@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Apply as a Provider — Localie</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .auth-panel-headline {
+      font-family: var(--font-serif);
+      font-size: 2.75rem;
+      line-height: 1.15;
+      color: var(--ice);
+      margin-bottom: 1rem;
+    }
+    .auth-panel-headline span { color: var(--gold); }
+
+    .panel-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: .875rem;
+      padding: .875rem 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+    .panel-feature:last-child { border-bottom: none; }
+    .panel-feature-icon {
+      width: 38px; height: 38px;
+      border-radius: var(--radius-sm);
+      background: rgba(26,107,223,.15);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      color: var(--blue-light);
+    }
+    .panel-feature h4 { font-size: .9375rem; margin-bottom: .125rem; }
+    .panel-feature p { font-size: .8125rem; color: var(--text-secondary); }
+
+    .trust-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      background: rgba(245,166,35,.1);
+      border: 1px solid rgba(245,166,35,.3);
+      border-radius: 999px;
+      padding: .3rem .875rem;
+      font-size: .8125rem;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+    }
+    .trust-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .form-hint {
+      font-size: .75rem;
+      color: var(--text-muted);
+      margin-top: .25rem;
+    }
+
+    .file-upload {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+
+    .file-input-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      padding: 2rem 1rem;
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-md);
+      background: rgba(26,107,223,.03);
+      cursor: pointer;
+      transition: all var(--transition);
+      color: var(--text-muted);
+      font-size: .9375rem;
+      font-weight: 500;
+    }
+    .file-input-label:hover {
+      border-color: var(--blue);
+      color: var(--blue-light);
+      background: rgba(26,107,223,.08);
+    }
+    .file-input-label input { display: none; }
+
+    .file-name {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .75rem 1rem;
+      background: rgba(52,211,153,.1);
+      border: 1px solid rgba(52,211,153,.3);
+      border-radius: var(--radius-md);
+      color: #34d399;
+      font-size: .875rem;
+    }
+
+    .bottom-links {
+      text-align: center;
+      font-size: .875rem;
+      color: var(--text-secondary);
+    }
+    .bottom-links a { color: var(--blue-light); font-weight: 500; }
+    .bottom-links a:hover { text-decoration: underline; }
+
+    .app-form-box {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .form-section-title {
+      font-size: .8125rem;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: .5rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Main layout ─────────────────────────────────────────────────────────── -->
+<div class="auth-page">
+
+  <!-- Left panel — brand / features -->
+  <div class="auth-panel">
+    <div class="auth-panel-inner">
+
+      <div class="trust-badge">Grow Your Business</div>
+
+      <h1 class="auth-panel-headline">
+        Reach more<br><span>local customers</span><br>on Localie.
+      </h1>
+      <p style="color:var(--text-secondary);margin-bottom:2rem;font-size:.9375rem;line-height:1.7;">
+        Join a curated network of verified service providers. Zero upfront fees,
+        no hidden commissions. Get found by customers looking for exactly what you offer.
+      </p>
+
+      <div style="display:flex;flex-direction:column;">
+        <div class="panel-feature">
+          <div class="panel-feature-icon">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+          </div>
+          <div>
+            <h4>Verified provider network</h4>
+            <p>Only ABN-checked and insured professionals join — customers know they can trust you.</p>
+          </div>
+        </div>
+        <div class="panel-feature">
+          <div class="panel-feature-icon">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div>
+            <h4>Instant availability slots</h4>
+            <p>Post same-day openings and get bookings in real time with zero wait.</p>
+          </div>
+        </div>
+        <div class="panel-feature">
+          <div class="panel-feature-icon">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+          </div>
+          <div>
+            <h4>Direct customer contact</h4>
+            <p>Message customers directly — no platform markup, no mysterious algorithms.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Right panel — application form -->
+  <div class="auth-form-wrapper">
+    <div class="app-form-box fade-in">
+
+      <!-- Logo -->
+      <a href="index.html" class="logo">
+        <div class="logo-mark">L</div>
+        Localie
+      </a>
+
+      <!-- Heading -->
+      <div>
+        <h2 style="font-size:1.5rem;margin-bottom:.25rem;">Become a provider</h2>
+        <p class="text-secondary text-sm">Complete your application to reach customers looking for your services.</p>
+      </div>
+
+      <!-- Application form -->
+      <form id="apply-form" novalidate style="display:flex;flex-direction:column;gap:1rem;">
+
+        <!-- Business Details Section -->
+        <div style="font-size:.8125rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-top:.5rem;">Business Details</div>
+
+        <!-- Full name -->
+        <div class="form-group">
+          <label class="form-label" for="full-name">Full name</label>
+          <div class="input-group">
+            <svg class="input-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
+            </svg>
+            <input
+              class="form-input"
+              type="text"
+              id="full-name"
+              name="full_name"
+              placeholder="Your full name"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="email">Email address</label>
+          <div class="input-group">
+            <svg class="input-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,12 2,6"/>
+            </svg>
+            <input
+              class="form-input"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Business name -->
+        <div class="form-group">
+          <label class="form-label" for="business-name">Business name</label>
+          <div class="input-group">
+            <svg class="input-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect x="2" y="4" width="20" height="16" rx="2" ry="2"/>
+              <path d="M2 8h20"/>
+            </svg>
+            <input
+              class="form-input"
+              type="text"
+              id="business-name"
+              name="business_name"
+              placeholder="Your business name"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- ABN -->
+        <div class="form-group">
+          <label class="form-label" for="abn">ABN (Australian Business Number)</label>
+          <input
+            class="form-input"
+            type="text"
+            id="abn"
+            name="abn"
+            placeholder="11 123 456 789"
+            maxlength="14"
+            required
+          />
+          <p class="form-hint">We'll verify your ABN to ensure legitimacy</p>
+        </div>
+
+        <!-- Compliance Section -->
+        <div style="font-size:.8125rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-top:.5rem;">Compliance & Insurance</div>
+
+        <!-- Insurance URL -->
+        <div class="form-group">
+          <label class="form-label" for="insurance-url">Insurance certificate (URL or file)</label>
+          <input
+            class="form-input"
+            type="url"
+            id="insurance-url"
+            name="insurance_url"
+            placeholder="https://... or upload file below"
+          />
+          <p class="form-hint">Link to your insurance document or upload below</p>
+        </div>
+
+        <!-- Insurance file upload -->
+        <div class="file-upload">
+          <label class="file-input-label" id="insurance-file-label">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <span>Drop file or click to upload</span>
+            <input type="file" id="insurance-file" name="insurance_file" accept=".pdf,.jpg,.jpeg,.png" />
+          </label>
+          <div id="insurance-file-name" style="display:none;" class="file-name">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polyline points="20 6 9 17 4 12"/>
+            </svg>
+            <span id="file-name-text"></span>
+          </div>
+        </div>
+
+        <!-- Service Area Section -->
+        <div style="font-size:.8125rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin-top:.5rem;">Service Information</div>
+
+        <!-- Service area -->
+        <div class="form-group">
+          <label class="form-label" for="service-area">Service area</label>
+          <div class="input-group">
+            <svg class="input-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <input
+              class="form-input"
+              type="text"
+              id="service-area"
+              name="service_area"
+              placeholder="e.g., Sydney metro, inner west"
+              required
+            />
+          </div>
+          <p class="form-hint">Where you provide services or are willing to travel</p>
+        </div>
+
+        <!-- Business description -->
+        <div class="form-group">
+          <label class="form-label" for="description">About your business</label>
+          <textarea
+            class="form-textarea"
+            id="description"
+            name="business_description"
+            placeholder="Tell customers what makes your service special. What services do you offer? What's your experience?"
+            required
+          ></textarea>
+          <p class="form-hint">This helps customers understand what you do (200 chars max)</p>
+        </div>
+
+        <!-- Checkbox acceptance -->
+        <label class="toggle" style="margin-top:.5rem;">
+          <input type="checkbox" id="terms-check" required />
+          <span class="toggle-track"></span>
+          <span style="font-size:.875rem;color:var(--text-secondary);">
+            I agree to Localie's <a href="#" style="color:var(--blue-light);">Terms of Service</a> and <a href="#" style="color:var(--blue-light);">Provider Agreement</a>
+          </span>
+        </label>
+
+        <div id="form-error" class="form-error" style="display:none;"></div>
+
+        <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">
+          Submit application
+        </button>
+      </form>
+
+      <!-- Bottom links -->
+      <div class="bottom-links">
+        Already a provider? <a href="login.html">Sign in here</a>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ── Scripts ──────────────────────────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+  import { signUp, redirectToDashboard, getSession } from './js/auth.js';
+  import { showToast, setLoading } from './js/app.js';
+
+  // ── Redirect if already logged in ─────────────────────────────────────────
+  (async () => {
+    const session = await getSession();
+    if (session) await redirectToDashboard();
+  })();
+
+  // ── File upload handler ───────────────────────────────────────────────────
+  const insuranceFileInput = document.getElementById('insurance-file');
+  const insuranceFileLabel = document.getElementById('insurance-file-label');
+  const insuranceFileName = document.getElementById('insurance-file-name');
+  const fileNameText = document.getElementById('file-name-text');
+
+  insuranceFileInput.addEventListener('change', () => {
+    if (insuranceFileInput.files.length > 0) {
+      const file = insuranceFileInput.files[0];
+      fileNameText.textContent = file.name;
+      insuranceFileLabel.style.display = 'none';
+      insuranceFileName.style.display = 'flex';
+    }
+  });
+
+  // Click to remove file
+  insuranceFileName.addEventListener('click', () => {
+    insuranceFileInput.value = '';
+    insuranceFileLabel.style.display = 'flex';
+    insuranceFileName.style.display = 'none';
+  });
+
+  // ── Application form submit ──────────────────────────────────────────────
+  const applyForm = document.getElementById('apply-form');
+  const submitBtn = document.getElementById('submit-btn');
+  const formError = document.getElementById('form-error');
+
+  function showFormError(msg) {
+    formError.textContent = msg;
+    formError.style.display = 'block';
+  }
+  function clearFormError() {
+    formError.textContent = '';
+    formError.style.display = 'none';
+  }
+
+  applyForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    clearFormError();
+
+    const fullName = document.getElementById('full-name').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const businessName = document.getElementById('business-name').value.trim();
+    const abn = document.getElementById('abn').value.trim();
+    const insuranceUrl = document.getElementById('insurance-url').value.trim();
+    const insuranceFile = insuranceFileInput.files[0];
+    const serviceArea = document.getElementById('service-area').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const termsCheck = document.getElementById('terms-check').checked;
+
+    if (!fullName) { showFormError('Please enter your full name.'); return; }
+    if (!email) { showFormError('Please enter your email.'); return; }
+    if (!businessName) { showFormError('Please enter your business name.'); return; }
+    if (!abn) { showFormError('Please enter your ABN.'); return; }
+    if (!abn.match(/^\d{2}\s\d{3}\s\d{3}\s\d{3}$|^\d{11}$/)) {
+      showFormError('Please enter a valid ABN (format: 11 123 456 789).');
+      return;
+    }
+    if (!insuranceUrl && !insuranceFile) {
+      showFormError('Please provide either an insurance URL or upload a file.');
+      return;
+    }
+    if (!serviceArea) { showFormError('Please specify your service area.'); return; }
+    if (!description) { showFormError('Please tell us about your business.'); return; }
+    if (description.length > 200) { showFormError('Business description must be 200 characters or less.'); return; }
+    if (!termsCheck) { showFormError('Please accept the Terms of Service.'); return; }
+
+    setLoading(submitBtn, true);
+    try {
+      // Create provider account
+      const metadata = {
+        full_name: fullName,
+        user_type: 'provider',
+        business_name: businessName,
+        abn,
+        insurance_url: insuranceUrl,
+        service_area: serviceArea,
+        business_description: description,
+        status: 'pending'
+      };
+
+      // TODO: Handle file upload to Supabase storage if insuranceFile exists
+      if (insuranceFile) {
+        // File will need to be uploaded separately
+        console.log('File upload:', insuranceFile.name);
+      }
+
+      await signUp(email, Math.random().toString(36).slice(-12), metadata);
+      showToast('Application submitted — we\'ll review it soon!', 'success');
+      await new Promise(r => setTimeout(r, 1500));
+      window.location.href = 'login.html';
+    } catch (err) {
+      const msg = err.message || 'Application failed. Please try again.';
+      showFormError(msg.includes('already') ? 'This email is already registered.' : msg);
+    } finally {
+      setLoading(submitBtn, false);
+    }
+  });
+</script>
+
+</body>
+</html>

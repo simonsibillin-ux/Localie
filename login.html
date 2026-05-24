@@ -4,493 +4,331 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign In — Localie</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
-    /* ── Page-specific overrides ── */
-    .auth-panel-headline {
-      font-family: var(--font-serif);
-      font-size: 2.75rem;
-      line-height: 1.15;
-      color: var(--ice);
-      margin-bottom: 1rem;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0d2d6a;
+      --blue: #1a6bdf;
+      --blue-light: #4a9eff;
+      --dark: #0a1628;
+      --gold: #f5a623;
+      --ice: #f0f8ff;
     }
-    .auth-panel-headline span { color: var(--gold); }
-    .panel-feature {
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #fff;
+      color: var(--navy);
+      min-height: 100vh;
+    }
+    .login-page {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+    .login-panel {
+      background: linear-gradient(135deg, var(--navy) 0%, var(--dark) 100%);
       display: flex;
-      align-items: flex-start;
-      gap: .875rem;
-      padding: .875rem 0;
-      border-bottom: 1px solid var(--border-soft);
-    }
-    .panel-feature:last-child { border-bottom: none; }
-    .panel-feature-icon {
-      width: 38px; height: 38px;
-      border-radius: var(--radius-sm);
-      background: rgba(26,107,223,.15);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      color: var(--blue-light);
-    }
-    .panel-feature h4 { font-size: .9375rem; margin-bottom: .125rem; }
-    .panel-feature p  { font-size: .8125rem; color: var(--text-secondary); }
-
-    .google-btn {
-      display: flex;
-      align-items: center;
+      flex-direction: column;
       justify-content: center;
-      gap: .75rem;
-      width: 100%;
-      padding: .7rem 1rem;
-      border-radius: var(--radius-md);
-      border: 1.5px solid var(--border-soft);
-      background: var(--surface);
-      color: var(--text-primary);
-      font-size: .9375rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all var(--transition);
+      align-items: center;
+      padding: 60px;
+      color: #fff;
     }
-    .google-btn:hover {
-      border-color: rgba(255,255,255,.2);
-      background: var(--surface-2);
+    .login-panel-inner { max-width: 400px; text-align: center; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-bottom: 40px; justify-content: center; }
+    .logo img { height: 40px; width: auto; }
+    .logo-text { font-family: 'DM Serif Display', serif; font-size: 24px; color: #fff; }
+    .logo-text span { color: var(--blue-light); }
+    .panel-tagline { font-size: 20px; font-family: 'DM Serif Display', serif; margin-bottom: 40px; color: #fff; }
+    .trust-stats {
+      display: flex;
+      gap: 30px;
+      justify-content: center;
+      margin-top: 40px;
     }
-    .google-logo { width: 20px; height: 20px; flex-shrink: 0; }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 28px; font-family: 'DM Serif Display', serif; color: var(--gold); }
+    .stat-label { font-size: 12px; color: rgba(255,255,255,0.6); text-transform: uppercase; margin-top: 4px; }
+
+    .form-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px;
+      background: #fff;
+    }
+    .form-box { width: 100%; max-width: 380px; }
+    .form-title { font-family: 'DM Serif Display', serif; font-size: 32px; margin-bottom: 12px; color: var(--navy); }
+    .form-sub { font-size: 14px; color: #999; margin-bottom: 32px; }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 20px;
+    }
+    .form-label { font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; }
+    .form-input {
+      padding: 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26,107,223,0.1);
+    }
 
     .forgot-link {
-      font-size: .8125rem;
-      color: var(--blue-light);
+      text-align: right;
+      font-size: 12px;
+      color: var(--blue);
+      text-decoration: none;
+      margin: 16px 0 24px;
       cursor: pointer;
-      align-self: flex-end;
-      margin-top: -.75rem;
     }
     .forgot-link:hover { text-decoration: underline; }
 
-    .bottom-links {
-      text-align: center;
-      font-size: .875rem;
-      color: var(--text-secondary);
+    .btn {
+      padding: 12px 24px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
     }
-    .bottom-links a { color: var(--blue-light); font-weight: 500; }
-    .bottom-links a:hover { text-decoration: underline; }
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+      width: 100%;
+    }
+    .btn-primary:hover { background: var(--navy); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* Forgot password modal */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.65);
-      backdrop-filter: blur(6px);
-      z-index: 200;
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0;
+      color: #ccc;
+      font-size: 12px;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #ddd;
+    }
+
+    .google-btn {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--navy);
+      font-weight: 500;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .2s;
+      gap: 8px;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
     }
-    .modal-overlay.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-xl);
-      padding: 2rem;
-      width: 100%;
-      max-width: 400px;
-      transform: translateY(12px);
-      transition: transform .25s cubic-bezier(.34,1.56,.64,1);
-    }
-    .modal-overlay.open .modal { transform: translateY(0); }
-    .modal-title { font-size: 1.125rem; font-weight: 600; margin-bottom: .375rem; }
-    .modal-sub   { font-size: .875rem; color: var(--text-secondary); margin-bottom: 1.25rem; }
+    .google-btn:hover { background: #f5f5f5; }
 
-    .success-state {
+    .bottom-links {
       text-align: center;
-      padding: 1rem 0;
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: .75rem;
+      font-size: 14px;
+      color: #666;
+      margin-top: 24px;
     }
-    .success-state.show { display: flex; }
-    .success-icon {
-      width: 56px; height: 56px;
-      border-radius: 50%;
-      background: rgba(52,211,153,.15);
-      display: flex; align-items: center; justify-content: center;
-      color: #34d399;
-      font-size: 1.5rem;
+    .bottom-links a {
+      color: var(--blue);
+      text-decoration: none;
+      font-weight: 500;
     }
+    .bottom-links a:hover { text-decoration: underline; }
 
-    /* Provider badge on panel */
-    .trust-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: .5rem;
-      background: rgba(245,166,35,.1);
-      border: 1px solid rgba(245,166,35,.3);
-      border-radius: 999px;
-      padding: .3rem .875rem;
-      font-size: .8125rem;
-      color: var(--gold);
-      margin-bottom: 1.5rem;
+    .error { color: #dc2626; font-size: 12px; margin-top: 4px; }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dark);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 1000;
+      display: none;
     }
-    .trust-badge::before {
-      content: '';
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--gold);
+    .toast.show { display: block; }
+
+    @media (max-width: 900px) {
+      .login-page { grid-template-columns: 1fr; }
+      .login-panel { display: none; }
+      .form-panel { padding: 40px 20px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ── Main layout ─────────────────────────────────────────────────────────── -->
-<div class="auth-page">
-
-  <!-- Left panel — brand / features -->
-  <div class="auth-panel">
-    <div class="auth-panel-inner">
-
-      <div class="trust-badge">Verified Local Services</div>
-
-      <h1 class="auth-panel-headline">
-        Connect with<br><span>trusted locals</span><br>in your area.
-      </h1>
-      <p style="color:var(--text-secondary);margin-bottom:2rem;font-size:.9375rem;line-height:1.7;">
-        Every provider on Localie is individually verified —
-        ABN checked, insured, and approved by our team.
+<div class="login-page">
+  <!-- Left Panel -->
+  <div class="login-panel">
+    <div class="login-panel-inner">
+      <a href="index.html" class="logo">
+        <img src="images/logo.png" alt="Localie">
+      </a>
+      <h1 class="panel-tagline">Local services you can trust</h1>
+      <p style="font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 40px;">
+        Every provider on Localie is individually verified — ABN checked, insured, and personally approved by our team.
       </p>
-
-      <div style="display:flex;flex-direction:column;">
-        <div class="panel-feature">
-          <div class="panel-feature-icon">
-            <!-- Shield check -->
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              <polyline points="9 12 11 14 15 10"/>
-            </svg>
-          </div>
-          <div>
-            <h4>Manually verified providers</h4>
-            <p>Every tradesperson, cleaner, and local expert is vetted before going live.</p>
-          </div>
+      <div class="trust-stats">
+        <div class="stat-item">
+          <div class="stat-num">2,847</div>
+          <div class="stat-label">Active Users</div>
         </div>
-        <div class="panel-feature">
-          <div class="panel-feature-icon">
-            <!-- Clock -->
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
-          </div>
-          <div>
-            <h4>Last-minute availability slots</h4>
-            <p>Providers post same-day openings so you can book when you need it most.</p>
-          </div>
-        </div>
-        <div class="panel-feature">
-          <div class="panel-feature-icon">
-            <!-- Message circle -->
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-          </div>
-          <div>
-            <h4>Direct messaging</h4>
-            <p>Chat directly with providers — no middleman, no hidden fees.</p>
-          </div>
+        <div class="stat-item">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Verified</div>
         </div>
       </div>
-
     </div>
   </div>
 
-  <!-- Right panel — login form -->
-  <div class="auth-form-wrapper">
-    <div class="auth-box fade-in">
+  <!-- Right Panel -->
+  <div class="form-panel">
+    <div class="form-box">
+      <h2 class="form-title">Sign in</h2>
+      <p class="form-sub">Welcome back to Localie</p>
 
-      <!-- Logo -->
-      <a href="index.html" class="logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
-        <img src="images/logo.png" alt="Localie" style="height:36px;width:auto;">
-        <span style="font-family:'DM Serif Display',serif;font-size:22px;color:#fff;">Local<span style="color:var(--blue-light);">ie</span></span>
-      </a>
-
-      <!-- Heading -->
-      <div>
-        <h2 style="font-size:1.5rem;margin-bottom:.25rem;">Welcome back</h2>
-        <p class="text-secondary text-sm">Sign in to your account to continue.</p>
-      </div>
-
-      <!-- Tab switcher -->
-      <div class="tab-switcher" id="login-tabs" role="tablist">
-        <button class="tab active" data-tab="customer" role="tab" aria-selected="true">
-          Customer
-        </button>
-        <button class="tab" data-tab="provider" role="tab" aria-selected="false">
-          Service Provider
-        </button>
-      </div>
-
-      <!-- Google sign-in -->
-      <button class="google-btn" id="google-btn" type="button">
-        <svg class="google-logo" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-          <path fill="none" d="M0 0h48v48H0z"/>
-        </svg>
+      <button class="google-btn">
+        <i class="ti ti-brand-google"></i>
         Continue with Google
       </button>
 
-      <!-- Divider -->
-      <div class="divider">or sign in with email</div>
+      <div class="divider">or</div>
 
-      <!-- Login form -->
-      <form id="login-form" novalidate style="display:flex;flex-direction:column;gap:1rem;">
+      <form id="loginForm" novalidate>
         <div class="form-group">
-          <label class="form-label" for="email">Email address</label>
-          <div class="input-group">
-            <svg class="input-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-              <polyline points="22,6 12,12 2,6"/>
-            </svg>
-            <input
-              class="form-input"
-              type="email"
-              id="email"
-              name="email"
-              placeholder="you@example.com"
-              autocomplete="email"
-              required
-            />
-          </div>
+          <label class="form-label">Email address</label>
+          <input type="email" class="form-input" id="email" placeholder="you@example.com" required />
+          <div class="error" id="emailError"></div>
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="password">Password</label>
-          <div class="input-group">
-            <svg class="input-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-            </svg>
-            <input
-              class="form-input"
-              type="password"
-              id="password"
-              name="password"
-              placeholder="••••••••"
-              autocomplete="current-password"
-              required
-            />
-            <button type="button" class="input-suffix" id="toggle-password" aria-label="Toggle password visibility">
-              <svg id="eye-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                <circle cx="12" cy="12" r="3"/>
-              </svg>
-            </button>
-          </div>
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" id="password" placeholder="••••••••" required />
+          <div class="error" id="passwordError"></div>
         </div>
 
-        <button type="button" class="forgot-link" id="forgot-btn">Forgot password?</button>
+        <a class="forgot-link" id="forgotLink">Forgot password?</a>
 
-        <div id="form-error" class="form-error" style="display:none;"></div>
+        <button type="submit" class="btn btn-primary" id="signInBtn">Sign in</button>
 
-        <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">
-          Sign in
-        </button>
+        <div class="error" id="formError" style="text-align: center; margin-top: 16px;"></div>
       </form>
 
-      <!-- Bottom links -->
-      <div class="bottom-links" id="bottom-links-customer">
-        Don't have an account? <a href="signup.html">Create one free</a>
+      <div class="bottom-links">
+        New to Localie? <a href="signup.html">Create account</a><br><br>
+        <a href="apply.html">Apply as a provider</a>
       </div>
-      <div class="bottom-links hidden" id="bottom-links-provider">
-        Not listed yet? <a href="apply.html">Apply to join as a provider</a>
-        &nbsp;·&nbsp;
-        <a href="signup.html">Customer sign up</a>
-      </div>
-
     </div>
   </div>
 </div>
 
-<!-- ── Forgot password modal ────────────────────────────────────────────────── -->
-<div class="modal-overlay" id="forgot-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-  <div class="modal">
-    <!-- Default state -->
-    <div id="forgot-default">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
-        <div>
-          <p class="modal-title" id="modal-title">Reset your password</p>
-          <p class="modal-sub">Enter your email and we'll send you a reset link.</p>
-        </div>
-        <button type="button" class="btn btn-ghost btn-sm" id="modal-close" aria-label="Close">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-      </div>
-      <form id="forgot-form" style="display:flex;flex-direction:column;gap:1rem;" novalidate>
-        <div class="form-group">
-          <label class="form-label" for="reset-email">Email address</label>
-          <input class="form-input" type="email" id="reset-email" placeholder="you@example.com" required />
-        </div>
-        <div id="forgot-error" class="form-error" style="display:none;"></div>
-        <button type="submit" class="btn btn-primary btn-block" id="forgot-submit-btn">Send reset link</button>
-      </form>
-    </div>
-    <!-- Success state -->
-    <div class="success-state" id="forgot-success">
-      <div class="success-icon">✓</div>
-      <p style="font-weight:600;font-size:1.0625rem;">Check your email</p>
-      <p class="text-secondary text-sm">We've sent a password reset link. It may take a minute to arrive.</p>
-      <button class="btn btn-outline btn-sm" id="forgot-done-btn">Close</button>
-    </div>
-  </div>
-</div>
+<div class="toast" id="toast"></div>
 
-<!-- ── Scripts ──────────────────────────────────────────────────────────────── -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
-  import { signIn, signInWithGoogle, redirectToDashboard, sendPasswordReset, getSession } from './js/auth.js';
-  import { showToast, setLoading } from './js/app.js';
+  import { signIn, getSession, redirectToDashboard } from './js/auth.js';
+  import sb from './js/supabase.js';
 
-  // ── Redirect if already logged in ─────────────────────────────────────────
+  // Check if already logged in
   (async () => {
     const session = await getSession();
     if (session) await redirectToDashboard();
   })();
 
-  // ── Tab switcher ───────────────────────────────────────────────────────────
-  const tabs = document.querySelectorAll('#login-tabs .tab');
-  const customerLinks = document.getElementById('bottom-links-customer');
-  const providerLinks = document.getElementById('bottom-links-provider');
-  let activeRole = 'customer';
+  const form = document.getElementById('loginForm');
+  const signInBtn = document.getElementById('signInBtn');
+  const formError = document.getElementById('formError');
 
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
-      tab.classList.add('active');
-      tab.setAttribute('aria-selected', 'true');
-      activeRole = tab.dataset.tab;
-      if (activeRole === 'provider') {
-        customerLinks.classList.add('hidden');
-        providerLinks.classList.remove('hidden');
-      } else {
-        providerLinks.classList.add('hidden');
-        customerLinks.classList.remove('hidden');
-      }
-    });
-  });
-
-  // ── Password visibility toggle ─────────────────────────────────────────────
-  const passwordInput = document.getElementById('password');
-  const toggleBtn = document.getElementById('toggle-password');
-  toggleBtn.addEventListener('click', () => {
-    const isPassword = passwordInput.type === 'password';
-    passwordInput.type = isPassword ? 'text' : 'password';
-    document.getElementById('eye-icon').innerHTML = isPassword
-      ? `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>`
-      : `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`;
-  });
-
-  // ── Login form submit ──────────────────────────────────────────────────────
-  const loginForm = document.getElementById('login-form');
-  const submitBtn = document.getElementById('submit-btn');
-  const formError = document.getElementById('form-error');
-
-  function showFormError(msg) {
-    formError.textContent = msg;
-    formError.style.display = 'block';
-  }
-  function clearFormError() {
-    formError.textContent = '';
-    formError.style.display = 'none';
-  }
-
-  loginForm.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    clearFormError();
+    formError.textContent = '';
+
     const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
 
-    if (!email) { showFormError('Please enter your email address.'); return; }
-    if (!password) { showFormError('Please enter your password.'); return; }
-
-    setLoading(submitBtn, true);
-    try {
-      await signIn(email, password);
-      showToast('Signed in — redirecting…', 'success');
-      await redirectToDashboard();
-    } catch (err) {
-      const msg = err.message || 'Sign in failed. Please try again.';
-      showFormError(msg === 'Invalid login credentials'
-        ? 'Incorrect email or password. Please try again.'
-        : msg);
-    } finally {
-      setLoading(submitBtn, false);
-    }
-  });
-
-  // ── Google sign-in ─────────────────────────────────────────────────────────
-  document.getElementById('google-btn').addEventListener('click', async () => {
-    try {
-      await signInWithGoogle();
-    } catch (err) {
-      showToast(err.message || 'Google sign-in failed.', 'error');
-    }
-  });
-
-  // ── Forgot password modal ──────────────────────────────────────────────────
-  const forgotModal = document.getElementById('forgot-modal');
-  const forgotDefault = document.getElementById('forgot-default');
-  const forgotSuccess = document.getElementById('forgot-success');
-
-  function openModal() {
-    forgotDefault.style.display = 'block';
-    forgotSuccess.classList.remove('show');
-    document.getElementById('reset-email').value = '';
-    document.getElementById('forgot-error').style.display = 'none';
-    forgotModal.classList.add('open');
-    document.getElementById('reset-email').focus();
-  }
-  function closeModal() { forgotModal.classList.remove('open'); }
-
-  document.getElementById('forgot-btn').addEventListener('click', openModal);
-  document.getElementById('modal-close').addEventListener('click', closeModal);
-  document.getElementById('forgot-done-btn').addEventListener('click', closeModal);
-  forgotModal.addEventListener('click', (e) => { if (e.target === forgotModal) closeModal(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
-
-  const forgotForm = document.getElementById('forgot-form');
-  const forgotSubmitBtn = document.getElementById('forgot-submit-btn');
-  const forgotError = document.getElementById('forgot-error');
-
-  forgotForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    forgotError.style.display = 'none';
-    const email = document.getElementById('reset-email').value.trim();
-    if (!email) {
-      forgotError.textContent = 'Please enter your email address.';
-      forgotError.style.display = 'block';
+    if (!email || !password) {
+      formError.textContent = 'Please fill in all fields';
       return;
     }
-    setLoading(forgotSubmitBtn, true);
+
+    signInBtn.disabled = true;
+    signInBtn.textContent = 'Signing in...';
+
     try {
-      await sendPasswordReset(email);
-      forgotDefault.style.display = 'none';
-      forgotSuccess.classList.add('show');
+      await signIn(email, password);
+      showToast('Signed in successfully', 'success');
+      await redirectToDashboard();
     } catch (err) {
-      forgotError.textContent = err.message || 'Failed to send reset email. Please try again.';
-      forgotError.style.display = 'block';
+      formError.textContent = err.message || 'Sign in failed';
     } finally {
-      setLoading(forgotSubmitBtn, false);
+      signInBtn.disabled = false;
+      signInBtn.textContent = 'Sign in';
     }
   });
+
+  document.getElementById('googleBtn')?.addEventListener('click', async () => {
+    try {
+      await sb.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo: window.location.origin + '/dashboard-customer.html' }
+      });
+    } catch (err) {
+      formError.textContent = err.message;
+    }
+  });
+
+  document.getElementById('forgotLink').addEventListener('click', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('email').value.trim();
+    if (!email) {
+      document.getElementById('emailError').textContent = 'Please enter your email';
+      return;
+    }
+    try {
+      await sb.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/reset-password.html'
+      });
+      showToast('Password reset link sent to your email', 'success');
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
+  });
+
+  function showToast(msg, type) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.style.background = type === 'error' ? '#dc2626' : '#059669';
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
 </script>
 
 </body>

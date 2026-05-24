@@ -4,14 +4,815 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin — Localie</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    :root {
+      --navy: #0d2d6a;
+      --blue: #1a6bdf;
+      --blue-light: #4a9eff;
+      --dark: #0a1628;
+      --gold: #f5a623;
+      --ice: #f0f8ff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f5f5f5;
+      color: var(--navy);
+    }
+
+    .admin-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: var(--dark);
+      color: #fff;
+      padding: 24px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      margin-bottom: 32px;
+    }
+
+    .sidebar-logo img { height: 32px; width: auto; }
+    .sidebar-logo-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      color: #fff;
+    }
+    .sidebar-logo-text span { color: var(--blue-light); }
+
+    .nav-section {
+      margin-bottom: 32px;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+
+    .nav-items {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .nav-item {
+      padding: 12px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      background: none;
+      color: rgba(255,255,255,0.7);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-item i {
+      font-size: 18px;
+    }
+
+    .nav-item:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+
+    .nav-item.active {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .logout-btn {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      right: 24px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      background: none;
+      color: rgba(255,255,255,0.7);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+    }
+
+    .main-content {
+      margin-left: 280px;
+      padding: 32px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .page-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      color: var(--navy);
+    }
+
+    .page-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: none;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--navy);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--navy);
+      border: 1px solid #ddd;
+    }
+
+    .btn-secondary:hover {
+      background: #f5f5f5;
+    }
+
+    .section { margin-bottom: 32px; }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #eee;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #999;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      color: var(--blue);
+      margin-bottom: 4px;
+    }
+
+    .stat-change {
+      font-size: 12px;
+      color: #16a34a;
+    }
+
+    .table-container {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #eee;
+      overflow: hidden;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th {
+      background: #f9f9f9;
+      padding: 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #666;
+      border-bottom: 1px solid #eee;
+    }
+
+    .table td {
+      padding: 16px;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+
+    .table tbody tr:hover {
+      background: #f9f9f9;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-approved {
+      background: #dbeafe;
+      color: #0c4a6e;
+    }
+
+    .status-rejected {
+      background: #fee2e2;
+      color: #7f1d1d;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+    }
+
+    .action-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: var(--navy);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .action-btn:hover {
+      background: var(--ice);
+    }
+
+    .feedback-box {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #eee;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .feedback-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .feedback-name {
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .feedback-type {
+      background: var(--ice);
+      color: var(--blue);
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .feedback-text {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .feedback-date {
+      font-size: 11px;
+      color: #999;
+    }
+
+    .composer {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #eee;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .composer-title {
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+
+    .composer-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      margin-bottom: 12px;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .composer-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      margin-bottom: 16px;
+      color: var(--navy);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+  </style>
 </head>
 <body>
-  <!-- Admin dashboard — coming soon -->
-  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;">
-    <a href="index.html" class="logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;"><img src="images/logo.png" alt="Localie" style="height:36px;width:auto;"><span style="font-family:'DM Serif Display',serif;font-size:22px;color:#fff;">Local<span style="color:#4a9eff;">ie</span></span></a>
-    <p class="text-secondary">Admin dashboard — coming soon.</p>
-    <a href="login.html" class="btn btn-outline btn-sm">Sign out</a>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <img src="images/logo.png" alt="Localie">
+      <div class="sidebar-logo-text">Local<span>ie</span></div>
+    </a>
+
+    <div class="nav-section">
+      <div class="nav-label">Management</div>
+      <div class="nav-items">
+        <button class="nav-item active" data-tab="applications">
+          <i class="ti ti-inbox"></i>
+          <span>Applications</span>
+        </button>
+        <button class="nav-item" data-tab="providers">
+          <i class="ti ti-users"></i>
+          <span>Providers</span>
+        </button>
+        <button class="nav-item" data-tab="revenue">
+          <i class="ti ti-chart-line"></i>
+          <span>Revenue</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="nav-section">
+      <div class="nav-label">Operations</div>
+      <div class="nav-items">
+        <button class="nav-item" data-tab="feedback">
+          <i class="ti ti-message-circle"></i>
+          <span>Feedback</span>
+        </button>
+        <button class="nav-item" data-tab="announcements">
+          <i class="ti ti-bell"></i>
+          <span>Announcements</span>
+        </button>
+      </div>
+    </div>
+
+    <button class="logout-btn" id="logoutBtn">
+      <i class="ti ti-logout"></i> Sign out
+    </button>
   </div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Applications Tab -->
+    <div class="tab-content active" data-tab="applications">
+      <div class="page-header">
+        <h1 class="page-title">Applications</h1>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Pending</div>
+          <div class="stat-value">12</div>
+          <div class="stat-change">Awaiting review</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Approved</div>
+          <div class="stat-value">247</div>
+          <div class="stat-change">This month: +23</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Rejected</div>
+          <div class="stat-value">18</div>
+          <div class="stat-change">This month: +2</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg time</div>
+          <div class="stat-value">2.3d</div>
+          <div class="stat-change">Review period</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Pending Applications</div>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Service</th>
+                <th>Location</th>
+                <th>Applied</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Emma Johnson</td>
+                <td>Electrical</td>
+                <td>Melbourne, VIC</td>
+                <td>2 hours ago</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="action-btn">Approve</button>
+                    <button class="action-btn">Reject</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Marcus Chen</td>
+                <td>Plumbing</td>
+                <td>Footscray, VIC</td>
+                <td>5 hours ago</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="action-btn">Approve</button>
+                    <button class="action-btn">Reject</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Sarah Williams</td>
+                <td>Cleaning</td>
+                <td>Carlton, VIC</td>
+                <td>1 day ago</td>
+                <td><span class="status-badge status-pending">Pending</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="action-btn">Approve</button>
+                    <button class="action-btn">Reject</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Providers Tab -->
+    <div class="tab-content" data-tab="providers">
+      <div class="page-header">
+        <h1 class="page-title">Providers</h1>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total</div>
+          <div class="stat-value">265</div>
+          <div class="stat-change">Active providers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Premium</div>
+          <div class="stat-value">87</div>
+          <div class="stat-change">Paid plans</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Suspended</div>
+          <div class="stat-value">3</div>
+          <div class="stat-change">Under review</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg rating</div>
+          <div class="stat-value">4.8</div>
+          <div class="stat-change">Platform average</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">All Providers</div>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Service</th>
+                <th>Rating</th>
+                <th>Plan</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>John's Electrical</td>
+                <td>Electrical</td>
+                <td>4.9 ⭐ (127)</td>
+                <td>Premium</td>
+                <td><span class="status-badge status-approved">Active</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="action-btn">View</button>
+                    <button class="action-btn">Suspend</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Mike's Cleaning Co</td>
+                <td>Cleaning</td>
+                <td>4.8 ⭐ (94)</td>
+                <td>Standard</td>
+                <td><span class="status-badge status-approved">Active</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="action-btn">View</button>
+                    <button class="action-btn">Suspend</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Sarah's Plumbing</td>
+                <td>Plumbing</td>
+                <td>4.7 ⭐ (156)</td>
+                <td>Premium</td>
+                <td><span class="status-badge status-approved">Active</span></td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="action-btn">View</button>
+                    <button class="action-btn">Suspend</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue Tab -->
+    <div class="tab-content" data-tab="revenue">
+      <div class="page-header">
+        <h1 class="page-title">Revenue</h1>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">MRR</div>
+          <div class="stat-value">$47.3k</div>
+          <div class="stat-change">+12% vs last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Premium subscriptions</div>
+          <div class="stat-value">87</div>
+          <div class="stat-change">+8 this month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg revenue per provider</div>
+          <div class="stat-value">$178</div>
+          <div class="stat-change">Monthly</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Churn rate</div>
+          <div class="stat-value">2.4%</div>
+          <div class="stat-change">This month</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Revenue Details</div>
+        <div class="table-container">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Provider</th>
+                <th>Plan</th>
+                <th>Monthly fee</th>
+                <th>Status</th>
+                <th>Next billing</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>John's Electrical</td>
+                <td>Premium ($99/mo)</td>
+                <td>$99.00</td>
+                <td><span class="status-badge status-approved">Active</span></td>
+                <td>2026-06-15</td>
+              </tr>
+              <tr>
+                <td>Sarah's Plumbing</td>
+                <td>Premium ($99/mo)</td>
+                <td>$99.00</td>
+                <td><span class="status-badge status-approved">Active</span></td>
+                <td>2026-06-20</td>
+              </tr>
+              <tr>
+                <td>Alex's Garden Design</td>
+                <td>Premium ($99/mo)</td>
+                <td>$99.00</td>
+                <td><span class="status-badge status-approved">Active</span></td>
+                <td>2026-06-10</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feedback Tab -->
+    <div class="tab-content" data-tab="feedback">
+      <div class="page-header">
+        <h1 class="page-title">Feedback</h1>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total feedback</div>
+          <div class="stat-value">342</div>
+          <div class="stat-change">All time</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Bug reports</div>
+          <div class="stat-value">28</div>
+          <div class="stat-change">Open issues</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Feature requests</div>
+          <div class="stat-value">54</div>
+          <div class="stat-change">Under review</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Avg sentiment</div>
+          <div class="stat-value">4.3</div>
+          <div class="stat-change">Out of 5</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Recent Feedback</div>
+
+        <div class="feedback-box">
+          <div class="feedback-header">
+            <div class="feedback-name">John Smith</div>
+            <div class="feedback-type">Bug Report</div>
+          </div>
+          <div class="feedback-text">The search filter isn't working properly on mobile. It resets when I navigate to another tab.</div>
+          <div class="feedback-date">2 hours ago</div>
+        </div>
+
+        <div class="feedback-box">
+          <div class="feedback-header">
+            <div class="feedback-name">Anonymous</div>
+            <div class="feedback-type">Feature Request</div>
+          </div>
+          <div class="feedback-text">Would love to see an option to schedule posts in advance, similar to social media platforms.</div>
+          <div class="feedback-date">5 hours ago</div>
+        </div>
+
+        <div class="feedback-box">
+          <div class="feedback-header">
+            <div class="feedback-name">Maria Garcia</div>
+            <div class="feedback-type">Positive</div>
+          </div>
+          <div class="feedback-text">Great platform! The verification process is thorough and I feel confident hiring providers here.</div>
+          <div class="feedback-date">Yesterday</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Announcements Tab -->
+    <div class="tab-content" data-tab="announcements">
+      <div class="page-header">
+        <h1 class="page-title">Announcements</h1>
+        <div class="page-actions">
+          <button class="btn btn-primary">New announcement</button>
+        </div>
+      </div>
+
+      <div class="composer">
+        <div class="composer-title">Send push notification to all users</div>
+        <input type="text" class="composer-input" placeholder="Title" />
+        <textarea class="composer-input" placeholder="Message"></textarea>
+        <div class="composer-buttons">
+          <button class="btn btn-secondary">Cancel</button>
+          <button class="btn btn-primary">Send notification</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Recent Announcements</div>
+
+        <div class="feedback-box">
+          <div class="feedback-header">
+            <div class="feedback-name">Localie Team</div>
+            <div class="feedback-type">System</div>
+          </div>
+          <div class="feedback-text">Scheduled maintenance on 2026-06-01 from 2-4pm AEST. We'll be upgrading our database infrastructure. Services may be temporarily unavailable.</div>
+          <div class="feedback-date">Sent to 2,847 users • 3 days ago</div>
+        </div>
+
+        <div class="feedback-box">
+          <div class="feedback-header">
+            <div class="feedback-name">Localie Team</div>
+            <div class="feedback-type">Feature</div>
+          </div>
+          <div class="feedback-text">New feature: Providers can now add portfolio photos to their profiles! This helps customers see your best work.</div>
+          <div class="feedback-date">Sent to 2,847 users • 1 week ago</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { requireAuth, signOut } from './js/auth.js';
+
+  // Protect this page and ensure admin access
+  const user = await requireAuth();
+  if (user?.user_metadata?.user_type !== 'admin') {
+    window.location.href = '/login.html';
+  }
+
+  // Tab switching
+  const navItems = document.querySelectorAll('.nav-item');
+  const tabContents = document.querySelectorAll('.tab-content');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const tab = item.dataset.tab;
+      navItems.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+      tabContents.forEach(content => content.classList.remove('active'));
+      document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+    });
+  });
+
+  // Sign out
+  document.getElementById('logoutBtn').addEventListener('click', async () => {
+    await signOut();
+  });
+</script>
+
 </body>
 </html>

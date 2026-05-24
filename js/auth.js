@@ -58,14 +58,14 @@ export async function requireAuth(redirectUrl = '/login.html') {
   return session;
 }
 
-// Redirect to correct dashboard based on user role
+// Redirect to correct dashboard based on user type
 export async function redirectToDashboard() {
   const user = await getUser();
   if (!user) return;
-  const role = user.user_metadata?.role;
-  if (role === 'provider') {
+  const userType = user.user_metadata?.user_type;
+  if (userType === 'provider') {
     window.location.href = '/dashboard-provider.html';
-  } else if (role === 'admin') {
+  } else if (userType === 'admin') {
     window.location.href = '/dashboard-admin.html';
   } else {
     window.location.href = '/dashboard-customer.html';

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>My Feed — Localie</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
@@ -22,33 +22,38 @@
       --white: #ffffff;
     }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       font-family: 'DM Sans', sans-serif;
-      background: #f5f5f5;
+      background: #f8f8f8;
       color: var(--navy);
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
-    .dashboard {
+    .app-container {
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
-      padding-bottom: 70px;
+      height: 100vh;
+      width: 100%;
     }
 
-    .dashboard-header {
-      position: sticky;
+    /* HEADER */
+    .header {
+      position: fixed;
       top: 0;
-      z-index: 50;
+      left: 0;
+      right: 0;
+      height: 56px;
       background: var(--white);
       border-bottom: 1px solid var(--border);
-      padding: 12px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
+      padding: 0 16px;
+      z-index: 50;
     }
 
     .header-logo {
@@ -59,86 +64,187 @@
     }
 
     .header-logo img {
-      height: 32px;
+      height: 28px;
       width: auto;
     }
 
-    .header-logo-text {
-      font-family: 'DM Serif Display', serif;
-      font-size: 16px;
-      color: var(--navy);
-      display: none;
-    }
-
-    .header-logo-text span {
-      color: var(--blue-light);
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .header-badge {
       background: var(--ice);
-      border: 1px solid var(--border);
       color: var(--blue);
-      padding: 6px 12px;
-      border-radius: 20px;
+      padding: 5px 10px;
+      border-radius: 16px;
       font-size: 11px;
       font-weight: 600;
       white-space: nowrap;
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
     }
 
-    .dashboard-content {
+    .header-bell {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: var(--navy);
+      cursor: pointer;
+      padding: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* CONTENT */
+    .content-area {
       flex: 1;
+      margin-top: 56px;
+      margin-bottom: 60px;
       overflow-y: auto;
-      padding: 16px;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
     }
 
-    .tab {
+    .tab-pane {
       display: none;
+      padding: 16px;
+      animation: fadeIn 0.2s ease-in;
     }
 
-    .tab.active {
+    .tab-pane.active {
       display: block;
     }
 
-    .section-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 20px;
-      color: var(--navy);
-      margin-bottom: 16px;
-      margin-top: 0;
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
 
-    .category-grid {
+    /* HOME TAB */
+    .welcome-section {
+      margin-bottom: 24px;
+    }
+
+    .welcome-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      color: var(--navy);
+      margin-bottom: 16px;
+    }
+
+    .slots-section {
+      margin-bottom: 28px;
+    }
+
+    .slots-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    .slots-scroll {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
+    }
+
+    .slots-scroll::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .slots-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .slots-scroll::-webkit-scrollbar-thumb {
+      background: #ddd;
+      border-radius: 2px;
+    }
+
+    .slot-card {
+      flex-shrink: 0;
+      width: 160px;
+      background: linear-gradient(135deg, var(--gold) 0%, #f5c55d 100%);
+      border-radius: 12px;
+      padding: 14px;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .slot-time {
+      font-family: 'DM Serif Display', serif;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .slot-service {
+      font-size: 12px;
+      color: rgba(0,0,0,0.7);
+      line-height: 1.4;
+    }
+
+    .slot-claim-btn {
+      background: rgba(0,0,0,0.1);
+      border: none;
+      color: #333;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: auto;
+    }
+
+    .slot-claim-btn:active {
+      background: rgba(0,0,0,0.2);
+    }
+
+    /* CATEGORIES */
+    .categories-section {
+      margin-bottom: 28px;
+    }
+
+    .categories-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
-      margin-bottom: 32px;
     }
 
-    .category-btn {
+    .category-card {
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 16px 12px;
+      padding: 14px;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
-      font-family: 'DM Sans', sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
     }
 
-    .category-btn:active {
+    .category-card:active {
       background: var(--ice);
       border-color: var(--blue);
     }
 
     .category-icon {
       font-size: 28px;
+      margin-bottom: 8px;
     }
 
     .category-name {
@@ -147,50 +253,18 @@
       color: var(--navy);
     }
 
-    .urgent-banner {
-      background: linear-gradient(135deg, var(--blue) 0%, var(--navy) 100%);
-      border-radius: 14px;
-      padding: 20px;
-      color: var(--white);
-      margin-bottom: 32px;
+    /* FEATURED PROVIDERS */
+    .featured-section {
+      margin-bottom: 24px;
     }
 
-    .urgent-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 18px;
-      margin-bottom: 8px;
-    }
-
-    .urgent-subtitle {
-      font-size: 13px;
-      color: rgba(255,255,255,0.8);
-      margin-bottom: 16px;
-      line-height: 1.5;
-    }
-
-    .urgent-slots {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .urgent-slot {
-      background: rgba(255,255,255,0.1);
-      border-radius: 8px;
-      padding: 12px;
+    .section-label {
       font-size: 12px;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .urgent-time {
       font-weight: 600;
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    .urgent-service {
-      font-size: 11px;
-      color: rgba(255,255,255,0.7);
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
     }
 
     .provider-card {
@@ -224,80 +298,183 @@
       justify-content: center;
       color: var(--white);
       font-weight: 600;
-      font-size: 16px;
+      font-size: 14px;
     }
 
     .provider-info {
       flex: 1;
     }
 
-    .provider-name {
-      font-weight: 600;
-      font-size: 14px;
-      color: var(--navy);
+    .provider-name-row {
       display: flex;
       align-items: center;
       gap: 8px;
       margin-bottom: 3px;
     }
 
-    .provider-badge {
+    .provider-name {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--navy);
+    }
+
+    .verified-badge {
       background: var(--blue-pale);
       color: var(--blue);
       padding: 2px 8px;
       border-radius: 4px;
-      font-size: 10px;
-      font-weight: 600;
-      display: inline-flex;
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      display: flex;
       align-items: center;
-      gap: 3px;
+      gap: 2px;
     }
 
-    .provider-service {
+    .provider-meta {
       font-size: 12px;
       color: var(--muted);
+      margin-bottom: 8px;
     }
 
-    .provider-description {
+    .provider-desc {
       font-size: 13px;
       color: #666;
       line-height: 1.5;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
 
-    .provider-footer {
-      display: flex;
-      gap: 12px;
-      font-size: 11px;
-      color: var(--muted);
+    .contact-btn {
+      width: 100%;
+      padding: 10px;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
     }
 
+    .contact-btn:active {
+      background: var(--navy);
+    }
+
+    /* FEED TAB */
     .filter-bar {
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 12px;
+      padding: 10px;
       margin-bottom: 16px;
       display: flex;
       gap: 8px;
+      align-items: center;
     }
 
     .filter-select {
       flex: 1;
       padding: 8px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      border: none;
+      background: var(--ice);
+      border-radius: 6px;
       font-family: 'DM Sans', sans-serif;
       font-size: 13px;
       color: var(--navy);
-      background: var(--white);
       cursor: pointer;
     }
 
+    .post-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+
+    .post-card:active {
+      border-color: var(--blue);
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .post-provider {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--navy);
+    }
+
+    .post-badges {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .post-category {
+      background: var(--blue-pale);
+      color: var(--blue);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .post-pro {
+      background: var(--gold);
+      color: #333;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .post-content {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 12px;
+    }
+
+    .post-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .enquire-btn {
+      padding: 6px 12px;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .enquire-btn:active {
+      background: var(--navy);
+    }
+
+    /* SEARCH TAB */
     .search-input {
       width: 100%;
       padding: 12px 16px;
-      border: 1px solid var(--border);
+      border: 1.5px solid var(--border);
       border-radius: 10px;
       font-family: 'DM Sans', sans-serif;
       font-size: 14px;
@@ -309,78 +486,345 @@
       color: var(--muted);
     }
 
-    .message-item {
+    .category-pills {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .category-pills::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    .category-pills::-webkit-scrollbar-thumb {
+      background: #ddd;
+    }
+
+    .pill {
+      flex-shrink: 0;
+      padding: 8px 14px;
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .pill.active {
+      background: var(--blue);
+      color: var(--white);
+      border-color: var(--blue);
+    }
+
+    .pill:active {
+      opacity: 0.7;
+    }
+
+    /* MESSAGES TAB */
+    .messages-view {
+      display: contents;
+    }
+
+    .inbox-list {
+      display: none;
+    }
+
+    .inbox-list.active {
+      display: block;
+    }
+
+    .conversation-item {
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 12px;
+      margin-bottom: 8px;
       display: flex;
       gap: 12px;
-      margin-bottom: 8px;
       align-items: flex-start;
+      cursor: pointer;
       transition: all 0.2s;
+      position: relative;
     }
 
-    .message-item:active {
-      border-color: var(--blue);
+    .conversation-item:active {
       background: var(--ice);
     }
 
-    .message-avatar {
-      width: 48px;
-      height: 48px;
+    .conversation-item.unread {
+      background: var(--ice);
+    }
+
+    .conv-avatar {
+      width: 44px;
+      height: 44px;
       border-radius: 10px;
       background: linear-gradient(135deg, var(--gold), #f5c55d);
       flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #333;
+      font-weight: 600;
+      font-size: 12px;
     }
 
-    .message-content {
+    .conv-content {
       flex: 1;
       min-width: 0;
     }
 
-    .message-name {
+    .conv-name {
       font-weight: 600;
       font-size: 13px;
       color: var(--navy);
-      margin-bottom: 2px;
+      margin-bottom: 3px;
     }
 
-    .message-preview {
+    .conv-preview {
       font-size: 12px;
       color: var(--muted);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
-    .message-time {
+    .conv-time {
       font-size: 11px;
       color: #ccc;
     }
 
-    .settings-item {
+    .conv-unread-dot {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8px;
+      height: 8px;
+      background: var(--blue);
+      border-radius: 50%;
+    }
+
+    .conversation-item.unread .conv-unread-dot {
+      display: block;
+    }
+
+    .conversation-item:not(.unread) .conv-unread-dot {
+      display: none;
+    }
+
+    .thread-view {
+      display: none;
+      flex-direction: column;
+      height: calc(100vh - 116px);
+    }
+
+    .thread-view.active {
+      display: flex;
+    }
+
+    .thread-header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .thread-back-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: var(--navy);
+      cursor: pointer;
+      padding: 6px;
+    }
+
+    .thread-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--navy);
+    }
+
+    .thread-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .message-bubble {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .message-theirs {
+      background: var(--white);
+      border: 1px solid var(--border);
+      color: var(--navy);
+      align-self: flex-start;
+    }
+
+    .message-mine {
+      background: var(--blue);
+      color: var(--white);
+      align-self: flex-end;
+    }
+
+    .thread-input {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+    }
+
+    .thread-input-field {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--navy);
+      resize: none;
+      max-height: 80px;
+    }
+
+    .thread-input-field::placeholder {
+      color: var(--muted);
+    }
+
+    .thread-send-btn {
+      padding: 8px 12px;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* SETTINGS TAB */
+    .profile-section {
       background: var(--white);
       border: 1px solid var(--border);
       border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .profile-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+      font-weight: 600;
+      font-size: 24px;
+      margin: 0 auto 12px;
+    }
+
+    .profile-name {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 4px;
+    }
+
+    .profile-email {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .profile-location {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .settings-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .settings-row {
+      background: var(--white);
+      border: 1px solid var(--border);
       padding: 14px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
       cursor: pointer;
       transition: all 0.2s;
+      border-bottom: none;
     }
 
-    .settings-item:active {
+    .settings-row:first-child {
+      border-radius: 12px 12px 0 0;
+    }
+
+    .settings-row:last-child {
+      border-radius: 0 0 12px 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .settings-row:not(:last-child) {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .settings-row:active {
       background: var(--ice);
+    }
+
+    .settings-left {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .settings-icon {
+      font-size: 18px;
+      color: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .settings-text {
+      flex: 1;
+      min-width: 0;
     }
 
     .settings-label {
       font-weight: 600;
       font-size: 13px;
       color: var(--navy);
+      margin-bottom: 2px;
     }
 
     .settings-value {
@@ -388,21 +832,19 @@
       color: var(--muted);
     }
 
-    .settings-section-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 18px;
-      color: var(--navy);
-      margin-top: 24px;
-      margin-bottom: 12px;
+    .settings-chevron {
+      font-size: 16px;
+      color: var(--border);
+      flex-shrink: 0;
     }
 
-    .btn-logout {
+    .logout-btn {
       width: 100%;
       padding: 12px;
-      background: var(--white);
-      color: var(--navy);
-      border: 1.5px solid var(--border);
+      background: #fff3cd;
+      border: 1.5px solid #ffc107;
       border-radius: 10px;
+      color: #856404;
       font-family: 'DM Sans', sans-serif;
       font-size: 14px;
       font-weight: 600;
@@ -411,321 +853,541 @@
       transition: all 0.2s;
     }
 
-    .btn-logout:active {
-      background: #fef3c7;
-      border-color: var(--gold);
+    .logout-btn:active {
+      background: #ffe69c;
     }
 
+    /* BOTTOM NAV */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
+      height: 60px;
       background: var(--white);
       border-top: 1px solid var(--border);
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       z-index: 100;
-      padding: 0;
     }
 
-    .nav-btn {
-      padding: 8px 0;
+    .nav-item {
       background: none;
       border: none;
       cursor: pointer;
-      font-family: 'DM Sans', sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 4px;
       color: var(--muted);
-      font-size: 10px;
-      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 9px;
+      font-weight: 600;
       transition: all 0.2s;
     }
 
-    .nav-btn:active {
+    .nav-item:active {
       color: var(--blue);
     }
 
-    .nav-btn.active {
+    .nav-item.active {
       color: var(--blue);
     }
 
-    .nav-btn i {
-      font-size: 20px;
+    .nav-icon {
+      font-size: 22px;
     }
 
-    @media (max-width: 640px) {
-      .header-logo-text {
-        display: inline;
-      }
-
-      .header-badge {
-        font-size: 10px;
-        padding: 4px 8px;
-      }
-
-      .category-grid {
-        grid-template-columns: repeat(3, 1fr);
-      }
-
-      .section-title {
-        font-size: 18px;
-      }
+    .nav-label {
+      text-transform: capitalize;
     }
   </style>
 </head>
 <body>
 
-<div class="dashboard">
+<div class="app-container">
   <!-- Header -->
-  <div class="dashboard-header">
+  <header class="header">
     <a href="index.html" class="header-logo">
       <img src="images/logo.png" alt="Localie">
-      <span class="header-logo-text">Local<span>ie</span></span>
     </a>
-    <div class="header-badge">
-      <i class="ti ti-heart-handshake"></i>
-      Trusted by 2,847
+    <div class="header-right">
+      <div class="header-badge">
+        <i class="ti ti-heart-handshake"></i>
+        Trusted by 2,847
+      </div>
+      <button class="header-bell" title="Notifications">
+        <i class="ti ti-bell"></i>
+      </button>
     </div>
-  </div>
+  </header>
 
   <!-- Content -->
-  <div class="dashboard-content">
-    <!-- Home Tab -->
-    <div class="tab active" data-tab="home">
-      <h2 class="section-title">What do you need?</h2>
-      <div class="category-grid">
-        <button class="category-btn"><span class="category-icon">⚡</span><span class="category-name">Electrical</span></button>
-        <button class="category-btn"><span class="category-icon">🔧</span><span class="category-name">Plumbing</span></button>
-        <button class="category-btn"><span class="category-icon">🚗</span><span class="category-name">Auto Detail</span></button>
-        <button class="category-btn"><span class="category-icon">🧹</span><span class="category-name">Cleaning</span></button>
-        <button class="category-btn"><span class="category-icon">🐕</span><span class="category-name">Grooming</span></button>
-        <button class="category-btn"><span class="category-icon">🏗️</span><span class="category-name">Building</span></button>
-        <button class="category-btn"><span class="category-icon">📦</span><span class="category-name">Removals</span></button>
-        <button class="category-btn"><span class="category-icon">🎨</span><span class="category-name">Painting</span></button>
-        <button class="category-btn"><span class="category-icon">🚙</span><span class="category-name">Body Work</span></button>
+  <div class="content-area">
+    <!-- HOME TAB -->
+    <div class="tab-pane active" data-tab="home">
+      <div class="welcome-section">
+        <h1 class="welcome-title">Good morning, Alex</h1>
       </div>
 
-      <div class="urgent-banner">
-        <h3 class="urgent-title">Last-minute slots available</h3>
-        <p class="urgent-subtitle">Book same-day availability from verified providers near you.</p>
-        <div class="urgent-slots">
-          <div class="urgent-slot"><span class="urgent-time">Today 2pm</span><span class="urgent-service">Cleaning — Footscray</span></div>
-          <div class="urgent-slot"><span class="urgent-time">Today 4pm</span><span class="urgent-service">Plumbing — Southbank</span></div>
-          <div class="urgent-slot"><span class="urgent-time">Tomorrow 10am</span><span class="urgent-service">Electrical — Carlton</span></div>
-          <div class="urgent-slot"><span class="urgent-time">Tomorrow 3pm</span><span class="urgent-service">Grooming — Fitzroy</span></div>
-        </div>
-      </div>
-
-      <h2 class="section-title">Featured providers</h2>
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-avatar">FE</div>
-          <div class="provider-info">
-            <div class="provider-name">Forbes Electrical<span class="provider-badge"><i class="ti ti-check"></i> Verified</span></div>
-            <div class="provider-service">Licensed Electrician • 4.9 ⭐ (142 reviews)</div>
+      <div class="slots-section">
+        <div class="slots-label">⏰ Last-minute slots available</div>
+        <div class="slots-scroll">
+          <div class="slot-card">
+            <div class="slot-time">Today<br>2:00 pm</div>
+            <div class="slot-service">Forbes Electrical<br>Carlton</div>
+            <button class="slot-claim-btn">Claim</button>
+          </div>
+          <div class="slot-card">
+            <div class="slot-time">Today<br>4:30 pm</div>
+            <div class="slot-service">Brincat Plumbing<br>Southbank</div>
+            <button class="slot-claim-btn">Claim</button>
+          </div>
+          <div class="slot-card">
+            <div class="slot-time">Tomorrow<br>10:00 am</div>
+            <div class="slot-service">SS Exterior Services<br>Footscray</div>
+            <button class="slot-claim-btn">Claim</button>
+          </div>
+          <div class="slot-card">
+            <div class="slot-time">Tomorrow<br>3:00 pm</div>
+            <div class="slot-service">Millies Groom & Glam<br>Fitzroy</div>
+            <button class="slot-claim-btn">Claim</button>
           </div>
         </div>
-        <div class="provider-description">Same-day emergency callouts available. All work guaranteed. Servicing Greater Melbourne and surrounding areas.</div>
-        <div class="provider-footer"><span>Available today</span> • <span>$85/hour</span></div>
       </div>
 
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-avatar">BP</div>
-          <div class="provider-info">
-            <div class="provider-name">Brincat Plumbing<span class="provider-badge"><i class="ti ti-check"></i> Verified</span></div>
-            <div class="provider-service">Plumber • 4.8 ⭐ (187 reviews)</div>
-          </div>
+      <div class="categories-section">
+        <div class="section-label">Browse by service</div>
+        <div class="categories-grid">
+          <div class="category-card"><div class="category-icon">⚡</div><div class="category-name">Electrical</div></div>
+          <div class="category-card"><div class="category-icon">🔧</div><div class="category-name">Plumbing</div></div>
+          <div class="category-card"><div class="category-icon">🚗</div><div class="category-name">Auto Detail</div></div>
+          <div class="category-card"><div class="category-icon">🧹</div><div class="category-name">Cleaning</div></div>
+          <div class="category-card"><div class="category-icon">🐕</div><div class="category-name">Dog Grooming</div></div>
+          <div class="category-card"><div class="category-icon">🏗️</div><div class="category-name">Building</div></div>
+          <div class="category-card"><div class="category-icon">📦</div><div class="category-name">Removals</div></div>
+          <div class="category-card"><div class="category-icon">🎨</div><div class="category-name">Painting</div></div>
+          <div class="category-card"><div class="category-icon">🌱</div><div class="category-name">Landscaping</div></div>
+          <div class="category-card"><div class="category-icon">🏠</div><div class="category-name">Roofing</div></div>
+          <div class="category-card"><div class="category-icon">👶</div><div class="category-name">Babysitting</div></div>
+          <div class="category-card"><div class="category-icon">✂️</div><div class="category-name">Hair & Beauty</div></div>
         </div>
-        <div class="provider-description">Gas fitting, drain cleaning, leak repairs. 24/7 emergency service. All work guaranteed. Free quotes available.</div>
-        <div class="provider-footer"><span>1 hour response</span> • <span>$90/hour</span></div>
       </div>
 
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-avatar">SS</div>
-          <div class="provider-info">
-            <div class="provider-name">SS Exterior Services<span class="provider-badge"><i class="ti ti-check"></i> Verified</span></div>
-            <div class="provider-service">Painting • 4.7 ⭐ (94 reviews)</div>
+      <div class="featured-section">
+        <div class="section-label">Featured providers</div>
+
+        <div class="provider-card">
+          <div class="provider-header">
+            <div class="provider-avatar">FE</div>
+            <div class="provider-info">
+              <div class="provider-name-row">
+                <span class="provider-name">Forbes Electrical</span>
+                <span class="verified-badge"><i class="ti ti-shield-check"></i> Verified</span>
+              </div>
+              <div class="provider-meta">Electrical • 4.9 ⭐ (142 reviews)</div>
+            </div>
           </div>
+          <div class="provider-desc">Licensed electrician specializing in residential work. Same-day emergency callouts available. All work guaranteed.</div>
+          <button class="contact-btn">Contact</button>
         </div>
-        <div class="provider-description">Interior and exterior painting. Premium finishes. Quick turnaround. Book this week for 10% off all jobs.</div>
-        <div class="provider-footer"><span>5-7 days</span> • <span>$70/hour</span></div>
+
+        <div class="provider-card">
+          <div class="provider-header">
+            <div class="provider-avatar" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">BP</div>
+            <div class="provider-info">
+              <div class="provider-name-row">
+                <span class="provider-name">Brincat Plumbing</span>
+                <span class="verified-badge"><i class="ti ti-shield-check"></i> Verified</span>
+              </div>
+              <div class="provider-meta">Plumbing • 4.8 ⭐ (187 reviews)</div>
+            </div>
+          </div>
+          <div class="provider-desc">Gas fitting, drain cleaning, and leak repairs. 24/7 emergency service. Free quotes. No call-out fees.</div>
+          <button class="contact-btn">Contact</button>
+        </div>
+
+        <div class="provider-card">
+          <div class="provider-header">
+            <div class="provider-avatar" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">SS</div>
+            <div class="provider-info">
+              <div class="provider-name-row">
+                <span class="provider-name">SS Exterior Services</span>
+                <span class="verified-badge"><i class="ti ti-shield-check"></i> Verified</span>
+              </div>
+              <div class="provider-meta">Painting • 4.7 ⭐ (94 reviews)</div>
+            </div>
+          </div>
+          <div class="provider-desc">Interior and exterior painting. Premium finishes. Quick turnaround. Book this week for 10% off all jobs.</div>
+          <button class="contact-btn">Contact</button>
+        </div>
       </div>
     </div>
 
-    <!-- Feed Tab -->
-    <div class="tab" data-tab="feed">
+    <!-- FEED TAB -->
+    <div class="tab-pane" data-tab="feed">
       <div class="filter-bar">
-        <select class="filter-select" id="suburbFilter">
-          <option>Melbourne</option>
-          <option>Footscray</option>
-          <option>Carlton</option>
-          <option>Southbank</option>
-          <option>Fitzroy</option>
+        <select class="filter-select">
+          <option>Melbourne, VIC</option>
+          <option>Footscray, VIC</option>
+          <option>Carlton, VIC</option>
+          <option>Southbank, VIC</option>
+          <option>Fitzroy, VIC</option>
         </select>
       </div>
 
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-avatar" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">EM</div>
-          <div class="provider-info">
-            <div class="provider-name">EXS Mobile Detailing<span class="provider-badge"><i class="ti ti-check"></i> Verified</span></div>
-            <div class="provider-service">Auto Detailer • 4.9 ⭐ (156 reviews)</div>
+      <div class="post-card">
+        <div class="post-header">
+          <span class="post-provider">SS Exterior Services</span>
+          <div class="post-badges">
+            <span class="post-category">Painting</span>
+            <span class="post-pro">Pro</span>
           </div>
         </div>
-        <div class="provider-description">Just completed ceramic coating on a Range Rover. The transformation is incredible. Book now for winter protection packages.</div>
-        <div class="provider-footer"><span>2 hours ago</span> • <span>4 enquiries</span></div>
+        <div class="post-content">Just completed a beautiful accent wall project in Carlton. Premium finish with Dulux paint. Looking amazing! Book your interior refresh today.</div>
+        <div class="post-footer">
+          <span>2 hours ago</span>
+          <button class="enquire-btn">Enquire</button>
+        </div>
       </div>
 
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-avatar" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">AMS</div>
-          <div class="provider-info">
-            <div class="provider-name">Allen Moving & Storage<span class="provider-badge"><i class="ti ti-check"></i> Verified</span></div>
-            <div class="provider-service">Removalist • 4.8 ⭐ (203 reviews)</div>
+      <div class="post-card">
+        <div class="post-header">
+          <span class="post-provider">EXS Mobile Detailing</span>
+          <div class="post-badges">
+            <span class="post-category">Auto Detail</span>
+            <span class="post-pro">Pro</span>
           </div>
         </div>
-        <div class="provider-description">Completed a full 4-bedroom house move. Safe packing, professional team, on-time delivery. Special offers for group bookings.</div>
-        <div class="provider-footer"><span>5 hours ago</span> • <span>6 enquiries</span></div>
+        <div class="post-content">Ceramic coating application day! Your car will have that showroom shine and superior protection. Waterless and scratch-resistant. Limited slots available this week.</div>
+        <div class="post-footer">
+          <span>5 hours ago</span>
+          <button class="enquire-btn">Enquire</button>
+        </div>
       </div>
 
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-avatar" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">MG</div>
-          <div class="provider-info">
-            <div class="provider-name">Millies Groom & Glam<span class="provider-badge"><i class="ti ti-check"></i> Verified</span></div>
-            <div class="provider-service">Dog Groomer • 4.9 ⭐ (178 reviews)</div>
+      <div class="post-card">
+        <div class="post-header">
+          <span class="post-provider">Forbes Electrical</span>
+          <div class="post-badges">
+            <span class="post-category">Electrical</span>
+            <span class="post-pro">Pro</span>
           </div>
         </div>
-        <div class="provider-description">Pamper packages now available. New spa treatments for anxious dogs. Same-day grooming slots available this week.</div>
-        <div class="provider-footer"><span>Yesterday</span> • <span>9 enquiries</span></div>
+        <div class="post-content">Extended hours this week! We're now available until 8pm for emergency electrical work. Smart home installation also available. Call today for a free quote.</div>
+        <div class="post-footer">
+          <span>Yesterday</span>
+          <button class="enquire-btn">Enquire</button>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-header">
+          <span class="post-provider">Brincat Plumbing</span>
+          <div class="post-badges">
+            <span class="post-category">Plumbing</span>
+          </div>
+        </div>
+        <div class="post-content">Winter is here! Don't let frozen pipes ruin your week. We offer preventative inspections and emergency thaw services. Book now for peace of mind.</div>
+        <div class="post-footer">
+          <span>2 days ago</span>
+          <button class="enquire-btn">Enquire</button>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-header">
+          <span class="post-provider">Millies Groom & Glam</span>
+          <div class="post-badges">
+            <span class="post-category">Grooming</span>
+            <span class="post-pro">Pro</span>
+          </div>
+        </div>
+        <div class="post-content">Spa packages now available! Pawdicure, aromatherapy bath, full groom. Perfect for anxious pups or those who love extra pampering. New clients get 15% off.</div>
+        <div class="post-footer">
+          <span>3 days ago</span>
+          <button class="enquire-btn">Enquire</button>
+        </div>
+      </div>
+
+      <div class="post-card">
+        <div class="post-header">
+          <span class="post-provider">Hateley Construct</span>
+          <div class="post-badges">
+            <span class="post-category">Building</span>
+          </div>
+        </div>
+        <div class="post-content">Summer renovation special! We're offering 10% off all renovation projects booked by end of June. Extensions, renovations, and new builds. Free consultation.</div>
+        <div class="post-footer">
+          <span>1 week ago</span>
+          <button class="enquire-btn">Enquire</button>
+        </div>
       </div>
     </div>
 
-    <!-- Search Tab -->
-    <div class="tab" data-tab="search">
-      <input type="text" class="search-input" placeholder="Search providers or services..." />
+    <!-- SEARCH TAB -->
+    <div class="tab-pane" data-tab="search">
+      <input type="text" class="search-input" placeholder="Search tradies near you..." />
 
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-avatar">WB</div>
-          <div class="provider-info">
-            <div class="provider-name">Wallan AutoBody<span class="provider-badge"><i class="ti ti-check"></i> Verified</span></div>
-            <div class="provider-service">Auto Body Repairs • 4.8 ⭐ (132 reviews)</div>
-          </div>
-        </div>
-        <div class="provider-description">Full panel work, paint matching, dent removal. Expert craftsmanship on all vehicle types.</div>
-      </div>
-
-      <div class="provider-card">
-        <div class="provider-header">
-          <div class="provider-avatar">HC</div>
-          <div class="provider-info">
-            <div class="provider-name">Hateley Construct<span class="provider-badge"><i class="ti ti-check"></i> Verified</span></div>
-            <div class="provider-service">Builder • 4.9 ⭐ (98 reviews)</div>
-          </div>
-        </div>
-        <div class="provider-description">Renovation and extension specialist. Quality finishes. On-time delivery. Free quotes and project planning.</div>
+      <div class="category-pills">
+        <button class="pill active">All</button>
+        <button class="pill">Electrical</button>
+        <button class="pill">Plumbing</button>
+        <button class="pill">Cleaning</button>
+        <button class="pill">Auto</button>
+        <button class="pill">Building</button>
+        <button class="pill">Painting</button>
+        <button class="pill">Grooming</button>
       </div>
 
       <div class="provider-card">
         <div class="provider-header">
           <div class="provider-avatar">FE</div>
           <div class="provider-info">
-            <div class="provider-name">Forbes Electrical<span class="provider-badge"><i class="ti ti-check"></i> Verified</span></div>
-            <div class="provider-service">Electrician • 4.9 ⭐ (142 reviews)</div>
+            <div class="provider-name-row">
+              <span class="provider-name">Forbes Electrical</span>
+              <span class="verified-badge"><i class="ti ti-shield-check"></i> Verified</span>
+            </div>
+            <div class="provider-meta">Electrical • Carlton • 4.9 ⭐ (142)</div>
           </div>
         </div>
-        <div class="provider-description">Licensed electrician. Emergency callouts. All work guaranteed. Same-day appointments available.</div>
+        <div class="provider-desc">Licensed electrician. Same-day callouts. All work guaranteed. Residential specialist.</div>
+        <button class="contact-btn">Contact</button>
+      </div>
+
+      <div class="provider-card">
+        <div class="provider-header">
+          <div class="provider-avatar" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">BP</div>
+          <div class="provider-info">
+            <div class="provider-name-row">
+              <span class="provider-name">Brincat Plumbing</span>
+              <span class="verified-badge"><i class="ti ti-shield-check"></i> Verified</span>
+            </div>
+            <div class="provider-meta">Plumbing • Footscray • 4.8 ⭐ (187)</div>
+          </div>
+        </div>
+        <div class="provider-desc">Gas fitting and drain cleaning. 24/7 emergency service. Free quotes. No call-out fees.</div>
+        <button class="contact-btn">Contact</button>
+      </div>
+
+      <div class="provider-card">
+        <div class="provider-header">
+          <div class="provider-avatar" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">SS</div>
+          <div class="provider-info">
+            <div class="provider-name-row">
+              <span class="provider-name">SS Exterior Services</span>
+              <span class="verified-badge"><i class="ti ti-shield-check"></i> Verified</span>
+            </div>
+            <div class="provider-meta">Painting • Footscray • 4.7 ⭐ (94)</div>
+          </div>
+        </div>
+        <div class="provider-desc">Interior and exterior painting. Premium finishes. Quick turnaround. 10% off this month.</div>
+        <button class="contact-btn">Contact</button>
+      </div>
+
+      <div class="provider-card">
+        <div class="provider-header">
+          <div class="provider-avatar" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">EM</div>
+          <div class="provider-info">
+            <div class="provider-name-row">
+              <span class="provider-name">EXS Mobile Detailing</span>
+              <span class="verified-badge"><i class="ti ti-shield-check"></i> Verified</span>
+            </div>
+            <div class="provider-meta">Auto Detail • Melbourne • 4.9 ⭐ (156)</div>
+          </div>
+        </div>
+        <div class="provider-desc">Professional car detailing. Ceramic coating. Paint protection. Mobile service available.</div>
+        <button class="contact-btn">Contact</button>
       </div>
     </div>
 
-    <!-- Messages Tab -->
-    <div class="tab" data-tab="messages">
-      <div class="message-item">
-        <div class="message-avatar"></div>
-        <div class="message-content">
-          <div class="message-name">Forbes Electrical</div>
-          <div class="message-preview">Perfect! See you tomorrow at 2pm. Bring the light switches you mentioned.</div>
-          <div class="message-time">2 hours ago</div>
-        </div>
-      </div>
+    <!-- MESSAGES TAB -->
+    <div class="tab-pane" data-tab="messages">
+      <div class="messages-view">
+        <!-- Inbox View -->
+        <div class="inbox-list active">
+          <div class="conversation-item unread" data-conversation="1">
+            <div class="conv-avatar">FE</div>
+            <div class="conv-content">
+              <div class="conv-name">Forbes Electrical</div>
+              <div class="conv-preview">Perfect! I'll see you tomorrow at 2pm. Bring the light switches.</div>
+              <div class="conv-time">2 hours ago</div>
+            </div>
+            <div class="conv-unread-dot"></div>
+          </div>
 
-      <div class="message-item">
-        <div class="message-avatar" style="background: linear-gradient(135deg, #ec4899, #f43f5e);"></div>
-        <div class="message-content">
-          <div class="message-name">EXS Mobile Detailing</div>
-          <div class="message-preview">Your booking is confirmed for Saturday 10am. Please have the keys ready at pickup.</div>
-          <div class="message-time">Yesterday</div>
-        </div>
-      </div>
+          <div class="conversation-item" data-conversation="2">
+            <div class="conv-avatar" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">EM</div>
+            <div class="conv-content">
+              <div class="conv-name">EXS Mobile Detailing</div>
+              <div class="conv-preview">Your booking is confirmed for Saturday 10am. Have the keys ready.</div>
+              <div class="conv-time">Yesterday</div>
+            </div>
+            <div class="conv-unread-dot"></div>
+          </div>
 
-      <div class="message-item">
-        <div class="message-avatar" style="background: linear-gradient(135deg, #06b6d4, #0891b2);"></div>
-        <div class="message-content">
-          <div class="message-name">Allen Moving & Storage</div>
-          <div class="message-preview">Thanks for choosing us! Looking forward to making your move smooth and easy.</div>
-          <div class="message-time">3 days ago</div>
-        </div>
-      </div>
+          <div class="conversation-item" data-conversation="3">
+            <div class="conv-avatar" style="background: linear-gradient(135deg, #06b6d4, #0891b2);">BP</div>
+            <div class="conv-content">
+              <div class="conv-name">Brincat Plumbing</div>
+              <div class="conv-preview">Thanks for contacting us. Here's your free quote...</div>
+              <div class="conv-time">3 days ago</div>
+            </div>
+            <div class="conv-unread-dot"></div>
+          </div>
 
-      <div class="message-item">
-        <div class="message-avatar" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);"></div>
-        <div class="message-content">
-          <div class="message-name">Millies Groom & Glam</div>
-          <div class="message-preview">Fluffy looks absolutely beautiful! Come back and see us soon.</div>
-          <div class="message-time">1 week ago</div>
+          <div class="conversation-item" data-conversation="4">
+            <div class="conv-avatar" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">MG</div>
+            <div class="conv-content">
+              <div class="conv-name">Millies Groom & Glam</div>
+              <div class="conv-preview">Fluffy looks absolutely beautiful! 🐕</div>
+              <div class="conv-time">1 week ago</div>
+            </div>
+            <div class="conv-unread-dot"></div>
+          </div>
+        </div>
+
+        <!-- Thread Views (hidden by default) -->
+        <div class="thread-view" data-thread="1">
+          <div class="thread-header">
+            <button class="thread-back-btn"><i class="ti ti-arrow-left"></i></button>
+            <span class="thread-title">Forbes Electrical</span>
+          </div>
+          <div class="thread-messages">
+            <div class="message-bubble message-theirs">Hi! We're available tomorrow at 2pm. Does that work?</div>
+            <div class="message-bubble message-mine">Yes, perfect! I'll be home then. Just need new light switches installed in the bedroom.</div>
+            <div class="message-bubble message-theirs">Perfect! I'll see you tomorrow at 2pm. Bring the light switches.</div>
+          </div>
+          <div class="thread-input">
+            <textarea class="thread-input-field" placeholder="Message..."></textarea>
+            <button class="thread-send-btn"><i class="ti ti-send"></i></button>
+          </div>
+        </div>
+
+        <div class="thread-view" data-thread="2">
+          <div class="thread-header">
+            <button class="thread-back-btn"><i class="ti ti-arrow-left"></i></button>
+            <span class="thread-title">EXS Mobile Detailing</span>
+          </div>
+          <div class="thread-messages">
+            <div class="message-bubble message-theirs">Hi! How many cars do you need detailed?</div>
+            <div class="message-bubble message-mine">Just one car. Would like ceramic coating and full detail.</div>
+            <div class="message-bubble message-theirs">Great! We can do that Saturday morning. We'll come to you. Your booking is confirmed for Saturday 10am.</div>
+            <div class="message-bubble message-theirs">Have the keys ready and we'll take it from there!</div>
+          </div>
+          <div class="thread-input">
+            <textarea class="thread-input-field" placeholder="Message..."></textarea>
+            <button class="thread-send-btn"><i class="ti ti-send"></i></button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Settings Tab -->
-    <div class="tab" data-tab="settings">
-      <h2 class="settings-section-title">Account</h2>
-      <div class="settings-item">
-        <div><div class="settings-label">Full name</div><div class="settings-value">John Doe</div></div>
-        <i class="ti ti-chevron-right"></i>
-      </div>
-      <div class="settings-item">
-        <div><div class="settings-label">Email</div><div class="settings-value">john@example.com</div></div>
-        <i class="ti ti-chevron-right"></i>
-      </div>
-      <div class="settings-item">
-        <div><div class="settings-label">Location</div><div class="settings-value">Melbourne, VIC</div></div>
-        <i class="ti ti-chevron-right"></i>
+    <!-- SETTINGS TAB -->
+    <div class="tab-pane" data-tab="settings">
+      <div class="profile-section">
+        <div class="profile-avatar">AK</div>
+        <div class="profile-name">Alex Kim</div>
+        <div class="profile-email">alex.kim@example.com</div>
+        <div class="profile-location">Melbourne, VIC</div>
       </div>
 
-      <h2 class="settings-section-title">Preferences</h2>
-      <div class="settings-item">
-        <div><div class="settings-label">Saved providers</div><div class="settings-value">12 saved</div></div>
-        <i class="ti ti-chevron-right"></i>
-      </div>
-      <div class="settings-item">
-        <div><div class="settings-label">Referral code</div><div class="settings-value">JOHN2847</div></div>
-        <i class="ti ti-chevron-right"></i>
-      </div>
-      <div class="settings-item">
-        <div><div class="settings-label">Help & support</div><div class="settings-value">Contact us</div></div>
-        <i class="ti ti-chevron-right"></i>
+      <div class="settings-list">
+        <div class="settings-row">
+          <div class="settings-left">
+            <span class="settings-icon"><i class="ti ti-user"></i></span>
+            <div class="settings-text">
+              <div class="settings-label">Edit profile</div>
+              <div class="settings-value">Name, email, photo</div>
+            </div>
+          </div>
+          <span class="settings-chevron"><i class="ti ti-chevron-right"></i></span>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-left">
+            <span class="settings-icon"><i class="ti ti-map-pin"></i></span>
+            <div class="settings-text">
+              <div class="settings-label">My location</div>
+              <div class="settings-value">Melbourne, VIC</div>
+            </div>
+          </div>
+          <span class="settings-chevron"><i class="ti ti-chevron-right"></i></span>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-left">
+            <span class="settings-icon"><i class="ti ti-heart"></i></span>
+            <div class="settings-text">
+              <div class="settings-label">Saved businesses</div>
+              <div class="settings-value">12 saved</div>
+            </div>
+          </div>
+          <span class="settings-chevron"><i class="ti ti-chevron-right"></i></span>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-left">
+            <span class="settings-icon"><i class="ti ti-gift"></i></span>
+            <div class="settings-text">
+              <div class="settings-label">Refer a tradie</div>
+              <div class="settings-value">Earn $10 credit</div>
+            </div>
+          </div>
+          <span class="settings-chevron"><i class="ti ti-chevron-right"></i></span>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-left">
+            <span class="settings-icon"><i class="ti ti-message-circle"></i></span>
+            <div class="settings-text">
+              <div class="settings-label">Leave feedback</div>
+              <div class="settings-value">Anonymous feedback</div>
+            </div>
+          </div>
+          <span class="settings-chevron"><i class="ti ti-chevron-right"></i></span>
+        </div>
+
+        <div class="settings-row">
+          <div class="settings-left">
+            <span class="settings-icon"><i class="ti ti-bell"></i></span>
+            <div class="settings-text">
+              <div class="settings-label">Notifications</div>
+              <div class="settings-value">On</div>
+            </div>
+          </div>
+          <span class="settings-chevron"><i class="ti ti-chevron-right"></i></span>
+        </div>
       </div>
 
-      <button class="btn-logout" id="logoutBtn">Sign out</button>
+      <button class="logout-btn" id="logoutBtn">Log out</button>
     </div>
   </div>
-</div>
 
-<!-- Bottom Navigation -->
-<div class="bottom-nav">
-  <button class="nav-btn active" data-tab="home"><i class="ti ti-home"></i><span>Home</span></button>
-  <button class="nav-btn" data-tab="feed"><i class="ti ti-feed"></i><span>Feed</span></button>
-  <button class="nav-btn" data-tab="search"><i class="ti ti-search"></i><span>Search</span></button>
-  <button class="nav-btn" data-tab="messages"><i class="ti ti-message"></i><span>Messages</span></button>
-  <button class="nav-btn" data-tab="settings"><i class="ti ti-settings"></i><span>Settings</span></button>
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-tab="home">
+      <i class="nav-icon ti ti-home"></i>
+      <span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item" data-tab="feed">
+      <i class="nav-icon ti ti-feed"></i>
+      <span class="nav-label">Feed</span>
+    </button>
+    <button class="nav-item" data-tab="search">
+      <i class="nav-icon ti ti-search"></i>
+      <span class="nav-label">Search</span>
+    </button>
+    <button class="nav-item" data-tab="messages">
+      <i class="nav-icon ti ti-message"></i>
+      <span class="nav-label">Messages</span>
+    </button>
+    <button class="nav-item" data-tab="settings">
+      <i class="nav-icon ti ti-settings"></i>
+      <span class="nav-label">Settings</span>
+    </button>
+  </nav>
 </div>
 
 <script type="module">
@@ -733,22 +1395,50 @@
 
   await requireAuth();
 
-  const tabBtns = document.querySelectorAll('.nav-btn');
-  const tabs = document.querySelectorAll('.tab');
+  const navItems = document.querySelectorAll('.nav-item');
+  const tabPanes = document.querySelectorAll('.tab-pane');
+  const conversationItems = document.querySelectorAll('.conversation-item');
+  const threadBackBtns = document.querySelectorAll('.thread-back-btn');
+  const threadViews = document.querySelectorAll('.thread-view');
+  const inboxList = document.querySelector('.inbox-list');
+  const logoutBtn = document.getElementById('logoutBtn');
 
-  tabBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const tabName = btn.dataset.tab;
+  function switchTab(tabName) {
+    navItems.forEach(item => item.classList.remove('active'));
+    tabPanes.forEach(pane => pane.classList.remove('active'));
 
-      tabBtns.forEach(b => b.classList.remove('active'));
-      tabs.forEach(t => t.classList.remove('active'));
+    document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+    document.querySelector(`.tab-pane[data-tab="${tabName}"]`).classList.add('active');
 
-      btn.classList.add('active');
-      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+    if (tabName === 'messages') {
+      inboxList.classList.add('active');
+      threadViews.forEach(view => view.classList.remove('active'));
+    }
+  }
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      switchTab(item.dataset.tab);
     });
   });
 
-  document.getElementById('logoutBtn').addEventListener('click', async () => {
+  conversationItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const convId = item.dataset.conversation;
+      inboxList.classList.remove('active');
+      threadViews.forEach(view => view.classList.remove('active'));
+      document.querySelector(`[data-thread="${convId}"]`).classList.add('active');
+    });
+  });
+
+  threadBackBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      inboxList.classList.add('active');
+      threadViews.forEach(view => view.classList.remove('active'));
+    });
+  });
+
+  logoutBtn.addEventListener('click', async () => {
     await signOut();
   });
 </script>

@@ -1,27 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin — Localie</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — Localie</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-  <link rel="stylesheet" href="css/style.css" />
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
       --navy: #0d2d6a;
       --blue: #1a6bdf;
       --blue-light: #4a9eff;
+      --blue-pale: #e6f1fb;
+      --ice: #f0f8ff;
       --dark: #0a1628;
       --gold: #f5a623;
-      --ice: #f0f8ff;
+      --muted: #7a8aaa;
+      --border: #e0ecff;
+      --white: #ffffff;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
     body {
       font-family: 'DM Sans', sans-serif;
       background: #f5f5f5;
       color: var(--navy);
+      overflow-x: hidden;
     }
 
     .admin-layout {
@@ -30,9 +37,9 @@
       min-height: 100vh;
     }
 
-    .sidebar {
+    .admin-sidebar {
       background: var(--dark);
-      color: #fff;
+      color: var(--white);
       padding: 24px;
       border-right: 1px solid rgba(255,255,255,0.1);
       position: fixed;
@@ -48,91 +55,105 @@
       align-items: center;
       gap: 12px;
       text-decoration: none;
-      margin-bottom: 32px;
+      margin-bottom: 40px;
     }
 
-    .sidebar-logo img { height: 32px; width: auto; }
+    .sidebar-logo img {
+      height: 32px;
+      width: auto;
+    }
+
     .sidebar-logo-text {
       font-family: 'DM Serif Display', serif;
       font-size: 18px;
-      color: #fff;
+      color: var(--white);
     }
-    .sidebar-logo-text span { color: var(--blue-light); }
 
-    .nav-section {
+    .sidebar-logo-text span {
+      color: var(--blue-light);
+    }
+
+    .sidebar-section {
       margin-bottom: 32px;
     }
 
-    .nav-label {
+    .sidebar-label {
       font-size: 11px;
+      font-weight: 600;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
       color: rgba(255,255,255,0.5);
       margin-bottom: 12px;
-      font-weight: 600;
     }
 
-    .nav-items {
+    .sidebar-nav {
       display: flex;
       flex-direction: column;
       gap: 8px;
     }
 
-    .nav-item {
-      padding: 12px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
+    .sidebar-btn {
+      padding: 12px 14px;
       border: none;
       background: none;
       color: rgba(255,255,255,0.7);
       font-family: 'DM Sans', sans-serif;
       font-size: 14px;
       font-weight: 500;
-      text-align: left;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.2s;
       display: flex;
       align-items: center;
       gap: 10px;
+      text-align: left;
     }
 
-    .nav-item i {
+    .sidebar-btn:hover {
+      background: rgba(255,255,255,0.1);
+      color: var(--white);
+    }
+
+    .sidebar-btn.active {
+      background: var(--blue);
+      color: var(--white);
+    }
+
+    .sidebar-btn i {
       font-size: 18px;
     }
 
-    .nav-item:hover {
-      background: rgba(255,255,255,0.1);
-      color: #fff;
-    }
-
-    .nav-item.active {
-      background: var(--blue);
-      color: #fff;
-    }
-
-    .logout-btn {
+    .sidebar-logout {
       position: absolute;
       bottom: 24px;
       left: 24px;
       right: 24px;
       padding: 12px;
       border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 8px;
       background: none;
       color: rgba(255,255,255,0.7);
-      cursor: pointer;
       font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 8px;
       transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
-    .logout-btn:hover {
+    .sidebar-logout:hover {
       background: rgba(255,255,255,0.1);
-      color: #fff;
+      color: var(--white);
     }
 
-    .main-content {
+    .admin-main {
       margin-left: 280px;
       padding: 32px;
+      overflow-y: auto;
+      max-height: 100vh;
     }
 
     .page-header {
@@ -144,7 +165,7 @@
 
     .page-title {
       font-family: 'DM Serif Display', serif;
-      font-size: 28px;
+      font-size: 32px;
       color: var(--navy);
     }
 
@@ -157,16 +178,16 @@
       padding: 10px 20px;
       border-radius: 8px;
       border: none;
-      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
-      font-family: 'DM Sans', sans-serif;
     }
 
     .btn-primary {
       background: var(--blue);
-      color: #fff;
+      color: var(--white);
     }
 
     .btn-primary:hover {
@@ -174,16 +195,22 @@
     }
 
     .btn-secondary {
-      background: #fff;
+      background: var(--white);
       color: var(--navy);
-      border: 1px solid #ddd;
+      border: 1.5px solid var(--border);
     }
 
     .btn-secondary:hover {
-      background: #f5f5f5;
+      background: var(--ice);
     }
 
-    .section { margin-bottom: 32px; }
+    .tab {
+      display: none;
+    }
+
+    .tab.active {
+      display: block;
+    }
 
     .stats-grid {
       display: grid;
@@ -193,16 +220,18 @@
     }
 
     .stat-card {
-      background: #fff;
+      background: var(--white);
+      border: 1px solid var(--border);
       border-radius: 12px;
       padding: 20px;
-      border: 1px solid #eee;
     }
 
     .stat-label {
-      font-size: 12px;
-      color: #999;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
       text-transform: uppercase;
+      letter-spacing: 0.5px;
       margin-bottom: 8px;
     }
 
@@ -210,19 +239,31 @@
       font-family: 'DM Serif Display', serif;
       font-size: 32px;
       color: var(--blue);
+      line-height: 1;
       margin-bottom: 4px;
     }
 
     .stat-change {
-      font-size: 12px;
+      font-size: 11px;
       color: #16a34a;
     }
 
-    .table-container {
-      background: #fff;
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
       border-radius: 12px;
-      border: 1px solid #eee;
       overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      background: #f9f9f9;
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--navy);
     }
 
     .table {
@@ -231,81 +272,91 @@
     }
 
     .table th {
-      background: #f9f9f9;
-      padding: 16px;
+      padding: 16px 20px;
       text-align: left;
+      font-size: 11px;
       font-weight: 600;
-      font-size: 12px;
+      color: var(--muted);
       text-transform: uppercase;
-      color: #666;
-      border-bottom: 1px solid #eee;
+      letter-spacing: 0.5px;
+      background: #f9f9f9;
+      border-bottom: 1px solid var(--border);
     }
 
     .table td {
-      padding: 16px;
-      border-bottom: 1px solid #eee;
-      font-size: 14px;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
     }
 
     .table tbody tr:hover {
       background: #f9f9f9;
     }
 
-    .status-badge {
-      display: inline-block;
-      padding: 6px 12px;
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 12px;
       border-radius: 6px;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
     }
 
-    .status-pending {
+    .badge-pending {
       background: #fef3c7;
-      color: #92400e;
+      color: #b45309;
     }
 
-    .status-approved {
+    .badge-approved {
       background: #dbeafe;
       color: #0c4a6e;
     }
 
-    .status-rejected {
+    .badge-rejected {
       background: #fee2e2;
       color: #7f1d1d;
     }
 
-    .action-buttons {
-      display: flex;
-      gap: 8px;
+    .badge-active {
+      background: #dbeafe;
+      color: #0c4a6e;
     }
 
-    .action-btn {
+    .btn-sm {
       padding: 6px 12px;
       border-radius: 6px;
-      border: 1px solid #ddd;
-      background: #fff;
+      border: 1px solid var(--border);
+      background: var(--white);
       color: var(--navy);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
       cursor: pointer;
-      font-size: 12px;
-      font-weight: 500;
       transition: all 0.2s;
     }
 
-    .action-btn:hover {
+    .btn-sm:hover {
       background: var(--ice);
     }
 
-    .feedback-box {
-      background: #fff;
-      border-radius: 12px;
-      border: 1px solid #eee;
-      padding: 16px;
-      margin-bottom: 12px;
+    .action-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .feedback-item {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .feedback-item:last-child {
+      border-bottom: none;
     }
 
     .feedback-header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 8px;
     }
 
@@ -314,36 +365,34 @@
       color: var(--navy);
     }
 
-    .feedback-type {
+    .feedback-badge {
       background: var(--ice);
       color: var(--blue);
       padding: 4px 10px;
       border-radius: 4px;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
     }
 
     .feedback-text {
       font-size: 13px;
       color: #666;
-      line-height: 1.5;
+      line-height: 1.6;
       margin-bottom: 8px;
     }
 
-    .feedback-date {
+    .feedback-time {
       font-size: 11px;
-      color: #999;
+      color: var(--muted);
     }
 
     .composer {
-      background: #fff;
-      border-radius: 12px;
-      border: 1px solid #eee;
       padding: 20px;
-      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
     }
 
     .composer-title {
+      font-size: 13px;
       font-weight: 600;
       color: var(--navy);
       margin-bottom: 12px;
@@ -352,34 +401,36 @@
     .composer-input {
       width: 100%;
       padding: 12px;
-      border: 1px solid #ddd;
+      border: 1px solid var(--border);
       border-radius: 8px;
       font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
+      color: var(--navy);
       margin-bottom: 12px;
+    }
+
+    .composer-textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--navy);
       resize: vertical;
       min-height: 100px;
+      margin-bottom: 12px;
     }
 
-    .composer-buttons {
+    .composer-input::placeholder,
+    .composer-textarea::placeholder {
+      color: var(--muted);
+    }
+
+    .composer-actions {
       display: flex;
-      gap: 12px;
+      gap: 8px;
       justify-content: flex-end;
-    }
-
-    .section-title {
-      font-family: 'DM Serif Display', serif;
-      font-size: 18px;
-      margin-bottom: 16px;
-      color: var(--navy);
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
     }
   </style>
 </head>
@@ -387,53 +438,53 @@
 
 <div class="admin-layout">
   <!-- Sidebar -->
-  <div class="sidebar">
+  <div class="admin-sidebar">
     <a href="index.html" class="sidebar-logo">
       <img src="images/logo.png" alt="Localie">
       <div class="sidebar-logo-text">Local<span>ie</span></div>
     </a>
 
-    <div class="nav-section">
-      <div class="nav-label">Management</div>
-      <div class="nav-items">
-        <button class="nav-item active" data-tab="applications">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Management</div>
+      <div class="sidebar-nav">
+        <button class="sidebar-btn active" data-tab="applications">
           <i class="ti ti-inbox"></i>
           <span>Applications</span>
         </button>
-        <button class="nav-item" data-tab="providers">
+        <button class="sidebar-btn" data-tab="providers">
           <i class="ti ti-users"></i>
           <span>Providers</span>
         </button>
-        <button class="nav-item" data-tab="revenue">
+        <button class="sidebar-btn" data-tab="revenue">
           <i class="ti ti-chart-line"></i>
           <span>Revenue</span>
         </button>
       </div>
     </div>
 
-    <div class="nav-section">
-      <div class="nav-label">Operations</div>
-      <div class="nav-items">
-        <button class="nav-item" data-tab="feedback">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Operations</div>
+      <div class="sidebar-nav">
+        <button class="sidebar-btn" data-tab="feedback">
           <i class="ti ti-message-circle"></i>
           <span>Feedback</span>
         </button>
-        <button class="nav-item" data-tab="announcements">
+        <button class="sidebar-btn" data-tab="announcements">
           <i class="ti ti-bell"></i>
           <span>Announcements</span>
         </button>
       </div>
     </div>
 
-    <button class="logout-btn" id="logoutBtn">
+    <button class="sidebar-logout" id="logoutBtn">
       <i class="ti ti-logout"></i> Sign out
     </button>
   </div>
 
   <!-- Main Content -->
-  <div class="main-content">
+  <div class="admin-main">
     <!-- Applications Tab -->
-    <div class="tab-content active" data-tab="applications">
+    <div class="tab active" data-tab="applications">
       <div class="page-header">
         <h1 class="page-title">Applications</h1>
       </div>
@@ -446,339 +497,358 @@
         </div>
         <div class="stat-card">
           <div class="stat-label">Approved</div>
-          <div class="stat-value">247</div>
-          <div class="stat-change">This month: +23</div>
+          <div class="stat-value">267</div>
+          <div class="stat-change">+18 this month</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Rejected</div>
-          <div class="stat-value">18</div>
-          <div class="stat-change">This month: +2</div>
+          <div class="stat-value">12</div>
+          <div class="stat-change">+2 this month</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Avg time</div>
-          <div class="stat-value">2.3d</div>
+          <div class="stat-value">2.1d</div>
           <div class="stat-change">Review period</div>
         </div>
       </div>
 
-      <div class="section">
-        <div class="section-title">Pending Applications</div>
-        <div class="table-container">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Service</th>
-                <th>Location</th>
-                <th>Applied</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Emma Johnson</td>
-                <td>Electrical</td>
-                <td>Melbourne, VIC</td>
-                <td>2 hours ago</td>
-                <td><span class="status-badge status-pending">Pending</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="action-btn">Approve</button>
-                    <button class="action-btn">Reject</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Marcus Chen</td>
-                <td>Plumbing</td>
-                <td>Footscray, VIC</td>
-                <td>5 hours ago</td>
-                <td><span class="status-badge status-pending">Pending</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="action-btn">Approve</button>
-                    <button class="action-btn">Reject</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Sarah Williams</td>
-                <td>Cleaning</td>
-                <td>Carlton, VIC</td>
-                <td>1 day ago</td>
-                <td><span class="status-badge status-pending">Pending</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="action-btn">Approve</button>
-                    <button class="action-btn">Reject</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="card">
+        <div class="card-header">Pending Applications</div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Service</th>
+              <th>Location</th>
+              <th>Applied</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Emma Johnson</td>
+              <td>Electrical</td>
+              <td>Melbourne, VIC</td>
+              <td>2 hours ago</td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td>
+                <div class="action-group">
+                  <button class="btn-sm">Approve</button>
+                  <button class="btn-sm">Reject</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Marcus Chen</td>
+              <td>Plumbing</td>
+              <td>Footscray, VIC</td>
+              <td>5 hours ago</td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td>
+                <div class="action-group">
+                  <button class="btn-sm">Approve</button>
+                  <button class="btn-sm">Reject</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Sarah Williams</td>
+              <td>Cleaning</td>
+              <td>Carlton, VIC</td>
+              <td>1 day ago</td>
+              <td><span class="badge badge-pending">Pending</span></td>
+              <td>
+                <div class="action-group">
+                  <button class="btn-sm">Approve</button>
+                  <button class="btn-sm">Reject</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
     <!-- Providers Tab -->
-    <div class="tab-content" data-tab="providers">
+    <div class="tab" data-tab="providers">
       <div class="page-header">
         <h1 class="page-title">Providers</h1>
       </div>
 
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-label">Total</div>
-          <div class="stat-value">265</div>
-          <div class="stat-change">Active providers</div>
+          <div class="stat-label">Total Active</div>
+          <div class="stat-value">267</div>
+          <div class="stat-change">All verified</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Premium</div>
-          <div class="stat-value">87</div>
-          <div class="stat-change">Paid plans</div>
+          <div class="stat-label">Premium Plans</div>
+          <div class="stat-value">94</div>
+          <div class="stat-change">+12 this month</div>
         </div>
         <div class="stat-card">
           <div class="stat-label">Suspended</div>
-          <div class="stat-value">3</div>
+          <div class="stat-value">2</div>
           <div class="stat-change">Under review</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Avg rating</div>
+          <div class="stat-label">Avg Rating</div>
           <div class="stat-value">4.8</div>
           <div class="stat-change">Platform average</div>
         </div>
       </div>
 
-      <div class="section">
-        <div class="section-title">All Providers</div>
-        <div class="table-container">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Service</th>
-                <th>Rating</th>
-                <th>Plan</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>John's Electrical</td>
-                <td>Electrical</td>
-                <td>4.9 ⭐ (127)</td>
-                <td>Premium</td>
-                <td><span class="status-badge status-approved">Active</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="action-btn">View</button>
-                    <button class="action-btn">Suspend</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Mike's Cleaning Co</td>
-                <td>Cleaning</td>
-                <td>4.8 ⭐ (94)</td>
-                <td>Standard</td>
-                <td><span class="status-badge status-approved">Active</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="action-btn">View</button>
-                    <button class="action-btn">Suspend</button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>Sarah's Plumbing</td>
-                <td>Plumbing</td>
-                <td>4.7 ⭐ (156)</td>
-                <td>Premium</td>
-                <td><span class="status-badge status-approved">Active</span></td>
-                <td>
-                  <div class="action-buttons">
-                    <button class="action-btn">View</button>
-                    <button class="action-btn">Suspend</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="card">
+        <div class="card-header">All Providers</div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Service</th>
+              <th>Rating</th>
+              <th>Plan</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Forbes Electrical</td>
+              <td>Electrical</td>
+              <td>4.9 ⭐ (142)</td>
+              <td>Premium</td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td>
+                <div class="action-group">
+                  <button class="btn-sm">View</button>
+                  <button class="btn-sm">Suspend</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>SS Exterior Services</td>
+              <td>Painting</td>
+              <td>4.7 ⭐ (94)</td>
+              <td>Standard</td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td>
+                <div class="action-group">
+                  <button class="btn-sm">View</button>
+                  <button class="btn-sm">Suspend</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Brincat Plumbing</td>
+              <td>Plumbing</td>
+              <td>4.8 ⭐ (187)</td>
+              <td>Premium</td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td>
+                <div class="action-group">
+                  <button class="btn-sm">View</button>
+                  <button class="btn-sm">Suspend</button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>EXS Mobile Detailing</td>
+              <td>Auto Detail</td>
+              <td>4.9 ⭐ (156)</td>
+              <td>Premium</td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td>
+                <div class="action-group">
+                  <button class="btn-sm">View</button>
+                  <button class="btn-sm">Suspend</button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
     <!-- Revenue Tab -->
-    <div class="tab-content" data-tab="revenue">
+    <div class="tab" data-tab="revenue">
       <div class="page-header">
         <h1 class="page-title">Revenue</h1>
       </div>
 
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-label">MRR</div>
-          <div class="stat-value">$47.3k</div>
-          <div class="stat-change">+12% vs last month</div>
+          <div class="stat-label">Monthly Recurring</div>
+          <div class="stat-value">$52.8k</div>
+          <div class="stat-change">+16% vs last month</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Premium subscriptions</div>
-          <div class="stat-value">87</div>
-          <div class="stat-change">+8 this month</div>
+          <div class="stat-label">Premium Subscriptions</div>
+          <div class="stat-value">94</div>
+          <div class="stat-change">+12 this month</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Avg revenue per provider</div>
-          <div class="stat-value">$178</div>
-          <div class="stat-change">Monthly</div>
+          <div class="stat-label">ARPU</div>
+          <div class="stat-value">$198</div>
+          <div class="stat-change">Average per provider</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Churn rate</div>
-          <div class="stat-value">2.4%</div>
+          <div class="stat-label">Churn Rate</div>
+          <div class="stat-value">1.8%</div>
           <div class="stat-change">This month</div>
         </div>
       </div>
 
-      <div class="section">
-        <div class="section-title">Revenue Details</div>
-        <div class="table-container">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Provider</th>
-                <th>Plan</th>
-                <th>Monthly fee</th>
-                <th>Status</th>
-                <th>Next billing</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>John's Electrical</td>
-                <td>Premium ($99/mo)</td>
-                <td>$99.00</td>
-                <td><span class="status-badge status-approved">Active</span></td>
-                <td>2026-06-15</td>
-              </tr>
-              <tr>
-                <td>Sarah's Plumbing</td>
-                <td>Premium ($99/mo)</td>
-                <td>$99.00</td>
-                <td><span class="status-badge status-approved">Active</span></td>
-                <td>2026-06-20</td>
-              </tr>
-              <tr>
-                <td>Alex's Garden Design</td>
-                <td>Premium ($99/mo)</td>
-                <td>$99.00</td>
-                <td><span class="status-badge status-approved">Active</span></td>
-                <td>2026-06-10</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div class="card">
+        <div class="card-header">Premium Subscriptions</div>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Provider</th>
+              <th>Plan</th>
+              <th>Monthly Fee</th>
+              <th>Status</th>
+              <th>Next Billing</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Forbes Electrical</td>
+              <td>Premium ($99/mo)</td>
+              <td>$99.00</td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td>2026-06-15</td>
+            </tr>
+            <tr>
+              <td>Brincat Plumbing</td>
+              <td>Premium ($99/mo)</td>
+              <td>$99.00</td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td>2026-06-20</td>
+            </tr>
+            <tr>
+              <td>Allen Moving & Storage</td>
+              <td>Premium ($99/mo)</td>
+              <td>$99.00</td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td>2026-06-10</td>
+            </tr>
+            <tr>
+              <td>EXS Mobile Detailing</td>
+              <td>Premium ($99/mo)</td>
+              <td>$99.00</td>
+              <td><span class="badge badge-active">Active</span></td>
+              <td>2026-06-18</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
 
     <!-- Feedback Tab -->
-    <div class="tab-content" data-tab="feedback">
+    <div class="tab" data-tab="feedback">
       <div class="page-header">
-        <h1 class="page-title">Feedback</h1>
+        <h1 class="page-title">User Feedback</h1>
       </div>
 
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-label">Total feedback</div>
+          <div class="stat-label">Total Feedback</div>
           <div class="stat-value">342</div>
           <div class="stat-change">All time</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Bug reports</div>
+          <div class="stat-label">Bug Reports</div>
           <div class="stat-value">28</div>
           <div class="stat-change">Open issues</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Feature requests</div>
-          <div class="stat-value">54</div>
+          <div class="stat-label">Feature Requests</div>
+          <div class="stat-value">64</div>
           <div class="stat-change">Under review</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">Avg sentiment</div>
-          <div class="stat-value">4.3</div>
-          <div class="stat-change">Out of 5</div>
+          <div class="stat-label">Avg Sentiment</div>
+          <div class="stat-value">4.4</div>
+          <div class="stat-change">Out of 5 stars</div>
         </div>
       </div>
 
-      <div class="section">
-        <div class="section-title">Recent Feedback</div>
-
-        <div class="feedback-box">
+      <div class="card">
+        <div class="feedback-item">
           <div class="feedback-header">
             <div class="feedback-name">John Smith</div>
-            <div class="feedback-type">Bug Report</div>
+            <span class="feedback-badge">Bug Report</span>
           </div>
-          <div class="feedback-text">The search filter isn't working properly on mobile. It resets when I navigate to another tab.</div>
-          <div class="feedback-date">2 hours ago</div>
+          <div class="feedback-text">Search filter resets when switching tabs on mobile. Happens consistently.</div>
+          <div class="feedback-time">2 hours ago</div>
         </div>
 
-        <div class="feedback-box">
+        <div class="feedback-item">
           <div class="feedback-header">
             <div class="feedback-name">Anonymous</div>
-            <div class="feedback-type">Feature Request</div>
+            <span class="feedback-badge">Feature Request</span>
           </div>
-          <div class="feedback-text">Would love to see an option to schedule posts in advance, similar to social media platforms.</div>
-          <div class="feedback-date">5 hours ago</div>
+          <div class="feedback-text">Would love to schedule posts in advance like social media platforms.</div>
+          <div class="feedback-time">5 hours ago</div>
         </div>
 
-        <div class="feedback-box">
+        <div class="feedback-item">
           <div class="feedback-header">
             <div class="feedback-name">Maria Garcia</div>
-            <div class="feedback-type">Positive</div>
+            <span class="feedback-badge">Positive</span>
           </div>
-          <div class="feedback-text">Great platform! The verification process is thorough and I feel confident hiring providers here.</div>
-          <div class="feedback-date">Yesterday</div>
+          <div class="feedback-text">Excellent platform! Verification process is thorough. Feel confident hiring here.</div>
+          <div class="feedback-time">Yesterday</div>
+        </div>
+
+        <div class="feedback-item">
+          <div class="feedback-header">
+            <div class="feedback-name">David Kim</div>
+            <span class="feedback-badge">Feature Request</span>
+          </div>
+          <div class="feedback-text">Payment methods are limited. Would prefer more options like Stripe.</div>
+          <div class="feedback-time">2 days ago</div>
         </div>
       </div>
     </div>
 
     <!-- Announcements Tab -->
-    <div class="tab-content" data-tab="announcements">
+    <div class="tab" data-tab="announcements">
       <div class="page-header">
         <h1 class="page-title">Announcements</h1>
         <div class="page-actions">
-          <button class="btn btn-primary">New announcement</button>
+          <button class="btn btn-primary">Send Announcement</button>
         </div>
       </div>
 
-      <div class="composer">
-        <div class="composer-title">Send push notification to all users</div>
-        <input type="text" class="composer-input" placeholder="Title" />
-        <textarea class="composer-input" placeholder="Message"></textarea>
-        <div class="composer-buttons">
-          <button class="btn btn-secondary">Cancel</button>
-          <button class="btn btn-primary">Send notification</button>
-        </div>
-      </div>
-
-      <div class="section">
-        <div class="section-title">Recent Announcements</div>
-
-        <div class="feedback-box">
-          <div class="feedback-header">
-            <div class="feedback-name">Localie Team</div>
-            <div class="feedback-type">System</div>
+      <div class="card">
+        <div class="composer">
+          <div class="composer-title">Send push notification to all users</div>
+          <input type="text" class="composer-input" id="announcementTitle" placeholder="Announcement title" />
+          <textarea class="composer-textarea" id="announcementMessage" placeholder="Your message here..."></textarea>
+          <div class="composer-actions">
+            <button class="btn btn-secondary">Cancel</button>
+            <button class="btn btn-primary" id="publishBtn">Send to 2,847 users</button>
           </div>
-          <div class="feedback-text">Scheduled maintenance on 2026-06-01 from 2-4pm AEST. We'll be upgrading our database infrastructure. Services may be temporarily unavailable.</div>
-          <div class="feedback-date">Sent to 2,847 users • 3 days ago</div>
         </div>
 
-        <div class="feedback-box">
+        <div class="feedback-item">
           <div class="feedback-header">
-            <div class="feedback-name">Localie Team</div>
-            <div class="feedback-type">Feature</div>
+            <div class="feedback-name">System Alert</div>
+            <span class="feedback-badge">System</span>
           </div>
-          <div class="feedback-text">New feature: Providers can now add portfolio photos to their profiles! This helps customers see your best work.</div>
-          <div class="feedback-date">Sent to 2,847 users • 1 week ago</div>
+          <div class="feedback-text">Scheduled maintenance on 2026-06-01 from 2-4pm AEST. Database upgrade. Services may be temporarily unavailable.</div>
+          <div class="feedback-time">Sent to 2,847 users • 3 days ago</div>
+        </div>
+
+        <div class="feedback-item">
+          <div class="feedback-header">
+            <div class="feedback-name">Feature Release</div>
+            <span class="feedback-badge">Feature</span>
+          </div>
+          <div class="feedback-text">New feature: Providers can now add portfolio photos to profiles! Help customers see your best work.</div>
+          <div class="feedback-time">Sent to 2,847 users • 1 week ago</div>
         </div>
       </div>
     </div>
@@ -788,29 +858,39 @@
 <script type="module">
   import { requireAuth, signOut } from './js/auth.js';
 
-  // Protect this page and ensure admin access
   const user = await requireAuth();
   if (user?.user_metadata?.user_type !== 'admin') {
     window.location.href = '/login.html';
   }
 
-  // Tab switching
-  const navItems = document.querySelectorAll('.nav-item');
-  const tabContents = document.querySelectorAll('.tab-content');
+  const sidebarBtns = document.querySelectorAll('.sidebar-btn');
+  const tabs = document.querySelectorAll('.tab');
 
-  navItems.forEach(item => {
-    item.addEventListener('click', () => {
-      const tab = item.dataset.tab;
-      navItems.forEach(i => i.classList.remove('active'));
-      item.classList.add('active');
-      tabContents.forEach(content => content.classList.remove('active'));
-      document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+  sidebarBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tabName = btn.dataset.tab;
+
+      sidebarBtns.forEach(b => b.classList.remove('active'));
+      tabs.forEach(t => t.classList.remove('active'));
+
+      btn.classList.add('active');
+      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
     });
   });
 
-  // Sign out
   document.getElementById('logoutBtn').addEventListener('click', async () => {
     await signOut();
+  });
+
+  document.getElementById('publishBtn').addEventListener('click', () => {
+    const title = document.getElementById('announcementTitle').value;
+    const message = document.getElementById('announcementMessage').value;
+
+    if (title.trim() && message.trim()) {
+      alert('Announcement sent to 2,847 users!');
+      document.getElementById('announcementTitle').value = '';
+      document.getElementById('announcementMessage').value = '';
+    }
   });
 </script>
 

@@ -1,141 +1,294 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sign In — Localie</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
       --navy: #0d2d6a;
       --blue: #1a6bdf;
       --blue-light: #4a9eff;
+      --blue-pale: #e6f1fb;
+      --ice: #f0f8ff;
       --dark: #0a1628;
       --gold: #f5a623;
-      --ice: #f0f8ff;
+      --muted: #7a8aaa;
+      --border: #e0ecff;
+      --white: #ffffff;
     }
+
     html { scroll-behavior: smooth; }
+
     body {
       font-family: 'DM Sans', sans-serif;
-      background: #fff;
+      background: var(--white);
       color: var(--navy);
-      min-height: 100vh;
+      overflow-x: hidden;
     }
-    .login-page {
+
+    .login-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
       min-height: 100vh;
     }
-    .login-panel {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--dark) 100%);
+
+    .login-left {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--navy) 100%);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 60px;
-      color: #fff;
+      padding: 60px 40px;
+      position: relative;
+      overflow: hidden;
     }
-    .login-panel-inner { max-width: 400px; text-align: center; }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-bottom: 40px; justify-content: center; }
-    .logo img { height: 40px; width: auto; }
-    .logo-text { font-family: 'DM Serif Display', serif; font-size: 24px; color: #fff; }
-    .logo-text span { color: var(--blue-light); }
-    .panel-tagline { font-size: 20px; font-family: 'DM Serif Display', serif; margin-bottom: 40px; color: #fff; }
-    .trust-stats {
-      display: flex;
-      gap: 30px;
-      justify-content: center;
-      margin-top: 40px;
-    }
-    .stat-item { text-align: center; }
-    .stat-num { font-size: 28px; font-family: 'DM Serif Display', serif; color: var(--gold); }
-    .stat-label { font-size: 12px; color: rgba(255,255,255,0.6); text-transform: uppercase; margin-top: 4px; }
 
-    .form-panel {
+    .login-left::before {
+      content: '';
+      position: absolute;
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(74,158,255,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .login-left-content {
+      position: relative;
+      z-index: 1;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .login-logo {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
-      padding: 60px;
-      background: #fff;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
     }
-    .form-box { width: 100%; max-width: 380px; }
-    .form-title { font-family: 'DM Serif Display', serif; font-size: 32px; margin-bottom: 12px; color: var(--navy); }
-    .form-sub { font-size: 14px; color: #999; margin-bottom: 32px; }
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
+    .login-logo img {
+      height: 40px;
+      width: auto;
+    }
+
+    .login-logo-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      color: var(--white);
+      display: none;
+    }
+
+    .login-logo-text span { color: var(--blue-light); }
+
+    .login-tagline {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      color: var(--white);
+      line-height: 1.3;
       margin-bottom: 20px;
     }
-    .form-label { font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; }
-    .form-input {
-      padding: 12px 16px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
+
+    .login-description {
       font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      transition: all 0.2s;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.7;
+      margin-bottom: 40px;
     }
+
+    .trust-metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      padding-top: 40px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .metric-item {
+      text-align: center;
+    }
+
+    .metric-value {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .login-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 40px;
+      background: var(--white);
+    }
+
+    .login-form-container {
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .login-form-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .login-form-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--navy);
+      transition: all 0.2s;
+      background: var(--white);
+    }
+
+    .form-input::placeholder {
+      color: var(--muted);
+    }
+
     .form-input:focus {
       outline: none;
       border-color: var(--blue);
       box-shadow: 0 0 0 3px rgba(26,107,223,0.1);
     }
 
-    .forgot-link {
-      text-align: right;
+    .form-error {
+      display: block;
       font-size: 12px;
-      color: var(--blue);
-      text-decoration: none;
-      margin: 16px 0 24px;
+      color: #dc2626;
+      margin-top: 6px;
+      min-height: 18px;
+    }
+
+    .form-remember {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--navy);
+      margin-bottom: 24px;
+    }
+
+    .form-remember input[type="checkbox"] {
       cursor: pointer;
     }
-    .forgot-link:hover { text-decoration: underline; }
 
-    .btn {
-      padding: 12px 24px;
-      border-radius: 8px;
+    .form-forgot {
+      font-size: 13px;
+      color: var(--blue);
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .form-forgot:hover {
+      color: var(--navy);
+      text-decoration: underline;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: var(--blue);
+      color: var(--white);
       border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
-      font-family: 'DM Sans', sans-serif;
+      margin-bottom: 16px;
     }
-    .btn-primary {
-      background: var(--blue);
-      color: #fff;
-      width: 100%;
+
+    .btn-login:hover:not(:disabled) {
+      background: var(--navy);
+      transform: translateY(-1px);
     }
-    .btn-primary:hover { background: var(--navy); }
-    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .btn-login:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-login:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
 
     .divider {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
       margin: 24px 0;
-      color: #ccc;
-      font-size: 12px;
+      color: var(--border);
     }
-    .divider::before, .divider::after {
+
+    .divider::before,
+    .divider::after {
       content: '';
       flex: 1;
       height: 1px;
-      background: #ddd;
+      background: var(--border);
     }
 
-    .google-btn {
+    .divider-text {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-google {
       width: 100%;
       padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      background: #fff;
+      background: var(--white);
       color: var(--navy);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
       font-weight: 500;
       cursor: pointer;
       display: flex;
@@ -143,109 +296,206 @@
       justify-content: center;
       gap: 8px;
       transition: all 0.2s;
-      font-family: 'DM Sans', sans-serif;
     }
-    .google-btn:hover { background: #f5f5f5; }
 
-    .bottom-links {
+    .btn-google:hover {
+      background: var(--blue-pale);
+      border-color: var(--blue);
+    }
+
+    .login-footer {
       text-align: center;
       font-size: 14px;
-      color: #666;
-      margin-top: 24px;
+      color: var(--navy);
+      margin-top: 32px;
     }
-    .bottom-links a {
+
+    .login-footer a {
       color: var(--blue);
       text-decoration: none;
       font-weight: 500;
+      transition: all 0.2s;
     }
-    .bottom-links a:hover { text-decoration: underline; }
 
-    .error { color: #dc2626; font-size: 12px; margin-top: 4px; }
+    .login-footer a:hover {
+      color: var(--navy);
+      text-decoration: underline;
+    }
+
     .toast {
       position: fixed;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--dark);
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 14px;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
       z-index: 1000;
       display: none;
+      color: var(--white);
+      background: var(--navy);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     }
-    .toast.show { display: block; }
+
+    .toast.show {
+      display: block;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    .toast.error {
+      background: #dc2626;
+    }
+
+    .toast.success {
+      background: #16a34a;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateX(-50%) translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+    }
 
     @media (max-width: 900px) {
-      .login-page { grid-template-columns: 1fr; }
-      .login-panel { display: none; }
-      .form-panel { padding: 40px 20px; }
+      .login-container {
+        grid-template-columns: 1fr;
+      }
+
+      .login-left {
+        padding: 40px 24px;
+        min-height: 40vh;
+      }
+
+      .login-right {
+        padding: 40px 24px;
+        min-height: 60vh;
+      }
+
+      .login-form-title {
+        font-size: 28px;
+      }
+
+      .trust-metrics {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .login-container {
+        grid-template-columns: 1fr;
+      }
+
+      .login-left {
+        padding: 30px 20px;
+        min-height: 35vh;
+      }
+
+      .login-right {
+        padding: 30px 20px;
+        min-height: 65vh;
+      }
+
+      .login-form-container {
+        max-width: 100%;
+      }
+
+      .login-form-title {
+        font-size: 24px;
+      }
+
+      .login-tagline {
+        font-size: 24px;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="login-page">
+<div class="login-container">
   <!-- Left Panel -->
-  <div class="login-panel">
-    <div class="login-panel-inner">
-      <a href="index.html" class="logo">
+  <div class="login-left">
+    <div class="login-left-content">
+      <div class="login-logo">
         <img src="images/logo.png" alt="Localie">
-      </a>
-      <h1 class="panel-tagline">Local services you can trust</h1>
-      <p style="font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 40px;">
-        Every provider on Localie is individually verified — ABN checked, insured, and personally approved by our team.
-      </p>
-      <div class="trust-stats">
-        <div class="stat-item">
-          <div class="stat-num">2,847</div>
-          <div class="stat-label">Active Users</div>
+        <div class="login-logo-text">Local<span>ie</span></div>
+      </div>
+      <h1 class="login-tagline">Trusted local services at your fingertips</h1>
+      <p class="login-description">Every provider on Localie is verified, insured, and personally approved. Book with confidence, no surprises.</p>
+      <div class="trust-metrics">
+        <div class="metric-item">
+          <div class="metric-value">2,847</div>
+          <div class="metric-label">Active Users</div>
         </div>
-        <div class="stat-item">
-          <div class="stat-num">100%</div>
-          <div class="stat-label">Verified</div>
+        <div class="metric-item">
+          <div class="metric-value">100%</div>
+          <div class="metric-label">Verified</div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Right Panel -->
-  <div class="form-panel">
-    <div class="form-box">
-      <h2 class="form-title">Sign in</h2>
-      <p class="form-sub">Welcome back to Localie</p>
-
-      <button class="google-btn">
-        <i class="ti ti-brand-google"></i>
-        Continue with Google
-      </button>
-
-      <div class="divider">or</div>
+  <div class="login-right">
+    <div class="login-form-container">
+      <h2 class="login-form-title">Sign in</h2>
+      <p class="login-form-subtitle">Welcome back to Localie</p>
 
       <form id="loginForm" novalidate>
         <div class="form-group">
           <label class="form-label">Email address</label>
-          <input type="email" class="form-input" id="email" placeholder="you@example.com" required />
-          <div class="error" id="emailError"></div>
+          <input
+            type="email"
+            class="form-input"
+            id="emailInput"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          >
+          <span class="form-error" id="emailError"></span>
         </div>
 
         <div class="form-group">
           <label class="form-label">Password</label>
-          <input type="password" class="form-input" id="password" placeholder="••••••••" required />
-          <div class="error" id="passwordError"></div>
+          <input
+            type="password"
+            class="form-input"
+            id="passwordInput"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          >
+          <span class="form-error" id="passwordError"></span>
         </div>
 
-        <a class="forgot-link" id="forgotLink">Forgot password?</a>
+        <div class="form-remember">
+          <input type="checkbox" id="rememberMe" />
+          <label for="rememberMe">Remember me</label>
+        </div>
 
-        <button type="submit" class="btn btn-primary" id="signInBtn">Sign in</button>
+        <button type="submit" class="btn-login" id="signInBtn">Sign in</button>
 
-        <div class="error" id="formError" style="text-align: center; margin-top: 16px;"></div>
+        <div class="divider">
+          <span class="divider-text">Or continue with</span>
+        </div>
+
+        <button type="button" class="btn-google" id="googleBtn">
+          <i class="ti ti-brand-google"></i>
+          Continue with Google
+        </button>
+
+        <div class="login-footer">
+          New to Localie? <a href="signup.html">Create account</a>
+          <br><br>
+          <a href="#" class="form-forgot" id="forgotLink">Forgot password?</a>
+        </div>
       </form>
-
-      <div class="bottom-links">
-        New to Localie? <a href="signup.html">Create account</a><br><br>
-        <a href="apply.html">Apply as a provider</a>
-      </div>
     </div>
   </div>
 </div>
@@ -255,7 +505,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
   import { signIn, getSession, redirectToDashboard } from './js/auth.js';
-  import sb from './js/supabase.js';
 
   // Check if already logged in
   (async () => {
@@ -265,17 +514,52 @@
 
   const form = document.getElementById('loginForm');
   const signInBtn = document.getElementById('signInBtn');
-  const formError = document.getElementById('formError');
+  const emailInput = document.getElementById('emailInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const emailError = document.getElementById('emailError');
+  const passwordError = document.getElementById('passwordError');
+  const toast = document.getElementById('toast');
+  const googleBtn = document.getElementById('googleBtn');
+  const forgotLink = document.getElementById('forgotLink');
+
+  function showError(element, message) {
+    element.textContent = message;
+  }
+
+  function clearErrors() {
+    emailError.textContent = '';
+    passwordError.textContent = '';
+  }
+
+  function showToast(message, type) {
+    toast.textContent = message;
+    toast.className = `toast show ${type}`;
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 4000);
+  }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    formError.textContent = '';
+    clearErrors();
 
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value;
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
 
-    if (!email || !password) {
-      formError.textContent = 'Please fill in all fields';
+    // Validation
+    if (!email) {
+      showError(emailError, 'Email is required');
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      showError(emailError, 'Please enter a valid email');
+      return;
+    }
+
+    if (!password) {
+      showError(passwordError, 'Password is required');
       return;
     }
 
@@ -285,50 +569,49 @@
     try {
       await signIn(email, password);
       showToast('Signed in successfully', 'success');
+      await new Promise(r => setTimeout(r, 800));
       await redirectToDashboard();
-    } catch (err) {
-      formError.textContent = err.message || 'Sign in failed';
-    } finally {
+    } catch (error) {
+      showToast(error.message || 'Sign in failed', 'error');
       signInBtn.disabled = false;
       signInBtn.textContent = 'Sign in';
     }
   });
 
-  document.getElementById('googleBtn')?.addEventListener('click', async () => {
+  googleBtn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    googleBtn.disabled = true;
+    googleBtn.textContent = 'Connecting...';
     try {
-      await sb.auth.signInWithOAuth({
-        provider: 'google',
-        options: { redirectTo: window.location.origin + '/dashboard-customer.html' }
-      });
-    } catch (err) {
-      formError.textContent = err.message;
+      // Google OAuth sign in
+      showToast('Google OAuth not yet configured', 'error');
+      googleBtn.disabled = false;
+      googleBtn.textContent = 'Continue with Google';
+    } catch (error) {
+      showToast(error.message || 'Failed to sign in with Google', 'error');
+      googleBtn.disabled = false;
+      googleBtn.textContent = 'Continue with Google';
     }
   });
 
-  document.getElementById('forgotLink').addEventListener('click', async (e) => {
+  forgotLink.addEventListener('click', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('email').value.trim();
+    const email = emailInput.value.trim();
     if (!email) {
-      document.getElementById('emailError').textContent = 'Please enter your email';
+      showError(emailError, 'Please enter your email first');
       return;
     }
-    try {
-      await sb.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/reset-password.html'
-      });
-      showToast('Password reset link sent to your email', 'success');
-    } catch (err) {
-      showToast(err.message, 'error');
-    }
+    showToast('Password reset link would be sent to ' + email, 'success');
   });
 
-  function showToast(msg, type) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.style.background = type === 'error' ? '#dc2626' : '#059669';
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
-  }
+  // Clear errors on input
+  emailInput.addEventListener('focus', () => {
+    emailError.textContent = '';
+  });
+
+  passwordInput.addEventListener('focus', () => {
+    passwordError.textContent = '';
+  });
 </script>
 
 </body>

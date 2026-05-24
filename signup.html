@@ -1,246 +1,548 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign Up — Localie</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account — Localie</title>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
       --navy: #0d2d6a;
       --blue: #1a6bdf;
       --blue-light: #4a9eff;
+      --blue-pale: #e6f1fb;
+      --ice: #f0f8ff;
       --dark: #0a1628;
       --gold: #f5a623;
-      --ice: #f0f8ff;
+      --muted: #7a8aaa;
+      --border: #e0ecff;
+      --white: #ffffff;
     }
+
     html { scroll-behavior: smooth; }
+
     body {
       font-family: 'DM Sans', sans-serif;
-      background: #fff;
+      background: var(--white);
       color: var(--navy);
-      min-height: 100vh;
+      overflow-x: hidden;
     }
-    .signup-page {
+
+    .signup-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
       min-height: 100vh;
     }
-    .signup-panel {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--dark) 100%);
+
+    .signup-left {
+      background: linear-gradient(135deg, var(--dark) 0%, var(--navy) 100%);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 60px;
-      color: #fff;
+      padding: 60px 40px;
+      position: relative;
+      overflow: hidden;
     }
-    .signup-panel-inner { max-width: 400px; text-align: center; }
-    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-bottom: 40px; justify-content: center; }
-    .logo img { height: 40px; width: auto; }
-    .panel-tagline { font-size: 20px; font-family: 'DM Serif Display', serif; margin-bottom: 40px; color: #fff; }
-    .panel-features { text-align: left; font-size: 14px; line-height: 1.8; }
-    .panel-features li { margin-bottom: 16px; display: flex; gap: 12px; }
-    .panel-features i { flex-shrink: 0; color: var(--blue-light); }
 
-    .form-panel {
+    .signup-left::before {
+      content: '';
+      position: absolute;
+      top: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(74,158,255,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .signup-left-content {
+      position: relative;
+      z-index: 1;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .signup-logo {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
       align-items: center;
-      padding: 40px;
-      background: #fff;
-      overflow-y: auto;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
     }
-    .form-box { width: 100%; max-width: 380px; }
-    .form-title { font-family: 'DM Serif Display', serif; font-size: 32px; margin-bottom: 12px; color: var(--navy); }
-    .form-sub { font-size: 14px; color: #999; margin-bottom: 24px; }
 
-    .form-group {
+    .signup-logo img {
+      height: 40px;
+      width: auto;
+    }
+
+    .signup-tagline {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      color: var(--white);
+      line-height: 1.3;
+      margin-bottom: 32px;
+    }
+
+    .signup-features {
+      text-align: left;
+      font-size: 14px;
+      color: rgba(255,255,255,0.75);
+      line-height: 1.8;
+    }
+
+    .feature-item {
       display: flex;
-      flex-direction: column;
-      gap: 6px;
+      gap: 12px;
       margin-bottom: 16px;
     }
-    .form-label { font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; }
-    .form-input {
-      padding: 12px 16px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-      font-family: 'DM Sans', sans-serif;
-      transition: all 0.2s;
+
+    .feature-icon {
+      flex-shrink: 0;
+      color: var(--blue-light);
+      font-size: 18px;
     }
+
+    .feature-text {
+      flex: 1;
+    }
+
+    .feature-title {
+      font-weight: 600;
+      margin-bottom: 3px;
+      color: var(--white);
+    }
+
+    .feature-desc {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    .signup-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 40px;
+      background: var(--white);
+      overflow-y: auto;
+    }
+
+    .signup-form-container {
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .signup-form-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 32px;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .signup-form-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--navy);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--navy);
+      transition: all 0.2s;
+      background: var(--white);
+    }
+
+    .form-input::placeholder {
+      color: var(--muted);
+    }
+
     .form-input:focus {
       outline: none;
       border-color: var(--blue);
       box-shadow: 0 0 0 3px rgba(26,107,223,0.1);
     }
 
-    .btn {
-      padding: 12px 24px;
-      border-radius: 8px;
+    .form-error {
+      display: block;
+      font-size: 12px;
+      color: #dc2626;
+      margin-top: 6px;
+      min-height: 18px;
+    }
+
+    .password-strength-container {
+      margin-top: 8px;
+      margin-bottom: 12px;
+    }
+
+    .password-strength-bar {
+      height: 4px;
+      background: #e5e7eb;
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .password-strength-fill {
+      height: 100%;
+      width: 0%;
+      transition: all 0.2s;
+      border-radius: 2px;
+    }
+
+    .password-strength-fill.weak {
+      background: #dc2626;
+      width: 33%;
+    }
+
+    .password-strength-fill.fair {
+      background: var(--gold);
+      width: 66%;
+    }
+
+    .password-strength-fill.strong {
+      background: #16a34a;
+      width: 100%;
+    }
+
+    .password-strength-text {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .password-requirements {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .form-checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--navy);
+      margin: 24px 0;
+    }
+
+    .form-checkbox-group input[type="checkbox"] {
+      margin-top: 2px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .form-checkbox-group a {
+      color: var(--blue);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .form-checkbox-group a:hover {
+      text-decoration: underline;
+    }
+
+    .form-error-checkbox {
+      display: block;
+      font-size: 12px;
+      color: #dc2626;
+      margin-top: 4px;
+    }
+
+    .btn-signup {
+      width: 100%;
+      padding: 14px;
+      background: var(--blue);
+      color: var(--white);
       border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
-      font-family: 'DM Sans', sans-serif;
+      margin-top: 8px;
+      margin-bottom: 20px;
     }
-    .btn-primary {
-      background: var(--blue);
-      color: #fff;
-      width: 100%;
-      margin-top: 24px;
-    }
-    .btn-primary:hover { background: var(--navy); }
-    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    .password-strength {
-      height: 4px;
-      background: #e0e0e0;
-      border-radius: 2px;
-      margin-top: 6px;
+    .btn-signup:hover:not(:disabled) {
+      background: var(--navy);
+      transform: translateY(-1px);
     }
-    .strength-bar {
-      height: 100%;
-      width: 0%;
-      border-radius: 2px;
-      transition: all 0.2s;
-    }
-    .strength-weak { background: #dc2626; width: 33%; }
-    .strength-fair { background: var(--gold); width: 66%; }
-    .strength-strong { background: #16a34a; width: 100%; }
 
-    .error { color: #dc2626; font-size: 12px; margin-top: 4px; }
-    .bottom-links {
+    .btn-signup:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .btn-signup:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .signup-footer {
       text-align: center;
       font-size: 14px;
-      color: #666;
-      margin-top: 20px;
+      color: var(--navy);
+      margin-top: 24px;
     }
-    .bottom-links a {
+
+    .signup-footer a {
       color: var(--blue);
       text-decoration: none;
       font-weight: 500;
+      transition: all 0.2s;
     }
-    .bottom-links a:hover { text-decoration: underline; }
+
+    .signup-footer a:hover {
+      color: var(--navy);
+      text-decoration: underline;
+    }
 
     .toast {
       position: fixed;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background: var(--dark);
-      color: #fff;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 14px;
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
       z-index: 1000;
       display: none;
+      color: var(--white);
+      background: var(--navy);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
     }
-    .toast.show { display: block; }
+
+    .toast.show {
+      display: block;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    .toast.error {
+      background: #dc2626;
+    }
+
+    .toast.success {
+      background: #16a34a;
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateX(-50%) translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+    }
 
     @media (max-width: 900px) {
-      .signup-page { grid-template-columns: 1fr; }
-      .signup-panel { display: none; }
-      .form-panel { padding: 30px 20px; }
+      .signup-container {
+        grid-template-columns: 1fr;
+      }
+
+      .signup-left {
+        padding: 40px 24px;
+        min-height: 40vh;
+      }
+
+      .signup-right {
+        padding: 40px 24px;
+        min-height: 60vh;
+      }
+
+      .signup-form-title {
+        font-size: 28px;
+      }
+
+      .signup-tagline {
+        font-size: 24px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .signup-container {
+        grid-template-columns: 1fr;
+      }
+
+      .signup-left {
+        padding: 30px 20px;
+        min-height: 35vh;
+      }
+
+      .signup-right {
+        padding: 30px 20px;
+        min-height: 65vh;
+      }
+
+      .signup-form-container {
+        max-width: 100%;
+      }
+
+      .signup-form-title {
+        font-size: 24px;
+      }
+
+      .signup-tagline {
+        font-size: 22px;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="signup-page">
+<div class="signup-container">
   <!-- Left Panel -->
-  <div class="signup-panel">
-    <div class="signup-panel-inner">
-      <a href="index.html" class="logo">
+  <div class="signup-left">
+    <div class="signup-left-content">
+      <div class="signup-logo">
         <img src="images/logo.png" alt="Localie">
-      </a>
-      <h1 class="panel-tagline">Join 2,847 locals</h1>
-      <ul class="panel-features" style="list-style: none; padding: 0;">
-        <li>
-          <i class="ti ti-check"></i>
-          <div>
-            <strong>Find verified providers</strong><br>
-            <span style="font-size: 12px; opacity: 0.8;">Every business checked and approved</span>
+      </div>
+      <h1 class="signup-tagline">Join 2,847 locals</h1>
+      <div class="signup-features">
+        <div class="feature-item">
+          <div class="feature-icon"><i class="ti ti-check"></i></div>
+          <div class="feature-text">
+            <div class="feature-title">Find verified providers</div>
+            <div class="feature-desc">Every business checked and approved</div>
           </div>
-        </li>
-        <li>
-          <i class="ti ti-check"></i>
-          <div>
-            <strong>Last-minute booking</strong><br>
-            <span style="font-size: 12px; opacity: 0.8;">Book same-day availability instantly</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="ti ti-check"></i></div>
+          <div class="feature-text">
+            <div class="feature-title">Book with confidence</div>
+            <div class="feature-desc">Last-minute availability, same-day booking</div>
           </div>
-        </li>
-        <li>
-          <i class="ti ti-check"></i>
-          <div>
-            <strong>Direct messaging</strong><br>
-            <span style="font-size: 12px; opacity: 0.8;">No fees, no middleman, no surprises</span>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="ti ti-check"></i></div>
+          <div class="feature-text">
+            <div class="feature-title">Direct messaging</div>
+            <div class="feature-desc">No fees, no middleman, no surprises</div>
           </div>
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- Right Panel -->
-  <div class="form-panel">
-    <div class="form-box">
-      <h2 class="form-title">Create account</h2>
-      <p class="form-sub">Join Localie for free</p>
+  <div class="signup-right">
+    <div class="signup-form-container">
+      <h2 class="signup-form-title">Create account</h2>
+      <p class="signup-form-subtitle">Join Localie for free</p>
 
       <form id="signupForm" novalidate>
         <div class="form-group">
           <label class="form-label">Full name</label>
-          <input type="text" class="form-input" id="fullName" placeholder="John Doe" required />
-          <div class="error" id="nameError"></div>
+          <input
+            type="text"
+            class="form-input"
+            id="fullNameInput"
+            placeholder="John Doe"
+            required
+            autocomplete="name"
+          >
+          <span class="form-error" id="fullNameError"></span>
         </div>
 
         <div class="form-group">
           <label class="form-label">Email address</label>
-          <input type="email" class="form-input" id="email" placeholder="you@example.com" required />
-          <div class="error" id="emailError"></div>
+          <input
+            type="email"
+            class="form-input"
+            id="emailInput"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          >
+          <span class="form-error" id="emailError"></span>
         </div>
 
         <div class="form-group">
           <label class="form-label">Location</label>
-          <input type="text" class="form-input" id="location" placeholder="e.g. Melbourne, VIC" />
-          <div class="error" id="locationError"></div>
+          <input
+            type="text"
+            class="form-input"
+            id="locationInput"
+            placeholder="e.g. Melbourne, VIC"
+            autocomplete="address-level2"
+          >
+          <span class="form-error" id="locationError"></span>
         </div>
 
         <div class="form-group">
           <label class="form-label">Password</label>
-          <input type="password" class="form-input" id="password" placeholder="••••••••" required />
-          <div class="password-strength">
-            <div class="strength-bar" id="strengthBar"></div>
+          <input
+            type="password"
+            class="form-input"
+            id="passwordInput"
+            placeholder="••••••••"
+            required
+            autocomplete="new-password"
+          >
+          <div class="password-strength-container">
+            <div class="password-strength-bar">
+              <div class="password-strength-fill" id="strengthBar"></div>
+            </div>
+            <div class="password-strength-text" id="strengthText">
+              Must have uppercase, lowercase, number • Min 8 characters
+            </div>
           </div>
-          <div style="font-size: 11px; color: #999; margin-top: 4px;">Min 8 characters, uppercase, lowercase & number</div>
-          <div class="error" id="passwordError"></div>
+          <span class="form-error" id="passwordError"></span>
         </div>
 
         <div class="form-group">
           <label class="form-label">Confirm password</label>
-          <input type="password" class="form-input" id="confirmPassword" placeholder="••••••••" required />
-          <div class="error" id="confirmError"></div>
+          <input
+            type="password"
+            class="form-input"
+            id="confirmPasswordInput"
+            placeholder="••••••••"
+            required
+            autocomplete="new-password"
+          >
+          <span class="form-error" id="confirmError"></span>
         </div>
 
-        <label style="display: flex; gap: 8px; align-items: flex-start; font-size: 12px; color: #666; margin-bottom: 16px;">
-          <input type="checkbox" id="terms" style="margin-top: 2px;" required />
-          <span>I agree to the <a href="#" style="color: var(--blue);">Terms of Service</a> and <a href="#" style="color: var(--blue);">Privacy Policy</a></span>
-        </label>
+        <div class="form-checkbox-group">
+          <input type="checkbox" id="termsCheckbox" required />
+          <div>
+            <div>I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a></div>
+            <span class="form-error-checkbox" id="termsError"></span>
+          </div>
+        </div>
 
-        <button type="submit" class="btn btn-primary" id="signUpBtn">Create account</button>
+        <button type="submit" class="btn-signup" id="signUpBtn">Create account</button>
 
-        <div class="error" id="formError" style="text-align: center; margin-top: 16px;"></div>
+        <div class="signup-footer">
+          Already have an account? <a href="login.html">Sign in</a>
+        </div>
       </form>
-
-      <div class="bottom-links">
-        Already have an account? <a href="login.html">Sign in</a><br><br>
-        <a href="apply.html">Apply as a provider</a>
-      </div>
     </div>
   </div>
 </div>
@@ -259,62 +561,132 @@
 
   const form = document.getElementById('signupForm');
   const signUpBtn = document.getElementById('signUpBtn');
-  const formError = document.getElementById('formError');
-  const passwordInput = document.getElementById('password');
+  const fullNameInput = document.getElementById('fullNameInput');
+  const emailInput = document.getElementById('emailInput');
+  const locationInput = document.getElementById('locationInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const confirmPasswordInput = document.getElementById('confirmPasswordInput');
+  const termsCheckbox = document.getElementById('termsCheckbox');
+  const strengthBar = document.getElementById('strengthBar');
+  const strengthText = document.getElementById('strengthText');
+  const toast = document.getElementById('toast');
 
-  // Password strength meter
-  passwordInput.addEventListener('input', () => {
-    const pwd = passwordInput.value;
-    const bar = document.getElementById('strengthBar');
-    bar.className = 'strength-bar';
+  const fullNameError = document.getElementById('fullNameError');
+  const emailError = document.getElementById('emailError');
+  const locationError = document.getElementById('locationError');
+  const passwordError = document.getElementById('passwordError');
+  const confirmError = document.getElementById('confirmError');
+  const termsError = document.getElementById('termsError');
 
+  function clearErrors() {
+    fullNameError.textContent = '';
+    emailError.textContent = '';
+    locationError.textContent = '';
+    passwordError.textContent = '';
+    confirmError.textContent = '';
+    termsError.textContent = '';
+  }
+
+  function showError(element, message) {
+    element.textContent = message;
+  }
+
+  function showToast(message, type) {
+    toast.textContent = message;
+    toast.className = `toast show ${type}`;
+    setTimeout(() => {
+      toast.classList.remove('show');
+    }, 4000);
+  }
+
+  function checkPasswordStrength(password) {
     let strength = 0;
-    if (pwd.length >= 8) strength++;
-    if (/[A-Z]/.test(pwd) && /[a-z]/.test(pwd)) strength++;
-    if (/\d/.test(pwd)) strength++;
+    const fill = strengthBar;
 
-    if (strength === 1) bar.classList.add('strength-weak');
-    else if (strength === 2) bar.classList.add('strength-fair');
-    else if (strength >= 3) bar.classList.add('strength-strong');
+    fill.className = 'password-strength-fill';
+
+    if (password.length >= 8) strength++;
+    if (/[A-Z]/.test(password) && /[a-z]/.test(password)) strength++;
+    if (/\d/.test(password)) strength++;
+
+    if (strength === 1) {
+      fill.classList.add('weak');
+      strengthText.textContent = 'Weak password';
+    } else if (strength === 2) {
+      fill.classList.add('fair');
+      strengthText.textContent = 'Fair password';
+    } else if (strength >= 3) {
+      fill.classList.add('strong');
+      strengthText.textContent = 'Strong password';
+    } else {
+      strengthText.textContent = 'Must have uppercase, lowercase, number • Min 8 characters';
+    }
+  }
+
+  passwordInput.addEventListener('input', () => {
+    checkPasswordStrength(passwordInput.value);
   });
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    formError.textContent = '';
+    clearErrors();
 
-    const fullName = document.getElementById('fullName').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const location = document.getElementById('location').value.trim();
-    const password = document.getElementById('password').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const terms = document.getElementById('terms').checked;
+    const fullName = fullNameInput.value.trim();
+    const email = emailInput.value.trim();
+    const location = locationInput.value.trim();
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+    const terms = termsCheckbox.checked;
 
+    // Validation
     if (!fullName) {
-      document.getElementById('nameError').textContent = 'Name is required';
+      showError(fullNameError, 'Name is required');
       return;
     }
+
+    if (fullName.length < 2) {
+      showError(fullNameError, 'Name must be at least 2 characters');
+      return;
+    }
+
     if (!email) {
-      document.getElementById('emailError').textContent = 'Email is required';
+      showError(emailError, 'Email is required');
       return;
     }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      showError(emailError, 'Please enter a valid email');
+      return;
+    }
+
+    if (!password) {
+      showError(passwordError, 'Password is required');
+      return;
+    }
+
     if (password.length < 8) {
-      document.getElementById('passwordError').textContent = 'Min 8 characters';
+      showError(passwordError, 'Password must be at least 8 characters');
       return;
     }
+
     if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
-      document.getElementById('passwordError').textContent = 'Need uppercase and lowercase';
+      showError(passwordError, 'Password must have uppercase and lowercase letters');
       return;
     }
+
     if (!/\d/.test(password)) {
-      document.getElementById('passwordError').textContent = 'Need at least one number';
+      showError(passwordError, 'Password must contain at least one number');
       return;
     }
+
     if (password !== confirmPassword) {
-      document.getElementById('confirmError').textContent = 'Passwords do not match';
+      showError(confirmError, 'Passwords do not match');
       return;
     }
+
     if (!terms) {
-      formError.textContent = 'Please accept terms';
+      showError(termsError, 'Please accept the terms');
       return;
     }
 
@@ -325,26 +697,25 @@
       await signUp(email, password, {
         full_name: fullName,
         user_type: 'customer',
-        location: location
+        location: location || ''
       });
       showToast('Account created! Redirecting...', 'success');
-      await new Promise(r => setTimeout(r, 1500));
-      window.location.href = 'dashboard-customer.html';
-    } catch (err) {
-      formError.textContent = err.message || 'Sign up failed';
-    } finally {
+      await new Promise(r => setTimeout(r, 1200));
+      await redirectToDashboard();
+    } catch (error) {
+      showToast(error.message || 'Sign up failed', 'error');
       signUpBtn.disabled = false;
       signUpBtn.textContent = 'Create account';
     }
   });
 
-  function showToast(msg, type) {
-    const toast = document.getElementById('toast');
-    toast.textContent = msg;
-    toast.style.background = type === 'error' ? '#dc2626' : '#059669';
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 3000);
-  }
+  // Clear errors on focus
+  fullNameInput.addEventListener('focus', () => { fullNameError.textContent = ''; });
+  emailInput.addEventListener('focus', () => { emailError.textContent = ''; });
+  locationInput.addEventListener('focus', () => { locationError.textContent = ''; });
+  passwordInput.addEventListener('focus', () => { passwordError.textContent = ''; });
+  confirmPasswordInput.addEventListener('focus', () => { confirmError.textContent = ''; });
+  termsCheckbox.addEventListener('change', () => { termsError.textContent = ''; });
 </script>
 
 </body>

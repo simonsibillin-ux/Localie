@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing — Localie</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0d2d6a;
+    --blue: #1a6bdf;
+    --blue-light: #4a9eff;
+    --blue-pale: #e6f1fb;
+    --ice: #f0f8ff;
+    --dark: #0a1628;
+    --gold: #f5a623;
+    --muted: #7a8aaa;
+    --border: #e0ecff;
+    --white: #ffffff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--white);
+    color: var(--navy);
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--border);
+    padding: 0 24px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    color: var(--navy);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--blue); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .btn-outline {
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: 1.5px solid var(--blue);
+    background: transparent;
+    color: var(--blue);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-outline:hover { background: var(--blue-pale); }
+
+  .btn-solid {
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: none;
+    background: var(--blue);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-solid:hover { background: var(--navy); }
+
+  /* HERO */
+  .hero {
+    min-height: 60vh;
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 100px 24px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(26,107,223,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(38px, 7vw, 60px);
+    color: #fff;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    max-width: 700px;
+  }
+
+  .hero-sub {
+    font-size: clamp(15px, 2vw, 18px);
+    color: rgba(255,255,255,0.55);
+    max-width: 520px;
+    line-height: 1.7;
+  }
+
+  /* TRIAL BANNER */
+  .trial-banner {
+    background: linear-gradient(135deg, rgba(245,166,35,0.15) 0%, rgba(26,107,223,0.1) 100%);
+    border: 1px solid rgba(245,166,35,0.3);
+    border-radius: 14px;
+    padding: 16px 24px;
+    margin: 60px 24px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .trial-banner-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--navy);
+  }
+  .trial-banner-highlight {
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  /* PRICING CARDS */
+  .pricing-section {
+    padding: 0 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 80px;
+  }
+
+  .pricing-card {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 32px;
+    position: relative;
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pricing-card:hover {
+    border-color: var(--blue);
+    box-shadow: 0 12px 40px rgba(26,107,223,0.15);
+  }
+
+  .pricing-card.featured {
+    border-color: var(--gold);
+    background: linear-gradient(145deg, #fff 0%, rgba(245,166,35,0.03) 100%);
+    box-shadow: 0 12px 40px rgba(245,166,35,0.2);
+    transform: scale(1.02);
+  }
+
+  .pricing-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: linear-gradient(135deg, var(--gold), #e09010);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 50px;
+    width: fit-content;
+    margin-bottom: 20px;
+  }
+
+  .pricing-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+
+  .pricing-amount {
+    font-family: 'DM Serif Display', serif;
+    font-size: 48px;
+    color: var(--navy);
+    line-height: 1;
+  }
+
+  .pricing-period {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .pricing-savings {
+    font-size: 13px;
+    color: var(--gold);
+    font-weight: 600;
+    margin-bottom: 28px;
+  }
+
+  .pricing-description {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 28px;
+    flex: 1;
+  }
+
+  .pricing-cta {
+    width: 100%;
+    padding: 14px 24px;
+    border-radius: 50px;
+    border: none;
+    background: var(--blue);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+
+  .pricing-cta:hover { background: var(--navy); transform: translateY(-2px); }
+
+  .pricing-card.featured .pricing-cta {
+    background: var(--gold);
+    color: var(--dark);
+  }
+
+  .pricing-card.featured .pricing-cta:hover {
+    background: #e09010;
+  }
+
+  .pricing-features {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: var(--navy);
+  }
+
+  .feature-item i {
+    font-size: 16px;
+    color: var(--blue);
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  /* COMPARISON TABLE */
+  .comparison-section {
+    padding: 80px 24px;
+    background: var(--ice);
+  }
+
+  .comparison-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .comparison-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    color: var(--navy);
+    margin-bottom: 48px;
+    text-align: center;
+  }
+
+  .comparison-table {
+    width: 100%;
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .table-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .table-row:last-child { border-bottom: none; }
+
+  .table-cell {
+    padding: 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+  }
+
+  .table-row:first-child .table-cell {
+    background: var(--blue-pale);
+    font-weight: 600;
+    color: var(--navy);
+    padding: 20px 16px;
+  }
+
+  .table-cell.feature-name {
+    font-weight: 500;
+    color: var(--navy);
+  }
+
+  .table-cell i {
+    font-size: 18px;
+    margin: 0 auto;
+  }
+
+  .table-cell i.check { color: #34d399; }
+  .table-cell i.cross { color: #ef4444; opacity: 0.3; }
+
+  /* FAQ SECTION */
+  .faq-section {
+    padding: 80px 24px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    color: var(--navy);
+    margin-bottom: 48px;
+    text-align: center;
+  }
+
+  .faq-item {
+    margin-bottom: 20px;
+  }
+
+  .faq-question {
+    background: var(--ice);
+    padding: 20px;
+    border-radius: 12px;
+    font-weight: 600;
+    color: var(--navy);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s;
+    border: 1px solid transparent;
+  }
+
+  .faq-question:hover {
+    border-color: var(--blue);
+    background: var(--blue-pale);
+  }
+
+  .faq-toggle {
+    font-size: 18px;
+    transition: transform 0.2s;
+  }
+
+  .faq-question.open .faq-toggle {
+    transform: rotate(180deg);
+  }
+
+  .faq-answer {
+    display: none;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .faq-answer.show { display: block; }
+
+  /* BOTTOM CTA */
+  .bottom-cta {
+    background: var(--dark);
+    padding: 80px 24px;
+  }
+
+  .cta-inner {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .cta-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 40px;
+    color: #fff;
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+
+  .cta-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 32px;
+    line-height: 1.6;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 40px;
+    border-radius: 50px;
+    background: var(--gold);
+    color: var(--dark);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .cta-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    padding: 40px 24px;
+    text-align: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .footer-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .footer-logo span { color: var(--blue-light); }
+  .footer-sub { font-size: 12px; color: rgba(255,255,255,0.3); }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .pricing-card.featured { transform: scale(1); }
+    .table-row { grid-template-columns: 2fr 1fr 1fr 1fr; }
+  }
+
+  @media (max-width: 700px) {
+    nav .btn-outline { display: none; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .table-row { grid-template-columns: 1fr 1fr; }
+    .table-cell { padding: 12px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="nav-logo">Local<span>ie</span></a>
+  <div class="nav-links">
+    <a href="login.html" class="btn-outline">Log in</a>
+    <a href="signup.html" class="btn-solid">Get started</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h1 class="hero-title">Simple, transparent pricing</h1>
+  <p class="hero-sub">Join the platform locals trust. Cancel anytime.</p>
+</section>
+
+<!-- TRIAL BANNER -->
+<div class="trial-banner">
+  <p class="trial-banner-text"><span class="trial-banner-highlight">14 days free.</span> No credit card required. Then choose your plan.</p>
+</div>
+
+<!-- PRICING CARDS -->
+<div class="pricing-section">
+  <div class="pricing-grid">
+    <!-- Standard -->
+    <div class="pricing-card">
+      <div class="pricing-name">Standard</div>
+      <div class="pricing-period">per month</div>
+      <div class="pricing-amount">$9.95</div>
+      <div class="pricing-description">Perfect for getting started</div>
+      <a href="apply.html" class="pricing-cta">
+        <i class="ti ti-arrow-right"></i>
+        Get started
+      </a>
+      <div class="pricing-features">
+        <div class="feature-item"><i class="ti ti-check"></i> Verified profile</div>
+        <div class="feature-item"><i class="ti ti-check"></i> 1 post per week</div>
+        <div class="feature-item"><i class="ti ti-check"></i> Direct messaging</div>
+        <div class="feature-item"><i class="ti ti-check"></i> Last-minute slots</div>
+        <div class="feature-item"><i class="ti ti-check"></i> Referral credits</div>
+        <div class="feature-item"><i class="ti ti-check"></i> Verified badge</div>
+      </div>
+    </div>
+
+    <!-- Pro (Most Popular) -->
+    <div class="pricing-card featured">
+      <div class="pricing-badge">
+        <i class="ti ti-crown"></i>
+        Most Popular
+      </div>
+      <div class="pricing-name">Pro</div>
+      <div class="pricing-period">per month</div>
+      <div class="pricing-amount">$29.95</div>
+      <div class="pricing-description">Grow your customer base</div>
+      <a href="apply.html" class="pricing-cta">
+        <i class="ti ti-arrow-right"></i>
+        Get started
+      </a>
+      <div class="pricing-features">
+        <div class="feature-item"><i class="ti ti-check"></i> Everything in Standard</div>
+        <div class="feature-item"><i class="ti ti-check"></i> 5 posts per week</div>
+        <div class="feature-item"><i class="ti ti-check"></i> Push notification ads</div>
+        <div class="feature-item"><i class="ti ti-check"></i> Featured placement</div>
+        <div class="feature-item"><i class="ti ti-check"></i> Analytics dashboard</div>
+        <div class="feature-item"><i class="ti ti-check"></i> Priority support</div>
+        <div class="feature-item"><i class="ti ti-check"></i> Pro badge</div>
+      </div>
+    </div>
+
+    <!-- Annual Pro -->
+    <div class="pricing-card">
+      <div class="pricing-name">Annual Pro</div>
+      <div class="pricing-period">per year, billed once</div>
+      <div class="pricing-amount">$299</div>
+      <div class="pricing-savings">Save $60 vs monthly</div>
+      <a href="apply.html" class="pricing-cta">
+        <i class="ti ti-arrow-right"></i>
+        Get started
+      </a>
+      <div class="pricing-features">
+        <div class="feature-item"><i class="ti ti-check"></i> Everything in Pro</div>
+        <div class="feature-item"><i class="ti ti-check"></i> Unlimited posts</div>
+        <div class="feature-item"><i class="ti ti-check"></i> 2 months free</div>
+        <div class="feature-item"><i class="ti ti-check"></i> Locked-in price</div>
+        <div class="feature-item"><i class="ti ti-check"></i> First access to features</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARISON TABLE -->
+<div class="comparison-section">
+  <div class="comparison-inner">
+    <h2 class="comparison-title">Feature comparison</h2>
+    <div class="comparison-table">
+      <div class="table-row">
+        <div class="table-cell">Feature</div>
+        <div class="table-cell">Standard</div>
+        <div class="table-cell">Pro</div>
+        <div class="table-cell">Annual Pro</div>
+      </div>
+      <div class="table-row">
+        <div class="table-cell feature-name">Verified profile</div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+      </div>
+      <div class="table-row">
+        <div class="table-cell feature-name">Posts per week</div>
+        <div class="table-cell">1</div>
+        <div class="table-cell">5</div>
+        <div class="table-cell">Unlimited</div>
+      </div>
+      <div class="table-row">
+        <div class="table-cell feature-name">Direct messaging</div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+      </div>
+      <div class="table-row">
+        <div class="table-cell feature-name">Push notification ads</div>
+        <div class="table-cell"><i class="ti ti-x cross"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+      </div>
+      <div class="table-row">
+        <div class="table-cell feature-name">Featured placement</div>
+        <div class="table-cell"><i class="ti ti-x cross"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+      </div>
+      <div class="table-row">
+        <div class="table-cell feature-name">Analytics dashboard</div>
+        <div class="table-cell"><i class="ti ti-x cross"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+      </div>
+      <div class="table-row">
+        <div class="table-cell feature-name">Last-minute slots</div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+      </div>
+      <div class="table-row">
+        <div class="table-cell feature-name">Referral credits</div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+      </div>
+      <div class="table-row">
+        <div class="table-cell feature-name">Priority support</div>
+        <div class="table-cell"><i class="ti ti-x cross"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+      </div>
+      <div class="table-row">
+        <div class="table-cell feature-name">First access to features</div>
+        <div class="table-cell"><i class="ti ti-x cross"></i></div>
+        <div class="table-cell"><i class="ti ti-x cross"></i></div>
+        <div class="table-cell"><i class="ti ti-check check"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ SECTION -->
+<div class="faq-section">
+  <h2 class="faq-title">Frequently asked questions</h2>
+
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">
+      <span>What happens if my application is rejected?</span>
+      <span class="faq-toggle">▼</span>
+    </div>
+    <div class="faq-answer">
+      If your application doesn't meet our standards, we'll explain why and give you guidance on what to improve. We're selective by design — every provider on Localie is personally vetted. If you're rejected, we can discuss ways to reapply when you're ready.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">
+      <span>Can I cancel anytime?</span>
+      <span class="faq-toggle">▼</span>
+    </div>
+    <div class="faq-answer">
+      Yes, absolutely. There are no long-term contracts or cancellation fees. You can cancel your subscription at any time from your account settings. Your access ends at the end of your billing period.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">
+      <span>What counts as a post?</span>
+      <span class="faq-toggle">▼</span>
+    </div>
+    <div class="faq-answer">
+      A post is any content you share to your business profile — photos, service updates, announcements, promotions, or availability changes. Posts help you stay top-of-mind with customers. Different tiers allow different posting frequencies per week.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">
+      <span>How do referral credits work?</span>
+      <span class="faq-toggle">▼</span>
+    </div>
+    <div class="faq-answer">
+      When you refer another business to Localie and they're approved, you earn referral credits. These credits can be applied to your monthly subscription bill, reducing what you owe. It's our way of rewarding you for helping grow the Localie community.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">
+      <span>Is there a setup fee?</span>
+      <span class="faq-toggle">▼</span>
+    </div>
+    <div class="faq-answer">
+      No setup fees, no hidden charges. You just pay the monthly or annual subscription price. Your first 14 days are free — no credit card required. After that, you'll be charged according to your chosen plan.
+    </div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-question" onclick="toggleFaq(this)">
+      <span>What is the vetting process?</span>
+      <span class="faq-toggle">▼</span>
+    </div>
+    <div class="faq-answer">
+      We verify your ABN, check your current insurance, and review your business reputation. This takes 2–5 business days. We're thorough because customers need to trust that every provider on Localie is legitimate, insured, and accountable.
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM CTA -->
+<div class="bottom-cta">
+  <div class="cta-inner">
+    <h2 class="cta-title">Ready to grow your local business?</h2>
+    <p class="cta-sub">Join Localie and reach customers looking for exactly what you offer. 14 days free, no credit card required.</p>
+    <a href="apply.html" class="cta-btn">
+      Apply now
+      <i class="ti ti-arrow-right"></i>
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Local<span>ie</span></div>
+  <div class="footer-sub">© 2026 Localie · All rights reserved · Built for local communities</div>
+</footer>
+
+<script>
+  function toggleFaq(element) {
+    const question = element;
+    const answer = element.nextElementSibling;
+
+    // Close other answers
+    document.querySelectorAll('.faq-answer.show').forEach(el => {
+      if (el !== answer) {
+        el.classList.remove('show');
+        el.previousElementSibling.classList.remove('open');
+      }
+    });
+
+    // Toggle current
+    answer.classList.toggle('show');
+    question.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>

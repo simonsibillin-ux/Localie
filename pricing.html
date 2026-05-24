@@ -155,18 +155,72 @@
     font-weight: 700;
   }
 
+  /* PRICING TOGGLE */
+  .pricing-toggle-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 60px 0 60px;
+  }
+
+  .pricing-toggle {
+    display: flex;
+    background: var(--ice);
+    border-radius: 50px;
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid var(--border);
+  }
+
+  .pricing-toggle-btn {
+    padding: 10px 28px;
+    border-radius: 50px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .pricing-toggle-btn.active {
+    background: #fff;
+    color: var(--navy);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .pricing-badge-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(52,211,153,0.15);
+    color: #34d399;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 6px 14px;
+    border-radius: 50px;
+    margin-left: 8px;
+  }
+
   /* PRICING CARDS */
   .pricing-section {
     padding: 0 24px;
-    max-width: 1100px;
+    max-width: 900px;
     margin: 0 auto;
   }
 
   .pricing-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 24px;
     margin-bottom: 80px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .pricing-card {
@@ -178,6 +232,7 @@
     transition: all 0.3s;
     display: flex;
     flex-direction: column;
+    height: 100%;
   }
 
   .pricing-card:hover {
@@ -229,10 +284,25 @@
   }
 
   .pricing-savings {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--gold);
     font-weight: 600;
-    margin-bottom: 28px;
+    margin-bottom: 16px;
+  }
+
+  .pricing-savings.hidden {
+    display: none;
+  }
+
+  .pricing-billing-label {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+    display: none;
+  }
+
+  .pricing-billing-label.show {
+    display: block;
   }
 
   .pricing-description {
@@ -260,7 +330,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 28px;
+    margin-top: auto;
   }
 
   .pricing-cta:hover { background: var(--navy); transform: translateY(-2px); }
@@ -278,6 +348,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    margin-bottom: 28px;
   }
 
   .feature-item {
@@ -427,16 +498,10 @@
   .cta-inner {
     max-width: 1100px;
     margin: 0 auto;
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 80px;
-    align-items: center;
-  }
-
-  .cta-btn-wrapper {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: space-between;
+    gap: 80px;
   }
 
   .cta-title {
@@ -495,15 +560,13 @@
   @media (max-width: 900px) {
     .pricing-card.featured { transform: scale(1); }
     .table-row { grid-template-columns: 2fr 1fr 1fr 1fr; }
-  }
-
-  @media (max-width: 900px) {
-    .cta-inner { grid-template-columns: 1fr; gap: 40px; }
+    .cta-inner { flex-direction: column; gap: 40px; align-items: flex-start; }
   }
 
   @media (max-width: 700px) {
     nav .btn-outline { display: none; }
-    .pricing-grid { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; max-width: 100%; }
+    .pricing-toggle-wrapper { flex-direction: column; gap: 12px; }
     .table-row { grid-template-columns: 1fr 1fr; }
     .table-cell { padding: 12px; font-size: 12px; }
   }
@@ -531,19 +594,30 @@
   <p class="trial-banner-text"><span class="trial-banner-highlight">14 days free.</span> No credit card required. Then choose your plan.</p>
 </div>
 
+<!-- PRICING TOGGLE -->
+<div class="pricing-toggle-wrapper">
+  <div class="pricing-toggle">
+    <button class="pricing-toggle-btn active" data-period="monthly">Monthly</button>
+    <button class="pricing-toggle-btn" data-period="yearly">Yearly</button>
+  </div>
+  <span class="pricing-badge-save" id="saveBadge" style="display: none;">
+    <i class="ti ti-check"></i>
+    Save 2 months
+  </span>
+</div>
+
 <!-- PRICING CARDS -->
 <div class="pricing-section">
   <div class="pricing-grid">
     <!-- Standard -->
     <div class="pricing-card">
       <div class="pricing-name">Standard</div>
-      <div class="pricing-period">per month</div>
-      <div class="pricing-amount">$9.95</div>
+      <div class="pricing-period monthly-period">per month</div>
+      <div class="pricing-period yearly-period" style="display: none;">per year</div>
+      <div class="pricing-amount" data-monthly="$9.95" data-yearly="$99">$9.95</div>
+      <div class="pricing-billing-label"></div>
+      <div class="pricing-savings hidden" id="standard-savings"></div>
       <div class="pricing-description">Perfect for getting started</div>
-      <a href="apply.html" class="pricing-cta">
-        <i class="ti ti-arrow-right"></i>
-        Get started
-      </a>
       <div class="pricing-features">
         <div class="feature-item"><i class="ti ti-check"></i> Verified profile</div>
         <div class="feature-item"><i class="ti ti-check"></i> 1 post per week</div>
@@ -552,6 +626,10 @@
         <div class="feature-item"><i class="ti ti-check"></i> Referral credits</div>
         <div class="feature-item"><i class="ti ti-check"></i> Verified badge</div>
       </div>
+      <a href="pricing.html" class="pricing-cta">
+        <i class="ti ti-arrow-right"></i>
+        Get started
+      </a>
     </div>
 
     <!-- Pro (Most Popular) -->
@@ -561,13 +639,12 @@
         Most Popular
       </div>
       <div class="pricing-name">Pro</div>
-      <div class="pricing-period">per month</div>
-      <div class="pricing-amount">$29.95</div>
+      <div class="pricing-period monthly-period">per month</div>
+      <div class="pricing-period yearly-period" style="display: none;">per year</div>
+      <div class="pricing-amount" data-monthly="$29.95" data-yearly="$299">$29.95</div>
+      <div class="pricing-billing-label"></div>
+      <div class="pricing-savings" id="pro-savings">Save ~$60</div>
       <div class="pricing-description">Grow your customer base</div>
-      <a href="apply.html" class="pricing-cta">
-        <i class="ti ti-arrow-right"></i>
-        Get started
-      </a>
       <div class="pricing-features">
         <div class="feature-item"><i class="ti ti-check"></i> Everything in Standard</div>
         <div class="feature-item"><i class="ti ti-check"></i> 5 posts per week</div>
@@ -577,25 +654,10 @@
         <div class="feature-item"><i class="ti ti-check"></i> Priority support</div>
         <div class="feature-item"><i class="ti ti-check"></i> Pro badge</div>
       </div>
-    </div>
-
-    <!-- Annual Pro -->
-    <div class="pricing-card">
-      <div class="pricing-name">Annual Pro</div>
-      <div class="pricing-period">per year, billed once</div>
-      <div class="pricing-amount">$299</div>
-      <div class="pricing-savings">Save $60 vs monthly</div>
-      <a href="apply.html" class="pricing-cta">
+      <a href="pricing.html" class="pricing-cta">
         <i class="ti ti-arrow-right"></i>
         Get started
       </a>
-      <div class="pricing-features">
-        <div class="feature-item"><i class="ti ti-check"></i> Everything in Pro</div>
-        <div class="feature-item"><i class="ti ti-check"></i> Unlimited posts</div>
-        <div class="feature-item"><i class="ti ti-check"></i> 2 months free</div>
-        <div class="feature-item"><i class="ti ti-check"></i> Locked-in price</div>
-        <div class="feature-item"><i class="ti ti-check"></i> First access to features</div>
-      </div>
     </div>
   </div>
 </div>
@@ -743,16 +805,14 @@
 <!-- BOTTOM CTA -->
 <div class="bottom-cta">
   <div class="cta-inner">
-    <div class="cta-btn-wrapper">
-      <a href="apply.html" class="cta-btn">
-        Apply now
-        <i class="ti ti-arrow-right"></i>
-      </a>
-    </div>
     <div>
       <h2 class="cta-title">Ready to grow your local business?</h2>
       <p class="cta-sub">Join Localie and reach customers looking for exactly what you offer. 14 days free, no credit card required.</p>
     </div>
+    <a href="apply.html" class="cta-btn">
+      Apply now
+      <i class="ti ti-arrow-right"></i>
+    </a>
   </div>
 </div>
 
@@ -763,6 +823,49 @@
 </footer>
 
 <script>
+  // Pricing Toggle
+  document.querySelectorAll('.pricing-toggle-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pricing-toggle-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const period = btn.dataset.period;
+      const isYearly = period === 'yearly';
+
+      // Update prices
+      document.querySelectorAll('.pricing-amount').forEach(amount => {
+        const monthly = amount.dataset.monthly;
+        const yearly = amount.dataset.yearly;
+        amount.textContent = isYearly ? yearly : monthly;
+      });
+
+      // Update period labels
+      document.querySelectorAll('.monthly-period').forEach(el => {
+        el.style.display = isYearly ? 'none' : 'block';
+      });
+      document.querySelectorAll('.yearly-period').forEach(el => {
+        el.style.display = isYearly ? 'block' : 'none';
+      });
+
+      // Update billing labels
+      document.querySelectorAll('.pricing-billing-label').forEach(el => {
+        el.textContent = isYearly ? 'Billed annually' : '';
+        el.classList.toggle('show', isYearly);
+      });
+
+      // Update savings badges
+      document.getElementById('standard-savings').textContent = isYearly ? 'Save ~$20' : '';
+      document.getElementById('standard-savings').classList.toggle('hidden', !isYearly);
+
+      document.getElementById('pro-savings').textContent = isYearly ? 'Save ~$60' : '';
+      document.getElementById('pro-savings').classList.toggle('hidden', !isYearly);
+
+      // Toggle save badge
+      document.getElementById('saveBadge').style.display = isYearly ? 'inline-flex' : 'none';
+    });
+  });
+
+  // FAQ Toggle
   function toggleFaq(element) {
     const question = element;
     const answer = element.nextElementSibling;

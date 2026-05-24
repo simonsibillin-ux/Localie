@@ -427,13 +427,16 @@
   .cta-inner {
     max-width: 1100px;
     margin: 0 auto;
-    display: flex;
-    align-items: flex-end;
-    gap: 60px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 80px;
+    align-items: center;
   }
 
-  .cta-content {
-    flex: 1;
+  .cta-btn-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .cta-title {
@@ -467,7 +470,6 @@
     border: none;
     cursor: pointer;
     transition: all 0.2s;
-    flex-shrink: 0;
   }
 
   .cta-btn:hover { opacity: 0.9; transform: translateY(-2px); }
@@ -496,7 +498,7 @@
   }
 
   @media (max-width: 900px) {
-    .cta-inner { flex-direction: column; align-items: flex-start; gap: 32px; }
+    .cta-inner { grid-template-columns: 1fr; gap: 40px; }
   }
 
   @media (max-width: 700px) {
@@ -504,7 +506,6 @@
     .pricing-grid { grid-template-columns: 1fr; }
     .table-row { grid-template-columns: 1fr 1fr; }
     .table-cell { padding: 12px; font-size: 12px; }
-    .cta-btn { width: 100%; justify-content: center; }
   }
 </style>
 </head>
@@ -742,14 +743,16 @@
 <!-- BOTTOM CTA -->
 <div class="bottom-cta">
   <div class="cta-inner">
-    <div class="cta-content">
+    <div class="cta-btn-wrapper">
+      <a href="apply.html" class="cta-btn">
+        Apply now
+        <i class="ti ti-arrow-right"></i>
+      </a>
+    </div>
+    <div>
       <h2 class="cta-title">Ready to grow your local business?</h2>
       <p class="cta-sub">Join Localie and reach customers looking for exactly what you offer. 14 days free, no credit card required.</p>
     </div>
-    <a href="apply.html" class="cta-btn">
-      Apply now
-      <i class="ti ti-arrow-right"></i>
-    </a>
   </div>
 </div>
 

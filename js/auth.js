@@ -9,7 +9,7 @@ export async function signIn(email, password) {
 export async function signInWithGoogle() {
   const { data, error } = await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.origin + '/dashboard-customer.html' }
+    options: { redirectTo: window.location.origin + '/login.html' }
   });
   if (error) throw error;
   return data;
@@ -79,6 +79,11 @@ export function getDashboardUrl(userType) {
 export async function redirectToDashboard() {
   const user = await getUser();
   if (!user) return;
-  const userType = user.user_metadata?.user_type;
+  // Try to get user_type from metadata, fallback to localStorage for existing users
+  let userType = user.user_metadata?.user_type;
+  if (!userType) {
+    userType = localStorage.getItem('selectedUserType');
+  }
+  localStorage.removeItem('selectedUserType');
   window.location.href = getDashboardUrl(userType);
 }

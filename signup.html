@@ -621,23 +621,30 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // selectSignupUserType must be global and available immediately — not inside a module
+  function selectSignupUserType(type) {
+    if (type === 'provider') {
+      window.location.href = 'apply.html';
+      return;
+    }
+    // Customer — show the signup form
+    document.getElementById('userTypeSelector').style.display = 'none';
+    document.getElementById('signupFormContainer').classList.remove('hidden');
+  }
+</script>
 <script type="module">
   import { signUp, getSession, redirectToDashboard, upsertProfile } from './js/auth.js';
 
-  // Check if already logged in
+  // Only redirect if already logged in AND user intentionally came here
+  // Don't redirect automatically — let them sign up if they want
   (async () => {
     const session = await getSession();
-    if (session) await redirectToDashboard();
-  })();
-
-  window.selectSignupUserType = function(type) {
-    if (type === 'provider') {
-      window.location.href = '/apply.html';
-      return;
+    const isReturning = sessionStorage.getItem('alreadyLoggedIn');
+    if (session && isReturning) {
+      await redirectToDashboard();
     }
-    document.getElementById('userTypeSelector').style.display = 'none';
-    document.getElementById('signupFormContainer').classList.remove('hidden');
-  };
+  })();
 
   const form = document.getElementById('signupForm');
   const signUpBtn = document.getElementById('signUpBtn');

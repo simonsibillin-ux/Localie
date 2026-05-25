@@ -584,37 +584,30 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script type="module">
-  import { signIn, getSession, redirectToDashboard, getUser, signOut } from './js/auth.js';
-
-  // Check if already logged in
-  (async () => {
-    if (window.location.pathname.includes('login.html')) {
-      const session = await getSession();
-      if (session) {
-        const user = await getUser();
-        const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
-        if (profile) {
-          await redirectToDashboard();
-        } else {
-          await signOut();
-        }
-      }
-    }
-  })();
-
-  let selectedUserType = null;
-
-  window.selectUserType = function(type) {
-    selectedUserType = type;
+<script>
+  // Must be global and outside module for onclick to work on iOS Safari
+  function selectUserType(type) {
     localStorage.setItem('selectedUserType', type);
-    const cards = document.querySelectorAll('.user-type-card');
-    cards.forEach(card => card.classList.remove('selected'));
+    document.querySelectorAll('.user-type-card').forEach(card => card.classList.remove('selected'));
     event.currentTarget.classList.add('selected');
-
     document.getElementById('userTypeSelector').style.display = 'none';
     document.getElementById('loginFormContainer').classList.remove('hidden');
-  };
+  }
+</script>
+<script type="module">
+  import { signIn, getSession, redirectToDashboard, getUser } from './js/auth.js';
+
+  // Check if already logged in — redirect to correct dashboard
+  (async () => {
+    try {
+      const session = await getSession();
+      if (session) {
+        await redirectToDashboard();
+      }
+    } catch(e) {
+      console.log('Session check failed', e);
+    }
+  })();
 
 
   const form = document.getElementById('loginForm');

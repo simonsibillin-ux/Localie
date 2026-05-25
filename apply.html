@@ -383,11 +383,9 @@
   import { signUp, redirectToDashboard, getSession, getDeviceType, getDashboardUrl, getUser, upsertProfile } from './js/auth.js';
   import { showToast, setLoading } from './js/app.js';
 
-  // ── Redirect if already logged in ─────────────────────────────────────────
-  (async () => {
-    const session = await getSession();
-    if (session) await redirectToDashboard();
-  })();
+  // ── apply.html is always accessible — do not redirect away ───────────────
+  // A provider may already be logged in as a customer and wants to also apply
+  // Do NOT auto-redirect here
 
   // ── File upload handler ───────────────────────────────────────────────────
   const insuranceFileInput = document.getElementById('insurance-file');

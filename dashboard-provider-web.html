@@ -157,7 +157,7 @@ textarea::placeholder { color: #aab4cc; }
   <!-- SIDEBAR -->
   <div class="sidebar">
     <div class="sidebar-top">
-      <a href="index.html" class="sidebar-logo">
+      <a href="#" class="sidebar-logo" id="sidebarLogo">
         <img src="images/logo.png" alt="Localie">
         <div class="logo-text">Local<em>ie</em></div>
       </a>
@@ -400,6 +400,10 @@ async function initProvider() {
     window.location.href = '/dashboard-provider.html';
     return;
   }
+
+  // Set logo link
+  const logoLink = document.getElementById('sidebarLogo');
+  if (logoLink) logoLink.href = '/dashboard-provider-web.html';
 
   const user = await getUser();
   if (!user || user.user_metadata?.user_type !== 'provider') {

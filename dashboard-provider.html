@@ -124,7 +124,7 @@ textarea::placeholder { color: #aab4cc; }
 <body>
 
 <div class="appbar">
-  <a href="index.html" class="appbar-logo">
+  <a href="#" class="appbar-logo" id="appbarLogo">
     <img src="images/logo.png" alt="Localie">
     <span>Local<em>ie</em></span>
   </a>
@@ -331,6 +331,10 @@ async function initProviderApp() {
       window.location.href = '/dashboard-provider-web.html';
       return;
     }
+
+    // Set logo link
+    const logoLink = document.getElementById('appbarLogo');
+    if (logoLink) logoLink.href = '/dashboard-provider.html';
 
     const user = await getUser();
     if (!user || user.user_metadata?.user_type !== 'provider') {

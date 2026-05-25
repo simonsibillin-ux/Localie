@@ -412,6 +412,61 @@
         font-size: 22px;
       }
     }
+
+    .user-type-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .user-type-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-type-card:hover {
+      border-color: var(--blue);
+      box-shadow: 0 4px 12px rgba(26,107,223,0.15);
+      transform: translateY(-2px);
+    }
+
+    .user-type-card.selected {
+      background: var(--blue-pale);
+      border-color: var(--blue);
+      box-shadow: 0 4px 12px rgba(26,107,223,0.2);
+    }
+
+    .user-type-icon {
+      font-size: 32px;
+      color: var(--blue);
+    }
+
+    .user-type-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .user-type-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .signup-form-container.hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -452,11 +507,26 @@
 
   <!-- Right Panel -->
   <div class="signup-right">
-    <div class="signup-form-container">
-      <h2 class="signup-form-title">Create account</h2>
-      <p class="signup-form-subtitle">Join Localie for free</p>
+    <div style="width:100%;max-width:360px">
+      <!-- User Type Selector -->
+      <div class="user-type-selector" id="userTypeSelector">
+        <div class="user-type-card" onclick="selectSignupUserType('customer')">
+          <i class="ti ti-user user-type-icon"></i>
+          <div class="user-type-title">I'm a customer</div>
+          <div class="user-type-subtitle">Find trusted local services</div>
+        </div>
+        <div class="user-type-card" onclick="selectSignupUserType('provider')">
+          <i class="ti ti-building user-type-icon"></i>
+          <div class="user-type-title">I'm a service provider</div>
+          <div class="user-type-subtitle">Manage your Localie business</div>
+        </div>
+      </div>
 
-      <form id="signupForm" novalidate>
+      <div class="signup-form-container hidden" id="signupFormContainer">
+        <h2 class="signup-form-title">Create account</h2>
+        <p class="signup-form-subtitle">Join Localie for free</p>
+
+        <form id="signupForm" novalidate>
         <div class="form-group">
           <label class="form-label">Full name</label>
           <input
@@ -543,6 +613,7 @@
           Already have an account? <a href="login.html">Sign in</a>
         </div>
       </form>
+      </div>
     </div>
   </div>
 </div>
@@ -558,6 +629,15 @@
     const session = await getSession();
     if (session) await redirectToDashboard();
   })();
+
+  window.selectSignupUserType = function(type) {
+    if (type === 'provider') {
+      window.location.href = '/apply.html';
+      return;
+    }
+    document.getElementById('userTypeSelector').style.display = 'none';
+    document.getElementById('signupFormContainer').classList.remove('hidden');
+  };
 
   const form = document.getElementById('signupForm');
   const signUpBtn = document.getElementById('signUpBtn');

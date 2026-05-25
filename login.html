@@ -414,6 +414,61 @@
         font-size: 24px;
       }
     }
+
+    .user-type-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .user-type-card {
+      background: var(--white);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-type-card:hover {
+      border-color: var(--blue);
+      box-shadow: 0 4px 12px rgba(26,107,223,0.15);
+      transform: translateY(-2px);
+    }
+
+    .user-type-card.selected {
+      background: var(--blue-pale);
+      border-color: var(--blue);
+      box-shadow: 0 4px 12px rgba(26,107,223,0.2);
+    }
+
+    .user-type-icon {
+      font-size: 32px;
+      color: var(--blue);
+    }
+
+    .user-type-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 18px;
+      color: var(--navy);
+      font-weight: 600;
+    }
+
+    .user-type-subtitle {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .login-form-container.hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -443,11 +498,26 @@
 
   <!-- Right Panel -->
   <div class="login-right">
-    <div class="login-form-container">
-      <h2 class="login-form-title">Sign in</h2>
-      <p class="login-form-subtitle">Welcome back to Localie</p>
+    <div style="width:100%;max-width:360px">
+      <!-- User Type Selector -->
+      <div class="user-type-selector" id="userTypeSelector">
+        <div class="user-type-card" onclick="selectUserType('customer')">
+          <i class="ti ti-user user-type-icon"></i>
+          <div class="user-type-title">I'm a customer</div>
+          <div class="user-type-subtitle">Find trusted local services</div>
+        </div>
+        <div class="user-type-card" onclick="selectUserType('provider')">
+          <i class="ti ti-building user-type-icon"></i>
+          <div class="user-type-title">I'm a service provider</div>
+          <div class="user-type-subtitle">Manage your Localie business</div>
+        </div>
+      </div>
 
-      <form id="loginForm" novalidate>
+      <div class="login-form-container hidden" id="loginFormContainer">
+        <h2 class="login-form-title">Sign in</h2>
+        <p class="login-form-subtitle">Welcome back to Localie</p>
+
+        <form id="loginForm" novalidate>
         <div class="form-group">
           <label class="form-label">Email address</label>
           <input
@@ -496,6 +566,7 @@
           <a href="#" class="form-forgot" id="forgotLink">Forgot password?</a>
         </div>
       </form>
+      </div>
     </div>
   </div>
 </div>
@@ -511,6 +582,18 @@
     const session = await getSession();
     if (session) await redirectToDashboard();
   })();
+
+  let selectedUserType = null;
+
+  window.selectUserType = function(type) {
+    selectedUserType = type;
+    const cards = document.querySelectorAll('.user-type-card');
+    cards.forEach(card => card.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+
+    document.getElementById('userTypeSelector').style.display = 'none';
+    document.getElementById('loginFormContainer').classList.remove('hidden');
+  };
 
   const form = document.getElementById('loginForm');
   const signInBtn = document.getElementById('signInBtn');
@@ -567,7 +650,12 @@
     signInBtn.textContent = 'Signing in...';
 
     try {
+      if (!selectedUserType) {
+        showError(emailError, 'Please select your account type');
+        return;
+      }
       await signIn(email, password);
+      localStorage.setItem('selectedUserType', selectedUserType);
       showToast('Signed in successfully', 'success');
       await new Promise(r => setTimeout(r, 800));
       await redirectToDashboard();

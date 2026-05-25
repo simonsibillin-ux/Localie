@@ -48,10 +48,14 @@
 
   .nav-logo {
     font-family: 'DM Serif Display', serif;
-    font-size: 24px;
+    font-size: 22px;
     color: var(--navy);
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
+  .nav-logo img { height: 36px; width: 36px; border-radius: 10px; object-fit: cover; }
   .nav-logo span { color: var(--blue); }
 
   .nav-links {
@@ -500,7 +504,10 @@
 
 <!-- NAV -->
 <nav>
-  <a href="/" class="nav-logo">Local<span>ie</span></a>
+  <a href="/" class="nav-logo">
+    <img src="images/logo.png" alt="Localie">
+    <span style="font-family:'DM Serif Display',serif;font-size:22px;color:var(--navy);">Local<span style="color:var(--blue);">ie</span></span>
+  </a>
   <div class="nav-links">
     <a href="login.html" class="btn-outline">Log in</a>
     <a href="signup.html" class="btn-solid">Get started</a>
@@ -658,7 +665,10 @@
 
 <!-- FOOTER -->
 <footer>
-  <div class="footer-logo">Local<span>ie</span></div>
+  <div class="footer-logo" style="display:flex;align-items:center;justify-content:center;gap:10px;">
+    <img src="images/logo.png" alt="Localie" style="height:32px;width:32px;border-radius:9px;object-fit:cover;">
+    <span>Local<span style="color:var(--blue-light);">ie</span></span>
+  </div>
   <div class="footer-sub">© 2026 Localie · All rights reserved · Built for local communities</div>
 </footer>
 

@@ -381,7 +381,7 @@ textarea::placeholder { color: #aab4cc; }
 
 <script type="module">
 import sb from './js/supabase.js';
-import { getUser } from './js/auth.js';
+import { getUser, getDeviceType } from './js/auth.js';
 
 const tabs = ['dashboard','post','messages','settings','refer','feedback'];
 const titles = { dashboard:'Dashboard', post:'Create a post', messages:'Messages', settings:'Settings & billing', refer:'Refer a business', feedback:'Leave feedback' };
@@ -395,6 +395,12 @@ window.switchTab = function(t) {
 };
 
 async function initProvider() {
+  // Responsive routing - redirect mobile users to mobile dashboard
+  if (getDeviceType() === 'mobile') {
+    window.location.href = '/dashboard-provider.html';
+    return;
+  }
+
   const user = await getUser();
   if (!user || user.user_metadata?.user_type !== 'provider') {
     window.location.href = '/login.html';

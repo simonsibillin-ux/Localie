@@ -262,7 +262,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--n
 
 <script type="module">
 import sb from './js/supabase.js';
-import { getUser, signOut } from './js/auth.js';
+import { getUser, getDeviceType, signOut } from './js/auth.js';
 
 const pages = {
   applications: ['Applications','Review and approve incoming provider applications'],
@@ -289,6 +289,12 @@ window.selectAudience = function(el) {
 };
 
 async function initAdmin() {
+  // Admin dashboard is desktop only
+  if (getDeviceType() === 'mobile') {
+    window.location.href = '/login.html';
+    return;
+  }
+
   const user = await getUser();
   if (!user || user.user_metadata?.user_type !== 'admin') {
     window.location.href = '/login.html';

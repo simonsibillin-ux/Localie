@@ -365,6 +365,7 @@
         <button type="submit" class="btn btn-primary btn-lg btn-block" id="submit-btn">
           Submit application
         </button>
+        <div style="text-align:center;font-size:0.75rem;color:#7a8aaa;margin-top:8px">Testing mode — approval bypassed</div>
       </form>
 
       <!-- Bottom links -->
@@ -379,7 +380,7 @@
 <!-- ── Scripts ──────────────────────────────────────────────────────────────── -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
-  import { signUp, redirectToDashboard, getSession } from './js/auth.js';
+  import { signUp, redirectToDashboard, getSession, getDeviceType, getDashboardUrl } from './js/auth.js';
   import { showToast, setLoading } from './js/app.js';
 
   // ── Redirect if already logged in ─────────────────────────────────────────
@@ -466,7 +467,7 @@
         insurance_url: insuranceUrl,
         service_area: serviceArea,
         business_description: description,
-        status: 'pending'
+        status: 'approved'
       };
 
       // TODO: Handle file upload to Supabase storage if insuranceFile exists
@@ -476,9 +477,10 @@
       }
 
       await signUp(email, Math.random().toString(36).slice(-12), metadata);
-      showToast('Application submitted — we\'ll review it soon!', 'success');
+      showToast('Application approved — welcome to Localie!', 'success');
       await new Promise(r => setTimeout(r, 1500));
-      window.location.href = 'login.html';
+      const dashboardUrl = getDashboardUrl('provider');
+      window.location.href = dashboardUrl;
     } catch (err) {
       const msg = err.message || 'Application failed. Please try again.';
       showFormError(msg.includes('already') ? 'This email is already registered.' : msg);

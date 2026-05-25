@@ -430,7 +430,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--n
 
 <script type="module">
 import sb from './js/supabase.js';
-import { getUser, signOut } from './js/auth.js';
+import { getUser, getDeviceType, signOut } from './js/auth.js';
 
 // Tab switching
 const tabs = ['home','feed','search','messages','settings'];
@@ -471,6 +471,12 @@ document.querySelectorAll('.filter-pill').forEach(p => {
 // Initialize app
 async function initApp() {
   try {
+    // Responsive routing - redirect desktop users to web dashboard
+    if (getDeviceType() === 'desktop') {
+      window.location.href = '/dashboard-customer-web.html';
+      return;
+    }
+
     // Check auth and get user
     const user = await getUser();
     if (!user) {

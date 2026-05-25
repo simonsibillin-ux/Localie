@@ -284,7 +284,7 @@ textarea::placeholder { color: #aab4cc; }
 
 <script type="module">
 import sb from './js/supabase.js';
-import { getUser, signOut } from './js/auth.js';
+import { getUser, getDeviceType, signOut } from './js/auth.js';
 
 // Tab switching
 const ptabs = ['dashboard','post','messages','settings'];
@@ -326,6 +326,12 @@ async function toggleAvail(row){
 // Initialize app
 async function initProviderApp() {
   try {
+    // Responsive routing - redirect desktop users to web dashboard
+    if (getDeviceType() === 'desktop') {
+      window.location.href = '/dashboard-provider-web.html';
+      return;
+    }
+
     const user = await getUser();
     if (!user || user.user_metadata?.user_type !== 'provider') {
       window.location.href = '/login.html';

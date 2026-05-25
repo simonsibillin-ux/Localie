@@ -415,7 +415,7 @@ html, body { height: 100%; overflow: hidden; font-family: 'DM Sans', sans-serif;
 
 <script type="module">
 import sb from './js/supabase.js';
-import { getUser } from './js/auth.js';
+import { getUser, getDeviceType } from './js/auth.js';
 
 const tabs = ['home','feed','search','messages','settings','refer','feedback'];
 window.switchTab = function(t) {
@@ -474,6 +474,12 @@ function getInitials(name) {
 }
 
 async function initApp() {
+  // Responsive routing - redirect mobile users to mobile dashboard
+  if (getDeviceType() === 'mobile') {
+    window.location.href = '/dashboard-customer.html';
+    return;
+  }
+
   const user = await getUser();
   if (!user) {
     window.location.href = '/login.html';

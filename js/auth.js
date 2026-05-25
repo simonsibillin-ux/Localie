@@ -58,16 +58,27 @@ export async function requireAuth(redirectUrl = '/login.html') {
   return session;
 }
 
-// Redirect to correct dashboard based on user type
+// Detect device type based on screen width
+export function getDeviceType() {
+  return window.innerWidth >= 768 ? 'desktop' : 'mobile';
+}
+
+// Get correct dashboard URL based on user type and device
+export function getDashboardUrl(userType) {
+  const isDesktop = getDeviceType() === 'desktop';
+  if (userType === 'provider') {
+    return isDesktop ? '/dashboard-provider-web.html' : '/dashboard-provider.html';
+  } else if (userType === 'admin') {
+    return '/dashboard-admin.html';
+  } else {
+    return isDesktop ? '/dashboard-customer-web.html' : '/dashboard-customer.html';
+  }
+}
+
+// Redirect to correct dashboard based on user type and device
 export async function redirectToDashboard() {
   const user = await getUser();
   if (!user) return;
   const userType = user.user_metadata?.user_type;
-  if (userType === 'provider') {
-    window.location.href = '/dashboard-provider.html';
-  } else if (userType === 'admin') {
-    window.location.href = '/dashboard-admin.html';
-  } else {
-    window.location.href = '/dashboard-customer.html';
-  }
+  window.location.href = getDashboardUrl(userType);
 }

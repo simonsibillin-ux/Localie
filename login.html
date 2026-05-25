@@ -595,27 +595,10 @@
   }
 </script>
 <script type="module">
-  import { signIn, getSession, redirectToDashboard, getUser } from './js/auth.js';
+  import { signIn, redirectToDashboard } from './js/auth.js';
 
-  // Check if already logged in — redirect to correct dashboard
-  // Uses a sessionStorage guard to prevent infinite redirect loops
-  (async () => {
-    try {
-      if (sessionStorage.getItem('loginLoopGuard')) {
-        sessionStorage.removeItem('loginLoopGuard');
-        return; // Already tried redirecting — don't do it again
-      }
-      const session = await getSession();
-      if (session) {
-        sessionStorage.setItem('loginLoopGuard', 'true');
-        await redirectToDashboard();
-        sessionStorage.removeItem('loginLoopGuard');
-      }
-    } catch(e) {
-      console.log('Session check failed', e);
-      sessionStorage.removeItem('loginLoopGuard');
-    }
-  })();
+  // No auto-redirect on login page — causes infinite loops if redirectToDashboard fails
+  // Users who are already logged in can simply log in again or navigate manually
 
 
   const form = document.getElementById('loginForm');

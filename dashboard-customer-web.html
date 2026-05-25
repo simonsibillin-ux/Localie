@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Localie — Find Local Services</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0d2d6a; --blue: #1a6bdf; --blue-light: #4a9eff;
+  --blue-pale: #e6f1fb; --ice: #f0f8ff; --dark: #0a1628;
+  --gold: #f5a623; --muted: #7a8aaa; --border: #e0ecff;
+  --green: #2e6b3e; --green-light: #e8f5e9; --white: #ffffff; --bg: #f4f7fb;
+}
+html, body { height: 100%; overflow: hidden; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--navy); }
+.layout { display: flex; height: 100vh; }
+
+/* SIDEBAR */
+.sidebar { width: 240px; background: var(--dark); display: flex; flex-direction: column; flex-shrink: 0; }
+.sidebar-top { padding: 24px 18px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-bottom: 20px; }
+.sidebar-logo img { height: 34px; width: 34px; border-radius: 10px; object-fit: cover; }
+.logo-text { font-family: 'DM Serif Display', serif; font-size: 20px; color: #fff; }
+.logo-text em { color: var(--blue-light); font-style: normal; }
+.trust-counter { background: rgba(74,158,255,0.1); border: 1px solid rgba(74,158,255,0.2); border-radius: 12px; padding: 10px 12px; }
+.trust-num { font-family: 'DM Serif Display', serif; font-size: 22px; color: #fff; }
+.trust-lbl { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+.sidebar-nav { flex: 1; padding: 16px 10px; }
+.nav-section-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.25); font-weight: 600; padding: 0 10px; margin-bottom: 6px; margin-top: 16px; }
+.nav-section-label:first-child { margin-top: 0; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; cursor: pointer; margin-bottom: 2px; transition: all 0.15s; border: none; background: transparent; width: 100%; text-align: left; }
+.nav-item i { font-size: 18px; color: rgba(255,255,255,0.35); flex-shrink: 0; }
+.nav-item span { font-size: 13px; color: rgba(255,255,255,0.35); font-family: 'DM Sans', sans-serif; font-weight: 500; }
+.nav-item.active { background: rgba(26,107,223,0.2); }
+.nav-item.active i { color: var(--blue-light); }
+.nav-item.active span { color: #fff; }
+.nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); }
+.sidebar-footer { padding: 16px; border-top: 1px solid rgba(255,255,255,0.06); }
+.user-row { display: flex; align-items: center; gap: 10px; }
+.user-avatar { width: 34px; height: 34px; border-radius: 50%; background: rgba(26,107,223,0.25); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600; color: var(--blue-light); flex-shrink: 0; }
+.user-name { font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500; }
+.user-type { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+
+/* MAIN */
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { background: var(--white); border-bottom: 0.5px solid var(--border); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.search-bar { background: var(--bg); border: 0.5px solid var(--border); border-radius: 12px; display: flex; align-items: center; gap: 8px; padding: 9px 14px; width: 320px; }
+.search-bar i { font-size: 15px; color: #aab4cc; }
+.search-bar input { border: none; background: transparent; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--navy); outline: none; flex: 1; }
+.search-bar input::placeholder { color: #aab4cc; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.notif-btn { position: relative; background: none; border: none; cursor: pointer; color: var(--muted); font-size: 20px; padding: 4px; }
+.notif-dot { position: absolute; top: 2px; right: 2px; width: 7px; height: 7px; background: #ef4444; border-radius: 50%; border: 1.5px solid var(--white); }
+.content { flex: 1; overflow-y: auto; padding: 28px; scrollbar-width: thin; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.tab-pane { display: none; animation: fadeIn 0.2s ease; }
+.tab-pane.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* HOME */
+.page-title { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--navy); margin-bottom: 4px; }
+.page-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.cat-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 28px; }
+.cat-card { background: var(--white); border-radius: 14px; padding: 16px 8px; display: flex; flex-direction: column; align-items: center; gap: 8px; border: 0.5px solid var(--border); cursor: pointer; transition: all 0.15s; }
+.cat-card:hover { background: var(--blue-pale); border-color: var(--blue); transform: translateY(-2px); }
+.cat-card i { font-size: 24px; color: var(--blue); }
+.cat-card span { font-size: 11px; font-weight: 500; color: var(--navy); text-align: center; line-height: 1.2; }
+.two-col { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+.sec-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); font-weight: 600; margin-bottom: 14px; }
+.provider-card { background: var(--white); border-radius: 16px; overflow: hidden; margin-bottom: 14px; border: 0.5px solid var(--border); transition: box-shadow 0.15s; }
+.provider-card:hover { box-shadow: 0 4px 20px rgba(26,107,223,0.1); }
+.card-inner { display: flex; }
+.card-img { width: 100px; display: flex; align-items: center; justify-content: center; font-size: 32px; color: #fff; flex-shrink: 0; position: relative; }
+.badge-pro { position: absolute; top: 8px; left: 8px; background: var(--gold); color: var(--dark); font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 50px; }
+.badge-new { position: absolute; top: 8px; right: 8px; background: var(--blue-light); color: #fff; font-size: 9px; font-weight: 700; padding: 2px 8px; border-radius: 50px; }
+.card-body { padding: 14px 16px; flex: 1; }
+.card-biz { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+.card-desc { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+.card-row { display: flex; align-items: center; justify-content: space-between; }
+.stars { font-size: 12px; color: var(--gold); }
+.verified { display: flex; align-items: center; gap: 4px; font-size: 10px; color: var(--blue); font-weight: 500; margin-top: 3px; }
+.btn-contact { background: var(--blue); color: #fff; border: none; border-radius: 50px; padding: 7px 18px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; transition: opacity 0.15s; }
+.btn-contact:hover { opacity: 0.88; }
+
+/* SLOTS SIDEBAR */
+.slot-card { background: #fff9ee; border: 1px solid rgba(245,166,35,0.25); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
+.slot-biz { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 3px; }
+.slot-time { font-size: 11px; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 5px; }
+.btn-claim { background: var(--gold); color: var(--dark); border: none; border-radius: 50px; padding: 7px 18px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; width: 100%; }
+
+/* FEED */
+.feed-filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.filter-pill { background: var(--white); border: 0.5px solid var(--border); border-radius: 50px; padding: 7px 16px; font-size: 12px; font-weight: 500; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+.filter-pill.active { background: var(--blue); color: #fff; border-color: var(--blue); }
+.feed-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.feed-card { background: var(--white); border-radius: 16px; overflow: hidden; border: 0.5px solid var(--border); transition: all 0.15s; }
+.feed-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(26,107,223,0.1); }
+.feed-img { height: 120px; display: flex; align-items: center; justify-content: center; font-size: 36px; color: #fff; position: relative; }
+.feed-body { padding: 14px; }
+.feed-biz { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 4px; }
+.feed-desc { font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 12px; }
+.feed-row { display: flex; align-items: center; justify-content: space-between; }
+
+/* MESSAGES */
+.messages-layout { display: grid; grid-template-columns: 300px 1fr; gap: 0; background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; height: calc(100vh - 200px); }
+.inbox-list { border-right: 0.5px solid var(--border); overflow-y: auto; }
+.inbox-header { padding: 16px; border-bottom: 0.5px solid var(--border); font-size: 14px; font-weight: 600; color: var(--navy); }
+.msg-item { padding: 14px 16px; border-bottom: 0.5px solid var(--border); cursor: pointer; transition: background 0.12s; display: flex; align-items: center; gap: 10px; }
+.msg-item:hover { background: var(--bg); }
+.msg-item.active { background: var(--blue-pale); }
+.msg-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--blue-pale); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+.msg-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+.msg-preview { font-size: 11px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+.unread-dot { width: 8px; height: 8px; background: var(--blue); border-radius: 50%; margin-left: auto; flex-shrink: 0; }
+.thread-area { display: flex; flex-direction: column; }
+.thread-header { padding: 16px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.thread-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--blue-pale); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+.thread-name { font-size: 14px; font-weight: 600; color: var(--navy); }
+.thread-sub { font-size: 11px; color: var(--muted); }
+.thread-body { flex: 1; overflow-y: auto; padding: 20px; }
+.bubble-row { display: flex; gap: 10px; margin-bottom: 14px; align-items: flex-end; }
+.bubble-row.mine { flex-direction: row-reverse; }
+.b-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--blue-pale); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+.bubble { background: var(--bg); border: 0.5px solid var(--border); border-radius: 16px; border-bottom-left-radius: 4px; padding: 10px 14px; font-size: 13px; color: var(--navy); line-height: 1.5; max-width: 420px; }
+.bubble.mine { background: var(--blue); color: #fff; border-bottom-left-radius: 16px; border-bottom-right-radius: 4px; }
+.bubble-time { font-size: 10px; color: #aab4cc; margin-top: 4px; }
+.thread-input-row { padding: 14px 20px; border-top: 0.5px solid var(--border); display: flex; gap: 10px; }
+.thread-input-row input { flex: 1; border: 0.5px solid var(--border); border-radius: 50px; padding: 11px 18px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--navy); outline: none; background: var(--bg); }
+.send-btn { background: var(--blue); color: #fff; border: none; border-radius: 50px; padding: 0 20px; height: 42px; display: flex; align-items: center; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; gap: 6px; }
+
+/* SETTINGS */
+.settings-layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
+.settings-sidebar { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; }
+.profile-block { background: var(--navy); padding: 24px; text-align: center; }
+.profile-avatar-lg { width: 64px; height: 64px; border-radius: 50%; background: rgba(74,158,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 26px; color: var(--blue-light); margin: 0 auto 12px; }
+.profile-name { font-size: 16px; font-weight: 600; color: #fff; }
+.profile-loc { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 4px; }
+.settings-nav-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; border-bottom: 0.5px solid var(--border); cursor: pointer; transition: background 0.12s; }
+.settings-nav-item:last-child { border-bottom: none; }
+.settings-nav-item:hover { background: var(--bg); }
+.settings-nav-item.active { background: var(--blue-pale); }
+.settings-nav-item i { font-size: 17px; color: var(--blue); width: 22px; }
+.settings-nav-item span { font-size: 13px; color: var(--navy); font-weight: 500; }
+.settings-content { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); padding: 24px; }
+.settings-section-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); margin-bottom: 6px; }
+.settings-section-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.form-row { margin-bottom: 16px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 6px; display: block; }
+.form-input { width: 100%; border: 0.5px solid var(--border); border-radius: 12px; padding: 11px 14px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--navy); outline: none; background: var(--bg); transition: border-color 0.15s; }
+.form-input:focus { border-color: var(--blue); background: var(--white); }
+.btn-save { background: var(--blue); color: #fff; border: none; border-radius: 50px; padding: 11px 28px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.logout-btn { background: #fdecea; color: #c0392b; border: 1.5px solid rgba(192,57,43,0.2); border-radius: 50px; padding: 11px 28px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-left: 12px; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-top">
+      <a href="index.html" class="sidebar-logo">
+        <img src="images/logo.png" alt="Localie">
+        <div class="logo-text">Local<em>ie</em></div>
+      </a>
+      <div class="trust-counter">
+        <div class="trust-num">2,847</div>
+        <div class="trust-lbl">locals using the app</div>
+      </div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Discover</div>
+      <button class="nav-item active" onclick="switchTab('home')" id="nav-home"><i class="ti ti-home"></i><span>Home</span></button>
+      <button class="nav-item" onclick="switchTab('feed')" id="nav-feed"><i class="ti ti-layout-list"></i><span>Feed</span></button>
+      <button class="nav-item" onclick="switchTab('search')" id="nav-search"><i class="ti ti-search"></i><span>Search</span></button>
+      <div class="nav-section-label">Account</div>
+      <button class="nav-item" onclick="switchTab('messages')" id="nav-messages"><i class="ti ti-message"></i><span>Messages</span></button>
+      <button class="nav-item" onclick="switchTab('settings')" id="nav-settings"><i class="ti ti-settings"></i><span>Settings</span></button>
+      <button class="nav-item" onclick="switchTab('refer')" id="nav-refer"><i class="ti ti-user-plus"></i><span>Refer a tradie</span></button>
+      <button class="nav-item" onclick="switchTab('feedback')" id="nav-feedback"><i class="ti ti-message-2"></i><span>Feedback</span></button>
+    </div>
+    <div class="sidebar-footer">
+      <div class="user-row">
+        <div class="user-avatar">JT</div>
+        <div>
+          <div class="user-name">Jake Thompson</div>
+          <div class="user-type">Customer · Melbourne</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="search-bar">
+        <i class="ti ti-search"></i>
+        <input type="text" placeholder="Search tradies near you..." />
+      </div>
+      <div class="topbar-right">
+        <button class="notif-btn" aria-label="Notifications">
+          <i class="ti ti-bell"></i>
+          <div class="notif-dot"></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- HOME -->
+      <div class="tab-pane active" id="tab-home">
+        <div class="page-title">Good morning, Jake 👋</div>
+        <div class="page-sub">Find trusted local services near Melbourne, VIC</div>
+        <div class="sec-label">Browse by category</div>
+        <div class="cat-grid">
+          <div class="cat-card"><i class="ti ti-bolt"></i><span>Electrical</span></div>
+          <div class="cat-card"><i class="ti ti-droplet"></i><span>Plumbing</span></div>
+          <div class="cat-card"><i class="ti ti-car"></i><span>Auto Detail</span></div>
+          <div class="cat-card"><i class="ti ti-home"></i><span>Cleaning</span></div>
+          <div class="cat-card"><i class="ti ti-paw"></i><span>Dog Grooming</span></div>
+          <div class="cat-card"><i class="ti ti-tools"></i><span>Building</span></div>
+          <div class="cat-card"><i class="ti ti-truck"></i><span>Removals</span></div>
+          <div class="cat-card"><i class="ti ti-scissors"></i><span>Hair & Beauty</span></div>
+          <div class="cat-card"><i class="ti ti-plant"></i><span>Landscaping</span></div>
+          <div class="cat-card"><i class="ti ti-antenna"></i><span>Roofing</span></div>
+          <div class="cat-card"><i class="ti ti-baby-carriage"></i><span>Babysitting</span></div>
+          <div class="cat-card"><i class="ti ti-trash"></i><span>Rubbish</span></div>
+        </div>
+        <div class="two-col">
+          <div>
+            <div class="sec-label">Featured locals</div>
+            <div class="provider-card">
+              <div class="card-inner">
+                <div class="card-img" style="background:linear-gradient(135deg,#1a6bdf,#0d4a9a)"><i class="ti ti-car"></i><div class="badge-pro">Pro</div><div class="badge-new">New</div></div>
+                <div class="card-body">
+                  <div class="card-biz">EXS Mobile Detailing</div>
+                  <div class="card-desc">20% off full details this week — limited spots remaining. All products are premium grade.</div>
+                  <div class="card-row"><div><div class="stars">★★★★★</div><div class="verified"><i class="ti ti-shield-check" style="font-size:11px"></i> Localie Verified</div></div><button class="btn-contact">Contact</button></div>
+                </div>
+              </div>
+            </div>
+            <div class="provider-card">
+              <div class="card-inner">
+                <div class="card-img" style="background:linear-gradient(135deg,#0d4a9a,#1a6bdf)"><i class="ti ti-bolt"></i></div>
+                <div class="card-body">
+                  <div class="card-biz">Forbes Electrical</div>
+                  <div class="card-desc">Switchboard upgrades & safety inspections — fast turnaround guaranteed.</div>
+                  <div class="card-row"><div><div class="stars">★★★★★</div><div class="verified"><i class="ti ti-shield-check" style="font-size:11px"></i> Localie Verified</div></div><button class="btn-contact">Contact</button></div>
+                </div>
+              </div>
+            </div>
+            <div class="provider-card">
+              <div class="card-inner">
+                <div class="card-img" style="background:linear-gradient(135deg,#2e6b3e,#1a6bdf)"><i class="ti ti-home"></i><div class="badge-pro">Pro</div></div>
+                <div class="card-body">
+                  <div class="card-biz">SS Exterior Services</div>
+                  <div class="card-desc">End of month pressure wash special — book before Friday and save 15%.</div>
+                  <div class="card-row"><div><div class="stars">★★★★★</div><div class="verified"><i class="ti ti-shield-check" style="font-size:11px"></i> Localie Verified</div></div><button class="btn-contact">Contact</button></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="sec-label">Last-minute slots 🔥</div>
+            <div class="slot-card">
+              <div class="slot-biz">EXS Mobile Detailing</div>
+              <div class="slot-time"><i class="ti ti-clock" style="font-size:12px;color:var(--gold)"></i> Today 2pm — Full detail available</div>
+              <button class="btn-claim">Claim this slot</button>
+            </div>
+            <div class="slot-card">
+              <div class="slot-biz">Millies Groom & Glam</div>
+              <div class="slot-time"><i class="ti ti-clock" style="font-size:12px;color:var(--gold)"></i> Tomorrow 10am — Full groom</div>
+              <button class="btn-claim">Claim this slot</button>
+            </div>
+            <div class="slot-card">
+              <div class="slot-biz">Brincat Plumbing</div>
+              <div class="slot-time"><i class="ti ti-clock" style="font-size:12px;color:var(--gold)"></i> Friday 9am — Hot water inspection</div>
+              <button class="btn-claim">Claim this slot</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEED -->
+      <div class="tab-pane" id="tab-feed">
+        <div class="page-title">Feed</div>
+        <div class="page-sub">Latest posts from verified local businesses</div>
+        <div class="feed-filters">
+          <div class="filter-pill active">Melbourne</div>
+          <div class="filter-pill">Wallan</div>
+          <div class="filter-pill">Broadford</div>
+          <div class="filter-pill">Kilmore</div>
+          <div class="filter-pill">Seymour</div>
+          <div class="filter-pill">All areas</div>
+        </div>
+        <div class="feed-grid">
+          <div class="feed-card"><div class="feed-img" style="background:linear-gradient(135deg,#2e6b3e,#1a6bdf)"><i class="ti ti-home"></i><div class="badge-pro">Pro</div></div><div class="feed-body"><div class="feed-biz">SS Exterior Services</div><div class="feed-desc">End of month pressure wash special — 15% off your first service if you book before Friday</div><div class="feed-row"><div class="verified"><i class="ti ti-shield-check" style="font-size:10px"></i> Localie Verified</div><button class="btn-contact" style="font-size:11px;padding:5px 14px">Enquire</button></div></div></div>
+          <div class="feed-card"><div class="feed-img" style="background:linear-gradient(135deg,#0d4a9a,#4a9eff)"><i class="ti ti-paw"></i><div class="badge-new">New</div></div><div class="feed-body"><div class="feed-biz">Millies Groom & Glam</div><div class="feed-desc">Now taking bookings for all breeds — first groom 10% off for new customers</div><div class="feed-row"><div class="verified"><i class="ti ti-shield-check" style="font-size:10px"></i> Localie Verified</div><button class="btn-contact" style="font-size:11px;padding:5px 14px">Book</button></div></div></div>
+          <div class="feed-card"><div class="feed-img" style="background:linear-gradient(135deg,#5a1a6b,#1a6bdf)"><i class="ti ti-tools"></i></div><div class="feed-body"><div class="feed-biz">Hateley Construct</div><div class="feed-desc">Free quotes on all renovation projects this month — no obligation whatsoever</div><div class="feed-row"><div class="verified"><i class="ti ti-shield-check" style="font-size:10px"></i> Localie Verified</div><button class="btn-contact" style="font-size:11px;padding:5px 14px">Quote</button></div></div></div>
+          <div class="feed-card"><div class="feed-img" style="background:linear-gradient(135deg,#0d2d6a,#1a6bdf)"><i class="ti ti-droplet"></i></div><div class="feed-body"><div class="feed-biz">Brincat Plumbing</div><div class="feed-desc">Hot water systems installed same week — fully insured & licensed</div><div class="feed-row"><div class="verified"><i class="ti ti-shield-check" style="font-size:10px"></i> Localie Verified</div><button class="btn-contact" style="font-size:11px;padding:5px 14px">Contact</button></div></div></div>
+          <div class="feed-card"><div class="feed-img" style="background:linear-gradient(135deg,#1a6bdf,#0d4a9a)"><i class="ti ti-car"></i><div class="badge-pro">Pro</div></div><div class="feed-body"><div class="feed-biz">EXS Mobile Detailing</div><div class="feed-desc">20% off full details this week — ceramic coat option available</div><div class="feed-row"><div class="verified"><i class="ti ti-shield-check" style="font-size:10px"></i> Localie Verified</div><button class="btn-contact" style="font-size:11px;padding:5px 14px">Book</button></div></div></div>
+          <div class="feed-card"><div class="feed-img" style="background:linear-gradient(135deg,#0d4a9a,#4a9eff)"><i class="ti ti-bolt"></i></div><div class="feed-body"><div class="feed-biz">Forbes Electrical</div><div class="feed-desc">Safety switch upgrades — protect your family, book this week</div><div class="feed-row"><div class="verified"><i class="ti ti-shield-check" style="font-size:10px"></i> Localie Verified</div><button class="btn-contact" style="font-size:11px;padding:5px 14px">Contact</button></div></div></div>
+        </div>
+      </div>
+
+      <!-- SEARCH -->
+      <div class="tab-pane" id="tab-search">
+        <div class="page-title">Search</div>
+        <div class="page-sub">Results near Melbourne, VIC</div>
+        <div class="provider-card"><div class="card-inner"><div class="card-img" style="background:linear-gradient(135deg,#0d2d6a,#1a6bdf);width:100px"><i class="ti ti-droplet"></i></div><div class="card-body"><div class="card-biz">Brincat Plumbing</div><div class="card-desc">Hot water, drainage, renovations — fully insured & licensed</div><div class="card-row"><div><div class="stars">★★★★★</div><div class="verified"><i class="ti ti-shield-check" style="font-size:11px"></i> Localie Verified</div></div><button class="btn-contact">Contact</button></div></div></div></div>
+        <div class="provider-card"><div class="card-inner"><div class="card-img" style="background:linear-gradient(135deg,#555,#888);width:100px"><i class="ti ti-car"></i></div><div class="card-body"><div class="card-biz">Wallan AutoBody</div><div class="card-desc">Panel beating, spray painting & insurance work — all makes and models</div><div class="card-row"><div><div class="stars">★★★★☆</div><div class="verified"><i class="ti ti-shield-check" style="font-size:11px"></i> Localie Verified</div></div><button class="btn-contact">Contact</button></div></div></div></div>
+        <div class="provider-card"><div class="card-inner"><div class="card-img" style="background:linear-gradient(135deg,#1a6bdf,#4a9eff);width:100px"><i class="ti ti-truck"></i></div><div class="card-body"><div class="card-biz">Allen Moving & Storage</div><div class="card-desc">Local & interstate moves — careful handling guaranteed</div><div class="card-row"><div><div class="stars">★★★★★</div><div class="verified"><i class="ti ti-shield-check" style="font-size:11px"></i> Localie Verified</div></div><button class="btn-contact">Contact</button></div></div></div></div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="tab-pane" id="tab-messages">
+        <div class="messages-layout">
+          <div class="inbox-list">
+            <div class="inbox-header">Messages</div>
+            <div class="msg-item active" onclick="selectThread(this,'EXS Mobile Detailing','Auto Detailing','EX','var(--blue-pale)','var(--blue)')">
+              <div class="msg-avatar">EX</div>
+              <div style="flex:1;min-width:0"><div class="msg-name">EXS Mobile Detailing</div><div class="msg-preview">Thursday works — what's included?</div></div>
+              <div class="unread-dot"></div>
+            </div>
+            <div class="msg-item" onclick="selectThread(this,'SS Exterior Services','Cleaning','SS','#e8f5e9','#2e6b3e')">
+              <div class="msg-avatar" style="background:#e8f5e9;color:#2e6b3e">SS</div>
+              <div style="flex:1;min-width:0"><div class="msg-name">SS Exterior Services</div><div class="msg-preview">Thanks so much, see you Friday!</div></div>
+            </div>
+            <div class="msg-item" onclick="selectThread(this,'Forbes Electrical','Electrical','FE','#fff4e0','#f5a623')">
+              <div class="msg-avatar" style="background:#fff4e0;color:#f5a623">FE</div>
+              <div style="flex:1;min-width:0"><div class="msg-name">Forbes Electrical</div><div class="msg-preview">Tuesday morning works for us!</div></div>
+              <div class="unread-dot"></div>
+            </div>
+          </div>
+          <div class="thread-area">
+            <div class="thread-header">
+              <div class="thread-avatar" id="t-avatar">EX</div>
+              <div><div class="thread-name" id="t-name">EXS Mobile Detailing</div><div class="thread-sub" id="t-sub">Localie Verified · Auto Detailing</div></div>
+            </div>
+            <div class="thread-body">
+              <div class="bubble-row"><div class="b-avatar">EX</div><div><div class="bubble">Hey! Thanks for reaching out. We have availability this Thursday from 10am.</div><div class="bubble-time">10:32am</div></div></div>
+              <div class="bubble-row mine"><div class="b-avatar" style="background:var(--blue);color:#fff">Me</div><div style="display:flex;flex-direction:column;align-items:flex-end"><div class="bubble mine">Thursday works perfectly. What's included in the full detail?</div><div class="bubble-time">10:35am</div></div></div>
+              <div class="bubble-row"><div class="b-avatar">EX</div><div><div class="bubble">Full interior & exterior, engine bay, ceramic coat option available. All premium products.</div><div class="bubble-time">10:37am</div></div></div>
+              <div class="bubble-row mine"><div class="b-avatar" style="background:var(--blue);color:#fff">Me</div><div style="display:flex;flex-direction:column;align-items:flex-end"><div class="bubble mine">Awesome — let's lock in Thursday 10am for the full detail + ceramic!</div><div class="bubble-time">10:39am</div></div></div>
+            </div>
+            <div class="thread-input-row">
+              <input type="text" placeholder="Type a message..." />
+              <button class="send-btn"><i class="ti ti-send" style="font-size:15px"></i> Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="tab-pane" id="tab-settings">
+        <div class="page-title">Settings</div>
+        <div class="page-sub" style="margin-bottom:24px">Manage your account and preferences</div>
+        <div class="settings-layout">
+          <div class="settings-sidebar">
+            <div class="profile-block">
+              <div class="profile-avatar-lg"><i class="ti ti-user"></i></div>
+              <div class="profile-name">Jake Thompson</div>
+              <div class="profile-loc"><i class="ti ti-map-pin" style="font-size:11px"></i> Melbourne, VIC</div>
+            </div>
+            <div class="settings-nav-item active"><i class="ti ti-user"></i><span>Profile info</span></div>
+            <div class="settings-nav-item"><i class="ti ti-map-pin"></i><span>Location</span></div>
+            <div class="settings-nav-item"><i class="ti ti-heart"></i><span>Saved businesses</span></div>
+            <div class="settings-nav-item"><i class="ti ti-bell"></i><span>Notifications</span></div>
+          </div>
+          <div class="settings-content">
+            <div class="settings-section-title">Profile information</div>
+            <div class="settings-section-sub">Keep your details up to date</div>
+            <div class="form-row"><label class="form-label">Full name</label><input class="form-input" type="text" value="Jake Thompson" /></div>
+            <div class="form-row"><label class="form-label">Email address</label><input class="form-input" type="email" value="jake@email.com" /></div>
+            <div class="form-row"><label class="form-label">Phone number</label><input class="form-input" type="tel" placeholder="e.g. 0400 000 000" /></div>
+            <div class="form-row"><label class="form-label">Location</label><input class="form-input" type="text" value="Melbourne, VIC" placeholder="e.g. Melbourne, VIC" /></div>
+            <div style="display:flex;align-items:center;gap:0;margin-top:8px">
+              <button class="btn-save">Save changes</button>
+              <button class="logout-btn" onclick="window.location.href='login.html'">Log out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REFER -->
+      <div class="tab-pane" id="tab-refer">
+        <div class="page-title">Refer a tradie</div>
+        <div class="page-sub" style="margin-bottom:24px">Know a great local business? Nominate them for Localie.</div>
+        <div style="background:var(--white);border:0.5px solid var(--border);border-radius:16px;padding:28px;max-width:560px">
+          <div class="form-row"><label class="form-label">Business name</label><input class="form-input" type="text" placeholder="e.g. Smith's Plumbing" /></div>
+          <div class="form-row"><label class="form-label">Trade / service type</label><input class="form-input" type="text" placeholder="e.g. Plumbing" /></div>
+          <div class="form-row"><label class="form-label">Contact name</label><input class="form-input" type="text" placeholder="e.g. John Smith" /></div>
+          <div class="form-row"><label class="form-label">Phone or email</label><input class="form-input" type="text" placeholder="e.g. john@smithsplumbing.com.au" /></div>
+          <div class="form-row"><label class="form-label">Why do you recommend them?</label><textarea class="form-input" rows="3" placeholder="Tell us why they'd be a great fit for Localie..." style="resize:none;height:80px"></textarea></div>
+          <button class="btn-save">Submit referral</button>
+        </div>
+      </div>
+
+      <!-- FEEDBACK -->
+      <div class="tab-pane" id="tab-feedback">
+        <div class="page-title">Anonymous feedback</div>
+        <div class="page-sub" style="margin-bottom:24px">Your feedback is sent anonymously to the Localie team.</div>
+        <div style="background:var(--white);border:0.5px solid var(--border);border-radius:16px;padding:28px;max-width:560px">
+          <div class="form-row"><label class="form-label">Feedback type</label><select class="form-input"><option>General feedback about the app</option><option>Feedback about a specific provider</option><option>Report an issue</option><option>Feature request</option></select></div>
+          <div class="form-row"><label class="form-label">Your message</label><textarea class="form-input" rows="4" placeholder="Tell us what you think..." style="resize:none;height:100px"></textarea></div>
+          <button class="btn-save">Send anonymously</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import sb from './js/supabase.js';
+import { getUser } from './js/auth.js';
+
+const tabs = ['home','feed','search','messages','settings','refer','feedback'];
+window.switchTab = function(t) {
+  tabs.forEach(x => { document.getElementById('tab-'+x).classList.remove('active'); const n = document.getElementById('nav-'+x); if(n) n.classList.remove('active'); });
+  document.getElementById('tab-'+t).classList.add('active');
+  const nav = document.getElementById('nav-'+t);
+  if(nav) nav.classList.add('active');
+};
+
+document.querySelectorAll('.filter-pill').forEach(p => {
+  p.addEventListener('click', function() { document.querySelectorAll('.filter-pill').forEach(x => x.classList.remove('active')); this.classList.add('active'); });
+});
+
+window.selectThread = function(el, name, cat, initials, bg, color) {
+  document.querySelectorAll('.msg-item').forEach(x => x.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('t-name').textContent = name;
+  document.getElementById('t-sub').textContent = 'Localie Verified · ' + cat;
+  const av = document.getElementById('t-avatar');
+  av.textContent = initials;
+  av.style.background = bg;
+  av.style.color = color;
+};
+
+function getCategoryIcon(category) {
+  const icons = {
+    'Electrical': 'ti-bolt',
+    'Plumbing': 'ti-droplet',
+    'Auto Detail': 'ti-car',
+    'Cleaning': 'ti-home',
+    'Dog Grooming': 'ti-paw',
+    'Building': 'ti-tools',
+    'Removals': 'ti-truck',
+    'Hair & Beauty': 'ti-scissors',
+    'Landscaping': 'ti-plant',
+    'Roofing': 'ti-antenna',
+    'Babysitting': 'ti-baby-carriage',
+    'Rubbish': 'ti-trash'
+  };
+  return icons[category] || 'ti-building';
+}
+
+function getGradient(index) {
+  const gradients = [
+    'linear-gradient(135deg,#1a6bdf,#0d4a9a)',
+    'linear-gradient(135deg,#0d4a9a,#1a6bdf)',
+    'linear-gradient(135deg,#2e6b3e,#1a6bdf)',
+    'linear-gradient(135deg,#f5a623,#0d4a9a)',
+    'linear-gradient(135deg,#7a8aaa,#1a6bdf)'
+  ];
+  return gradients[index % gradients.length];
+}
+
+function getInitials(name) {
+  return name.split(' ').map(n => n[0]).join('').toUpperCase();
+}
+
+async function initApp() {
+  const user = await getUser();
+  if (!user) {
+    window.location.href = '/login.html';
+    return;
+  }
+
+  const userData = user.user_metadata || {};
+  const userName = userData.full_name || user.email.split('@')[0];
+  const userLocation = userData.location || 'Melbourne, VIC';
+
+  // Update sidebar user info
+  const avatar = document.querySelector('.user-avatar');
+  if (avatar) avatar.textContent = getInitials(userName);
+  const nameEl = document.querySelector('.user-name');
+  if (nameEl) nameEl.textContent = userName;
+  const typeEl = document.querySelector('.user-type');
+  if (typeEl) typeEl.textContent = 'Customer · ' + userLocation;
+
+  // Update settings profile
+  const profileName = document.querySelector('.profile-name');
+  if (profileName) profileName.textContent = userName;
+  const profileLoc = document.querySelector('.profile-loc');
+  if (profileLoc) profileLoc.innerHTML = '<i class="ti ti-map-pin" style="font-size:11px"></i> ' + userLocation;
+
+  // Update page greeting
+  const greeting = document.querySelector('.page-title');
+  if (greeting && greeting.textContent.includes('Good morning')) {
+    const firstName = userName.split(' ')[0];
+    greeting.textContent = 'Good morning, ' + firstName + ' 👋';
+  }
+
+  // Update page subtitle
+  const pageSubtitle = document.querySelector('.page-sub');
+  if (pageSubtitle) {
+    pageSubtitle.textContent = 'Find trusted local services near ' + userLocation;
+  }
+
+  // Fetch providers for featured section
+  const { data: providers } = await sb.from('providers').select('*').eq('verified', true).limit(6);
+  if (providers && providers.length > 0) {
+    populateFeatured(providers.slice(0, 3));
+    populateFeed(providers.slice(0, 6));
+  }
+}
+
+function populateFeatured(providers) {
+  const container = document.querySelector('.two-col > div:first-child');
+  if (!container) return;
+
+  const existingCards = container.querySelectorAll('.provider-card');
+  existingCards.forEach((card, idx) => {
+    if (idx > 0) card.remove();
+  });
+
+  const firstCard = container.querySelector('.provider-card');
+  if (firstCard && providers[0]) {
+    const p = providers[0];
+    const icon = getCategoryIcon(p.category);
+    firstCard.querySelector('.card-img').innerHTML = `<i class="ti ${icon}"></i>${p.plan === 'Pro' ? '<div class="badge-pro">Pro</div>' : ''}<div class="badge-new">New</div>`;
+    firstCard.querySelector('.card-img').style.background = getGradient(0);
+    firstCard.querySelector('.card-biz').textContent = p.business_name;
+    firstCard.querySelector('.card-desc').textContent = p.description || 'Verified local service provider';
+    firstCard.querySelector('.verified').innerHTML = '<i class="ti ti-shield-check" style="font-size:11px"></i> Localie Verified';
+  }
+
+  providers.slice(1).forEach((p, idx) => {
+    const icon = getCategoryIcon(p.category);
+    const card = document.createElement('div');
+    card.className = 'provider-card';
+    card.innerHTML = `
+      <div class="card-inner">
+        <div class="card-img" style="background:${getGradient(idx + 1)}"><i class="ti ${icon}"></i>${p.plan === 'Pro' ? '<div class="badge-pro">Pro</div>' : ''}</div>
+        <div class="card-body">
+          <div class="card-biz">${p.business_name}</div>
+          <div class="card-desc">${p.description || 'Verified local service provider'}</div>
+          <div class="card-row"><div><div class="stars">★★★★★</div><div class="verified"><i class="ti ti-shield-check" style="font-size:11px"></i> Localie Verified</div></div><button class="btn-contact">Contact</button></div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function populateFeed(providers) {
+  const container = document.querySelector('.feed-grid');
+  if (!container) return;
+
+  container.innerHTML = '';
+
+  providers.forEach((p, idx) => {
+    const icon = getCategoryIcon(p.category);
+    const card = document.createElement('div');
+    card.className = 'feed-card';
+    card.innerHTML = `
+      <div class="feed-img" style="background:${getGradient(idx)}"><i class="ti ${icon}"></i>${p.plan === 'Pro' ? '<div class="badge-pro">Pro</div>' : ''}</div>
+      <div class="feed-body">
+        <div class="feed-biz">${p.business_name}</div>
+        <div class="feed-desc">${p.description || 'Verified local service'}</div>
+        <div class="feed-row"><div class="verified"><i class="ti ti-shield-check" style="font-size:10px"></i> Localie Verified</div><button class="btn-contact" style="font-size:11px;padding:5px 14px">Enquire</button></div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+initApp();
+</script>
+</body>
+</html>

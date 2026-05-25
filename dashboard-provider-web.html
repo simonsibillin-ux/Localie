@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Localie — Provider Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0d2d6a; --blue: #1a6bdf; --blue-light: #4a9eff;
+  --blue-pale: #e6f1fb; --dark: #0a1628; --gold: #f5a623;
+  --muted: #7a8aaa; --border: #e0ecff; --green: #2e6b3e;
+  --green-light: #e8f5e9; --white: #ffffff; --bg: #f4f7fb;
+}
+html, body { height: 100%; overflow: hidden; font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--navy); }
+.layout { display: flex; height: 100vh; }
+.sidebar { width: 240px; background: var(--dark); display: flex; flex-direction: column; flex-shrink: 0; }
+.sidebar-top { padding: 24px 18px 20px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.sidebar-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; margin-bottom: 16px; }
+.sidebar-logo img { height: 34px; width: 34px; border-radius: 10px; object-fit: cover; }
+.logo-text { font-family: 'DM Serif Display', serif; font-size: 20px; color: #fff; }
+.logo-text em { color: var(--blue-light); font-style: normal; }
+.plan-block { background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.2); border-radius: 12px; padding: 10px 12px; }
+.plan-name { font-size: 11px; color: var(--gold); font-weight: 600; margin-bottom: 2px; }
+.plan-price { font-family: 'DM Serif Display', serif; font-size: 20px; color: #fff; }
+.plan-next { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+.upgrade-link { display: block; background: var(--gold); color: var(--dark); border: none; border-radius: 50px; padding: 7px; font-size: 11px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; text-align: center; margin-top: 10px; }
+.sidebar-nav { flex: 1; padding: 16px 10px; }
+.nav-section-label { font-size: 9px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.25); font-weight: 600; padding: 0 10px; margin-bottom: 6px; margin-top: 16px; }
+.nav-section-label:first-child { margin-top: 0; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; cursor: pointer; margin-bottom: 2px; transition: all 0.15s; border: none; background: transparent; width: 100%; text-align: left; }
+.nav-item i { font-size: 18px; color: rgba(255,255,255,0.35); flex-shrink: 0; }
+.nav-item span { font-size: 13px; color: rgba(255,255,255,0.35); font-family: 'DM Sans', sans-serif; font-weight: 500; flex: 1; }
+.nav-item.active { background: rgba(26,107,223,0.2); }
+.nav-item.active i { color: var(--blue-light); }
+.nav-item.active span { color: #fff; }
+.nav-item:hover:not(.active) { background: rgba(255,255,255,0.05); }
+.nav-badge { background: #ef4444; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 50px; }
+.sidebar-footer { padding: 16px; border-top: 1px solid rgba(255,255,255,0.06); }
+.biz-row { display: flex; align-items: center; gap: 10px; }
+.biz-avatar { width: 34px; height: 34px; border-radius: 10px; background: rgba(26,107,223,0.25); display: flex; align-items: center; justify-content: center; font-size: 15px; color: var(--blue-light); flex-shrink: 0; }
+.biz-name { font-size: 13px; color: rgba(255,255,255,0.7); font-weight: 500; }
+.biz-sub { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+.main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.topbar { background: var(--white); border-bottom: 0.5px solid var(--border); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.topbar-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: var(--navy); }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.notif-btn { position: relative; background: none; border: none; cursor: pointer; color: var(--muted); font-size: 20px; padding: 4px; }
+.notif-dot { position: absolute; top: 2px; right: 2px; width: 7px; height: 7px; background: #ef4444; border-radius: 50%; border: 1.5px solid var(--white); }
+.content { flex: 1; overflow-y: auto; padding: 28px; scrollbar-width: thin; }
+.content::-webkit-scrollbar { width: 4px; }
+.content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.tab-pane { display: none; animation: fadeIn 0.2s ease; }
+.tab-pane.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+.stat-card { background: var(--white); border: 0.5px solid var(--border); border-radius: 14px; padding: 16px 18px; }
+.stat-num { font-family: 'DM Serif Display', serif; font-size: 30px; color: var(--blue); }
+.stat-lbl { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.stat-trend { font-size: 11px; color: var(--green); margin-top: 4px; display: flex; align-items: center; gap: 3px; }
+.two-col { display: grid; grid-template-columns: 1fr 360px; gap: 24px; }
+.sec-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); font-weight: 600; margin-bottom: 14px; }
+.section-card { background: var(--white); border: 0.5px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+.card-title { font-size: 14px; font-weight: 600; color: var(--navy); margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; }
+.activity-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+.activity-row:last-child { border-bottom: none; }
+.act-icon { width: 34px; height: 34px; border-radius: 50%; background: var(--blue-pale); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.act-icon i { font-size: 16px; color: var(--blue); }
+.act-text { font-size: 13px; color: var(--navy); flex: 1; }
+.act-time { font-size: 11px; color: var(--muted); }
+.composer { background: var(--white); border: 0.5px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+.composer-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.composer-title { font-size: 15px; font-weight: 600; color: var(--navy); }
+.post-limit { font-size: 11px; color: #c0392b; background: #fdecea; padding: 4px 12px; border-radius: 50px; font-weight: 500; }
+.post-limit.ok { color: var(--green); background: var(--green-light); }
+textarea { width: 100%; border: 0.5px solid var(--border); border-radius: 12px; padding: 12px 14px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--navy); resize: none; height: 100px; outline: none; background: var(--bg); transition: border-color 0.15s; }
+textarea:focus { border-color: var(--blue); background: var(--white); }
+textarea::placeholder { color: #aab4cc; }
+.composer-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+.icon-btns { display: flex; gap: 8px; }
+.icon-btn { background: none; border: 0.5px solid var(--border); border-radius: 10px; padding: 8px 12px; cursor: pointer; color: var(--muted); font-size: 16px; transition: all 0.15s; }
+.icon-btn:hover { border-color: var(--blue); color: var(--blue); }
+.post-btn { background: var(--blue); color: #fff; border: none; border-radius: 50px; padding: 10px 24px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.slot-composer { background: #fff9ee; border: 1px solid rgba(245,166,35,0.3); border-radius: 16px; padding: 20px; margin-bottom: 20px; }
+.slot-title { font-size: 14px; font-weight: 600; color: #92650a; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+.slot-input { background: var(--white); border: 0.5px solid rgba(245,166,35,0.3); border-radius: 12px; padding: 11px 14px; font-size: 13px; font-family: 'DM Sans', sans-serif; color: var(--navy); width: 100%; outline: none; margin-bottom: 10px; transition: border-color 0.15s; }
+.slot-input:focus { border-color: var(--gold); }
+.slot-btn { background: var(--gold); color: var(--dark); border: none; border-radius: 50px; padding: 11px 24px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.upgrade-card { background: linear-gradient(135deg, var(--dark), var(--navy)); border-radius: 16px; padding: 24px; text-align: center; }
+.upgrade-card-title { font-family: 'DM Serif Display', serif; font-size: 20px; color: #fff; margin-bottom: 8px; }
+.upgrade-card-sub { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 20px; line-height: 1.6; }
+.upgrade-card-btn { background: var(--gold); color: var(--dark); border: none; border-radius: 50px; padding: 12px 28px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.messages-layout { display: grid; grid-template-columns: 300px 1fr; gap: 0; background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; height: calc(100vh - 200px); }
+.inbox-list { border-right: 0.5px solid var(--border); overflow-y: auto; }
+.inbox-header { padding: 16px 18px; border-bottom: 0.5px solid var(--border); font-size: 14px; font-weight: 600; color: var(--navy); }
+.msg-item { padding: 14px 18px; border-bottom: 0.5px solid var(--border); cursor: pointer; transition: background 0.12s; display: flex; align-items: center; gap: 10px; }
+.msg-item:hover { background: var(--bg); }
+.msg-item.active { background: var(--blue-pale); }
+.msg-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--blue-pale); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; flex-shrink: 0; }
+.msg-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+.msg-preview { font-size: 11px; color: var(--muted); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 170px; }
+.unread-dot { width: 8px; height: 8px; background: var(--blue); border-radius: 50%; margin-left: auto; flex-shrink: 0; }
+.thread-area { display: flex; flex-direction: column; }
+.thread-header { padding: 16px 20px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.thread-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--blue-pale); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+.thread-name { font-size: 14px; font-weight: 600; color: var(--navy); }
+.thread-sub { font-size: 11px; color: var(--muted); }
+.thread-body { flex: 1; overflow-y: auto; padding: 20px; }
+.bubble-row { display: flex; gap: 10px; margin-bottom: 14px; align-items: flex-end; }
+.bubble-row.mine { flex-direction: row-reverse; }
+.b-avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--blue-pale); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+.bubble { background: var(--bg); border: 0.5px solid var(--border); border-radius: 16px; border-bottom-left-radius: 4px; padding: 10px 14px; font-size: 13px; color: var(--navy); line-height: 1.5; max-width: 420px; }
+.bubble.mine { background: var(--blue); color: #fff; border-bottom-left-radius: 16px; border-bottom-right-radius: 4px; }
+.bubble-time { font-size: 10px; color: #aab4cc; margin-top: 4px; }
+.thread-input-row { padding: 14px 20px; border-top: 0.5px solid var(--border); display: flex; gap: 10px; }
+.thread-input-row input { flex: 1; border: 0.5px solid var(--border); border-radius: 50px; padding: 11px 18px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--navy); outline: none; background: var(--bg); }
+.send-btn { background: var(--blue); color: #fff; border: none; border-radius: 50px; padding: 0 20px; height: 42px; display: flex; align-items: center; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 600; gap: 6px; }
+.settings-layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
+.settings-sidebar { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); overflow: hidden; }
+.profile-block { background: var(--dark); padding: 24px; text-align: center; }
+.profile-avatar-lg { width: 64px; height: 64px; border-radius: 16px; background: rgba(26,107,223,0.2); display: flex; align-items: center; justify-content: center; font-size: 26px; color: var(--blue-light); margin: 0 auto 12px; }
+.profile-name { font-size: 16px; font-weight: 600; color: #fff; }
+.profile-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+.settings-nav-item { display: flex; align-items: center; gap: 10px; padding: 13px 16px; border-bottom: 0.5px solid var(--border); cursor: pointer; transition: background 0.12s; }
+.settings-nav-item:last-child { border-bottom: none; }
+.settings-nav-item:hover { background: var(--bg); }
+.settings-nav-item.active { background: var(--blue-pale); }
+.settings-nav-item i { font-size: 17px; color: var(--blue); width: 22px; }
+.settings-nav-item span { font-size: 13px; color: var(--navy); font-weight: 500; }
+.settings-content { background: var(--white); border-radius: 16px; border: 0.5px solid var(--border); padding: 24px; }
+.settings-section-title { font-family: 'DM Serif Display', serif; font-size: 18px; color: var(--navy); margin-bottom: 6px; }
+.settings-section-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+.form-row { margin-bottom: 16px; }
+.form-label { font-size: 12px; font-weight: 600; color: var(--navy); margin-bottom: 6px; display: block; }
+.form-input { width: 100%; border: 0.5px solid var(--border); border-radius: 12px; padding: 11px 14px; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--navy); outline: none; background: var(--bg); transition: border-color 0.15s; }
+.form-input:focus { border-color: var(--blue); background: var(--white); }
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 0.5px solid var(--border); }
+.toggle-row:last-child { border-bottom: none; }
+.toggle-label { font-size: 13px; font-weight: 500; color: var(--navy); }
+.toggle-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.toggle { width: 44px; height: 24px; background: var(--green); border-radius: 50px; position: relative; cursor: pointer; border: none; transition: background 0.2s; flex-shrink: 0; }
+.toggle::after { content: ''; position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; background: #fff; border-radius: 50%; transition: all 0.2s; }
+.toggle.off { background: #d1d5db; }
+.toggle.off::after { right: auto; left: 3px; }
+.credits-banner { background: var(--green-light); border: 1px solid rgba(46,107,62,0.2); border-radius: 14px; padding: 14px 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.credits-num { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--green); }
+.credits-lbl { font-size: 12px; color: var(--green); margin-top: 2px; }
+.btn-save { background: var(--blue); color: #fff; border: none; border-radius: 50px; padding: 11px 28px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; }
+.btn-danger { background: #fdecea; color: #c0392b; border: 1.5px solid rgba(192,57,43,0.2); border-radius: 50px; padding: 11px 28px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: 'DM Sans', sans-serif; margin-left: 12px; }
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-top">
+      <a href="index.html" class="sidebar-logo">
+        <img src="images/logo.png" alt="Localie">
+        <div class="logo-text">Local<em>ie</em></div>
+      </a>
+      <div class="plan-block">
+        <div class="plan-name">Standard plan</div>
+        <div class="plan-price">$9.95<span style="font-size:12px;color:rgba(255,255,255,0.4)">/mo</span></div>
+        <div class="plan-next">Next billing: 1 Jun 2026</div>
+        <button class="upgrade-link">Upgrade to Pro ↗</button>
+      </div>
+    </div>
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Business</div>
+      <button class="nav-item active" onclick="switchTab('dashboard')" id="nav-dashboard"><i class="ti ti-layout-dashboard"></i><span>Dashboard</span></button>
+      <button class="nav-item" onclick="switchTab('post')" id="nav-post"><i class="ti ti-edit"></i><span>Create a post</span></button>
+      <button class="nav-item" onclick="switchTab('messages')" id="nav-messages"><i class="ti ti-message"></i><span>Messages</span><div class="nav-badge">3</div></button>
+      <div class="nav-section-label">Account</div>
+      <button class="nav-item" onclick="switchTab('settings')" id="nav-settings"><i class="ti ti-settings"></i><span>Settings & billing</span></button>
+      <button class="nav-item" onclick="switchTab('refer')" id="nav-refer"><i class="ti ti-user-plus"></i><span>Refer a business</span></button>
+      <button class="nav-item" onclick="switchTab('feedback')" id="nav-feedback"><i class="ti ti-message-2"></i><span>Leave feedback</span></button>
+    </div>
+    <div class="sidebar-footer">
+      <div class="biz-row">
+        <div class="biz-avatar"><i class="ti ti-building" style="font-size:16px"></i></div>
+        <div>
+          <div class="biz-name">EXS Mobile Detailing</div>
+          <div class="biz-sub">Auto Detailing · Melbourne</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Dashboard</div>
+      <div class="topbar-right">
+        <button class="notif-btn" aria-label="Notifications">
+          <i class="ti ti-bell"></i>
+          <div class="notif-dot"></div>
+        </button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <div class="tab-pane active" id="tab-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card"><div class="stat-num">42</div><div class="stat-lbl">Profile views</div><div class="stat-trend"><i class="ti ti-trending-up" style="font-size:11px"></i> +12 this week</div></div>
+          <div class="stat-card"><div class="stat-num">8</div><div class="stat-lbl">New enquiries</div><div class="stat-trend"><i class="ti ti-trending-up" style="font-size:11px"></i> +3 this week</div></div>
+          <div class="stat-card"><div class="stat-num">3</div><div class="stat-lbl">Posts this month</div><div class="stat-trend" style="color:var(--muted)">Weekly limit: 1 post</div></div>
+          <div class="stat-card"><div class="stat-num">$0.40</div><div class="stat-lbl">Referral credits</div><div class="stat-trend">4 referrals made</div></div>
+        </div>
+        <div class="two-col">
+          <div>
+            <div class="section-card">
+              <div class="card-title">Recent activity</div>
+              <div class="activity-row"><div class="act-icon"><i class="ti ti-message"></i></div><div class="act-text">New enquiry from <b>Jake T.</b> — Thursday availability</div><div class="act-time">2m ago</div></div>
+              <div class="activity-row"><div class="act-icon"><i class="ti ti-eye"></i></div><div class="act-text">6 new profile views today</div><div class="act-time">1h ago</div></div>
+              <div class="activity-row"><div class="act-icon"><i class="ti ti-star"></i></div><div class="act-text">New 5-star review received from Sarah R.</div><div class="act-time">3h ago</div></div>
+              <div class="activity-row"><div class="act-icon"><i class="ti ti-gift"></i></div><div class="act-text">Referral credit earned — $0.10 added to account</div><div class="act-time">Yesterday</div></div>
+              <div class="activity-row"><div class="act-icon"><i class="ti ti-message"></i></div><div class="act-text">New enquiry from <b>Mark W.</b> — service area question</div><div class="act-time">Yesterday</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="section-card">
+              <div class="card-title">Quick actions</div>
+              <button class="post-btn" style="width:100%;margin-bottom:10px;padding:12px" onclick="switchTab('post')">Create a post</button>
+              <button class="post-btn" style="width:100%;background:var(--bg);color:var(--navy);border:0.5px solid var(--border);margin-bottom:10px;padding:12px" onclick="switchTab('messages')">View messages (3 unread)</button>
+              <button class="post-btn" style="width:100%;background:var(--gold);color:var(--dark);padding:12px">Upgrade to Pro ↗</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- POST -->
+      <div class="tab-pane" id="tab-post">
+        <div style="max-width:720px">
+          <div class="composer">
+            <div class="composer-header">
+              <div class="composer-title">Create a post</div>
+              <div class="post-limit">1 of 1 posts used this week</div>
+            </div>
+            <textarea placeholder="Share a promo, update, or special offer with locals in your area..."></textarea>
+            <div class="composer-actions">
+              <div class="icon-btns">
+                <button class="icon-btn" aria-label="Add photo"><i class="ti ti-photo"></i></button>
+                <button class="icon-btn" aria-label="Add tag"><i class="ti ti-tag"></i></button>
+                <button class="icon-btn" aria-label="Add location"><i class="ti ti-map-pin"></i></button>
+              </div>
+              <button class="post-btn">Publish post</button>
+            </div>
+          </div>
+          <div class="slot-composer">
+            <div class="slot-title"><i class="ti ti-clock" style="color:var(--gold)"></i> Post a last-minute slot</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+              <input class="slot-input" type="text" placeholder="e.g. Full detail available today 2pm" />
+              <input class="slot-input" type="text" placeholder="e.g. Melbourne, VIC" />
+            </div>
+            <button class="slot-btn">Post last-minute slot</button>
+          </div>
+          <div class="upgrade-card">
+            <div class="upgrade-card-title">Want more posts per week?</div>
+            <div class="upgrade-card-sub">Upgrade to Pro for 5 posts per week, push notification ads to locals in your area, and featured placement at the top of the feed.</div>
+            <button class="upgrade-card-btn">Upgrade to Pro — $29.95/mo</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MESSAGES -->
+      <div class="tab-pane" id="tab-messages">
+        <div class="messages-layout">
+          <div class="inbox-list">
+            <div class="inbox-header">Inbox</div>
+            <div class="msg-item active">
+              <div class="msg-avatar">JT</div>
+              <div style="flex:1;min-width:0"><div class="msg-name">Jake T.</div><div class="msg-preview">Thursday works — what's included?</div></div>
+              <div class="unread-dot"></div>
+            </div>
+            <div class="msg-item">
+              <div class="msg-avatar" style="background:#e8f5e9;color:#2e6b3e">SR</div>
+              <div style="flex:1;min-width:0"><div class="msg-name">Sarah R.</div><div class="msg-preview">Thanks so much, will book again!</div></div>
+            </div>
+            <div class="msg-item">
+              <div class="msg-avatar" style="background:#fff4e0;color:#f5a623">MW</div>
+              <div style="flex:1;min-width:0"><div class="msg-name">Mark W.</div><div class="msg-preview">Do you service Broadford area?</div></div>
+              <div class="unread-dot"></div>
+            </div>
+            <div class="msg-item">
+              <div class="msg-avatar" style="background:#fdecea;color:#c0392b">AL</div>
+              <div style="flex:1;min-width:0"><div class="msg-name">Amy L.</div><div class="msg-preview">Available this Saturday morning?</div></div>
+              <div class="unread-dot"></div>
+            </div>
+          </div>
+          <div class="thread-area">
+            <div class="thread-header">
+              <div class="thread-avatar">JT</div>
+              <div><div class="thread-name">Jake T.</div><div class="thread-sub">Customer · Melbourne, VIC</div></div>
+            </div>
+            <div class="thread-body">
+              <div class="bubble-row"><div class="b-avatar">JT</div><div><div class="bubble">Hi! I saw your profile on Localie — do you have availability this week for a full detail?</div><div class="bubble-time">10:30am</div></div></div>
+              <div class="bubble-row mine"><div class="b-avatar" style="background:var(--blue);color:#fff">Me</div><div style="display:flex;flex-direction:column;align-items:flex-end"><div class="bubble mine">Hey! Thanks for reaching out. We have availability Thursday from 10am.</div><div class="bubble-time">10:32am</div></div></div>
+              <div class="bubble-row"><div class="b-avatar">JT</div><div><div class="bubble">Thursday works perfectly. What's included in the full detail?</div><div class="bubble-time">10:35am</div></div></div>
+              <div class="bubble-row mine"><div class="b-avatar" style="background:var(--blue);color:#fff">Me</div><div style="display:flex;flex-direction:column;align-items:flex-end"><div class="bubble mine">Full interior & exterior, engine bay, ceramic coat option available. All premium products.</div><div class="bubble-time">10:37am</div></div></div>
+            </div>
+            <div class="thread-input-row">
+              <input type="text" placeholder="Type a message..." />
+              <button class="send-btn"><i class="ti ti-send" style="font-size:15px"></i> Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SETTINGS -->
+      <div class="tab-pane" id="tab-settings">
+        <div class="credits-banner">
+          <i class="ti ti-gift" style="font-size:26px;color:var(--green)"></i>
+          <div><div class="credits-num">$0.40</div><div class="credits-lbl">Referral credits accumulated — applied to your next bill</div></div>
+        </div>
+        <div class="settings-layout">
+          <div class="settings-sidebar">
+            <div class="profile-block">
+              <div class="profile-avatar-lg"><i class="ti ti-building"></i></div>
+              <div class="profile-name">EXS Mobile Detailing</div>
+              <div class="profile-sub">Auto Detailing · Melbourne, VIC</div>
+            </div>
+            <div class="settings-nav-item active"><i class="ti ti-building"></i><span>Business profile</span></div>
+            <div class="settings-nav-item"><i class="ti ti-map-pin"></i><span>Service area</span></div>
+            <div class="settings-nav-item"><i class="ti ti-credit-card"></i><span>Billing & plan</span></div>
+            <div class="settings-nav-item"><i class="ti ti-shield-check"></i><span>Documents</span></div>
+          </div>
+          <div class="settings-content">
+            <div class="settings-section-title">Business profile</div>
+            <div class="settings-section-sub">Changes require admin approval before going live</div>
+            <div class="form-row"><label class="form-label">Business name</label><input class="form-input" type="text" value="EXS Mobile Detailing" /></div>
+            <div class="form-row"><label class="form-label">Business description</label><textarea style="height:80px" placeholder="Describe your services...">Premium mobile car detailing — we come to you.</textarea></div>
+            <div class="form-row"><label class="form-label">Service area</label><input class="form-input" type="text" value="Melbourne + 30km radius" placeholder="e.g. Melbourne, VIC" /></div>
+            <div class="form-row"><label class="form-label">Phone number</label><input class="form-input" type="tel" placeholder="e.g. 0400 000 000" /></div>
+            <div style="border: 0.5px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 16px;">
+              <div class="toggle-row"><div><div class="toggle-label">Currently taking new clients</div><div class="toggle-sub">Toggle off when fully booked</div></div><button class="toggle" onclick="this.classList.toggle('off')" aria-label="Toggle availability"></button></div>
+            </div>
+            <div style="display:flex;align-items:center">
+              <button class="btn-save">Save changes</button>
+              <button class="btn-danger" onclick="window.location.href='login.html'">Log out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REFER -->
+      <div class="tab-pane" id="tab-refer">
+        <div style="max-width:560px">
+          <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:6px">Refer a business</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:24px">Earn $0.10 credit for every business you refer that gets approved.</div>
+          <div class="section-card">
+            <div class="form-row"><label class="form-label">Business name</label><input class="form-input" type="text" placeholder="e.g. Smith's Plumbing" /></div>
+            <div class="form-row"><label class="form-label">Trade / service type</label><input class="form-input" type="text" placeholder="e.g. Plumbing" /></div>
+            <div class="form-row"><label class="form-label">Contact name</label><input class="form-input" type="text" placeholder="e.g. John Smith" /></div>
+            <div class="form-row"><label class="form-label">Phone or email</label><input class="form-input" type="text" placeholder="e.g. 0400 000 000" /></div>
+            <button class="btn-save">Submit referral</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEEDBACK -->
+      <div class="tab-pane" id="tab-feedback">
+        <div style="max-width:560px">
+          <div style="font-family:'DM Serif Display',serif;font-size:24px;color:var(--navy);margin-bottom:6px">Leave feedback</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:24px">Your feedback goes directly to Simon and Ethan.</div>
+          <div class="section-card">
+            <div class="form-row"><label class="form-label">Feedback type</label><select class="form-input"><option>General feedback</option><option>Feature request</option><option>Issue or bug</option><option>Billing question</option></select></div>
+            <div class="form-row"><label class="form-label">Your message</label><textarea style="height:100px" placeholder="Tell us what you think..."></textarea></div>
+            <button class="btn-save">Send feedback</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import sb from './js/supabase.js';
+import { getUser } from './js/auth.js';
+
+const tabs = ['dashboard','post','messages','settings','refer','feedback'];
+const titles = { dashboard:'Dashboard', post:'Create a post', messages:'Messages', settings:'Settings & billing', refer:'Refer a business', feedback:'Leave feedback' };
+
+window.switchTab = function(t) {
+  tabs.forEach(x => { document.getElementById('tab-'+x).classList.remove('active'); const n = document.getElementById('nav-'+x); if(n) n.classList.remove('active'); });
+  document.getElementById('tab-'+t).classList.add('active');
+  const nav = document.getElementById('nav-'+t);
+  if(nav) nav.classList.add('active');
+  document.getElementById('topbar-title').textContent = titles[t];
+};
+
+async function initProvider() {
+  const user = await getUser();
+  if (!user || user.user_metadata?.user_type !== 'provider') {
+    window.location.href = '/login.html';
+    return;
+  }
+
+  // Fetch provider data
+  const { data: provider } = await sb.from('providers').select('*').eq('user_id', user.id).single();
+
+  if (!provider) {
+    window.location.href = '/login.html';
+    return;
+  }
+
+  // Update sidebar business info
+  const bizName = document.querySelector('.biz-name');
+  if (bizName) bizName.textContent = provider.business_name;
+  const bizSub = document.querySelector('.biz-sub');
+  if (bizSub) bizSub.textContent = provider.category + ' · ' + provider.location;
+
+  // Update settings profile
+  const profileName = document.querySelector('.profile-name');
+  if (profileName) profileName.textContent = provider.business_name;
+  const profileSub = document.querySelector('.profile-sub');
+  if (profileSub) profileSub.textContent = provider.category + ' · ' + provider.location;
+
+  // Update business form fields
+  const bizNameInput = document.querySelector('.settings-content .form-input[type="text"]:nth-child(1)');
+  if (bizNameInput) bizNameInput.value = provider.business_name;
+
+  // Update stats
+  const statCards = document.querySelectorAll('.stat-card');
+  if (statCards[0]) statCards[0].querySelector('.stat-num').textContent = provider.profile_views || 0;
+  if (statCards[1]) statCards[1].querySelector('.stat-num').textContent = provider.enquiries || 0;
+
+  // Update plan info
+  const planName = document.querySelector('.plan-name');
+  if (planName) planName.textContent = (provider.plan || 'Standard') + ' plan';
+
+  // Handle post submission
+  const publishBtn = document.querySelector('.composer-actions .post-btn');
+  if (publishBtn) {
+    publishBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const textarea = document.querySelector('.composer textarea');
+      if (!textarea.value.trim()) return;
+
+      publishBtn.disabled = true;
+      publishBtn.textContent = 'Publishing...';
+
+      const { error } = await sb.from('provider_posts').insert([{
+        provider_id: provider.id,
+        content: textarea.value,
+        created_at: new Date().toISOString()
+      }]);
+
+      if (!error) {
+        textarea.value = '';
+        publishBtn.disabled = false;
+        publishBtn.textContent = 'Publish post';
+      }
+    });
+  }
+
+  // Handle availability toggle
+  const toggleBtn = document.querySelector('.toggle');
+  if (toggleBtn) {
+    if (provider.taking_new_clients) {
+      toggleBtn.classList.remove('off');
+    } else {
+      toggleBtn.classList.add('off');
+    }
+
+    toggleBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const newStatus = !toggleBtn.classList.contains('off');
+
+      const { error } = await sb.from('providers').update({ taking_new_clients: newStatus }).eq('id', provider.id);
+
+      if (error) {
+        toggleBtn.classList.toggle('off');
+      }
+    });
+  }
+}
+
+initProvider();
+</script>
+</body>
+</html>

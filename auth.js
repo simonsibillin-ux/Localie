@@ -111,23 +111,30 @@ export async function upsertProfile(fullName, location, isCustomer = true, isPro
 // Redirect to correct dashboard based on profile roles
 export async function redirectToDashboard() {
   const user = await getUser();
-  if (!user) return;
+  if (!user) {
+    window.location.href = '/login.html';
+    return;
+  }
 
-  // Guard against infinite loop — if we're already on login.html and have no profile,
-  // sign out and stay on the page rather than looping back
-  const onLoginPage = window.location.pathname.includes('login.html') ||
-                      window.location.pathname === '/' ||
-                      window.location.pathname.endsWith('/');
+  let profile = await getUserProfile();
 
-  const profile = await getUserProfile();
-
+  // If no profile exists, create a default customer profile automatically
+  // This handles users who signed up before the profiles table existed
   if (!profile) {
-    // No profile found — sign out silently and stay on login page
-    // This prevents the infinite redirect loop
-    await import('./supabase.js').then(m => m.default.auth.signOut()).catch(() => {});
-    if (!onLoginPage) {
-      window.location.href = '/login.html';
-    }
+    const userType = localStorage.getItem('selectedUserType') || 'customer';
+    const isProvider = userType === 'provider';
+    profile = await upsertProfile(
+      user.user_metadata?.full_name || user.email.split('@')[0],
+      user.user_metadata?.location || null,
+      true,        // is_customer — everyone is a customer by default
+      isProvider   // is_provider — only if they came from provider flow
+    );
+    localStorage.removeItem('selectedUserType');
+  }
+
+  // If still no profile something is seriously wrong — bail to login
+  if (!profile) {
+    window.location.href = '/login.html';
     return;
   }
 

@@ -59,7 +59,6 @@
     .dashboard-logo img {
       height: 48px;
       width: auto;
-      filter: brightness(0) invert(1);
     }
 
     .dashboard-logo-text {
@@ -302,8 +301,9 @@
   (async () => {
     const profile = await getUserProfile();
     if (profile && profile.full_name) {
-      userName = profile.full_name.split(' ')[0];
-      document.getElementById('welcomeHeading').textContent = `Welcome back, ${userName}`;
+      const firstName = profile.full_name.split(' ')[0];
+      const capitalised = firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase();
+      document.getElementById('welcomeHeading').textContent = `Welcome back, ${capitalised}`;
     }
   })();
 

@@ -409,7 +409,12 @@ async function initProvider() {
   if (logoLink) logoLink.href = '/dashboard-provider-web.html';
 
   const user = await getUser();
-  if (!user || user.user_metadata?.user_type !== 'provider') {
+  if (!user) {
+    window.location.href = '/login.html';
+    return;
+  }
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  if (!profile || !profile.is_provider) {
     window.location.href = '/login.html';
     return;
   }

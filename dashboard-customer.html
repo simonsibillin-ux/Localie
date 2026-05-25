@@ -490,10 +490,15 @@ async function initApp() {
       window.location.href = '/login.html';
       return;
     }
+    const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+    if (!profile || !profile.is_customer) {
+      window.location.href = '/login.html';
+      return;
+    }
 
     // Update profile info in settings
-    const userName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
-    const userLocation = user.user_metadata?.location || 'Melbourne, VIC';
+    const userName = profile.full_name || user.email?.split('@')[0] || 'User';
+    const userLocation = profile.location || 'Melbourne, VIC';
 
     document.querySelector('.profile-name').textContent = userName;
     document.querySelector('.profile-loc').innerHTML = `<i class="ti ti-map-pin" style="font-size:10px"></i> ${userLocation}`;

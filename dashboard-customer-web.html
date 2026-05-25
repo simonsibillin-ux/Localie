@@ -492,10 +492,14 @@ async function initApp() {
     window.location.href = '/login.html';
     return;
   }
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  if (!profile || !profile.is_customer) {
+    window.location.href = '/login.html';
+    return;
+  }
 
-  const userData = user.user_metadata || {};
-  const userName = userData.full_name || user.email.split('@')[0];
-  const userLocation = userData.location || 'Melbourne, VIC';
+  const userName = profile.full_name || user.email.split('@')[0];
+  const userLocation = profile.location || 'Melbourne, VIC';
 
   // Update sidebar user info
   const avatar = document.querySelector('.user-avatar');

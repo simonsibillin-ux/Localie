@@ -9,7 +9,7 @@ export async function signIn(email, password) {
 export async function signInWithGoogle() {
   const { data, error } = await sb.auth.signInWithOAuth({
     provider: 'google',
-    options: { redirectTo: window.location.origin + '/login.html' }
+    options: { redirectTo: window.location.origin + '/auth-callback.html' }
   });
   if (error) throw error;
   return data;

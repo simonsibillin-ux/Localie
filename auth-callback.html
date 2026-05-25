@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signing in...</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #0a1628 0%, #0d2d6a 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .spinner {
+      text-align: center;
+      color: white;
+    }
+    .spinner-circle {
+      width: 48px;
+      height: 48px;
+      border: 3px solid rgba(255,255,255,0.2);
+      border-top: 3px solid #4a9eff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner-text {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+  </style>
+</head>
+<body>
+  <div class="spinner">
+    <div class="spinner-circle"></div>
+    <div class="spinner-text">Signing you in...</div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script type="module">
+    import { redirectToDashboard } from './js/auth.js';
+    (async () => {
+      try {
+        await redirectToDashboard();
+      } catch (error) {
+        console.error('Auth callback error:', error);
+        setTimeout(() => {
+          window.location.href = '/login.html';
+        }, 1500);
+      }
+    })();
+  </script>
+</body>
+</html>

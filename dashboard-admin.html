@@ -296,7 +296,12 @@ async function initAdmin() {
   }
 
   const user = await getUser();
-  if (!user || user.user_metadata?.user_type !== 'admin') {
+  if (!user) {
+    window.location.href = '/login.html';
+    return;
+  }
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  if (!profile || !profile.is_admin) {
     window.location.href = '/login.html';
     return;
   }

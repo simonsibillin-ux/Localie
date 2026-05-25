@@ -136,8 +136,9 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 60px 40px;
+      padding: 60px 40px 120px 40px;
       background: var(--white);
+      overflow-y: auto;
     }
 
     .login-form-container {
@@ -229,6 +230,9 @@
     }
 
     .btn-login {
+      position: relative;
+      z-index: 10;
+      -webkit-appearance: none;
       width: 100%;
       padding: 14px;
       background: var(--blue);
@@ -241,6 +245,7 @@
       cursor: pointer;
       transition: all 0.2s;
       margin-bottom: 16px;
+      display: block;
     }
 
     .btn-login:hover:not(:disabled) {
@@ -373,7 +378,7 @@
       }
 
       .login-right {
-        padding: 40px 24px;
+        padding: 40px 24px 120px 24px;
         min-height: 60vh;
       }
 
@@ -398,7 +403,7 @@
       }
 
       .login-right {
-        padding: 30px 20px;
+        padding: 30px 20px 120px 20px;
         min-height: 65vh;
         justify-content: flex-start;
         overflow-y: auto;
@@ -511,12 +516,22 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
-  import { signIn, getSession, redirectToDashboard } from './js/auth.js';
+  import { signIn, getSession, redirectToDashboard, getUser, signOut } from './js/auth.js';
 
   // Check if already logged in
   (async () => {
-    const session = await getSession();
-    if (session) await redirectToDashboard();
+    if (window.location.pathname.includes('login.html')) {
+      const session = await getSession();
+      if (session) {
+        const user = await getUser();
+        const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+        if (profile) {
+          await redirectToDashboard();
+        } else {
+          await signOut();
+        }
+      }
+    }
   })();
 
 

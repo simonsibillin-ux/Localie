@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Dashboard — Localie</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --navy: #0d2d6a;
+      --blue: #1a6bdf;
+      --blue-light: #4a9eff;
+      --blue-pale: #e6f1fb;
+      --ice: #f0f8ff;
+      --dark: #0a1628;
+      --gold: #f5a623;
+      --muted: #7a8aaa;
+      --border: #e0ecff;
+      --white: #ffffff;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: linear-gradient(135deg, var(--dark) 0%, var(--navy) 100%);
+      color: var(--navy);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .dashboard-select-container {
+      max-width: 900px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .dashboard-logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 60px;
+    }
+
+    .dashboard-logo img {
+      height: 48px;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .dashboard-logo-text {
+      font-family: 'DM Serif Display', serif;
+      font-size: 28px;
+      color: var(--white);
+    }
+
+    .dashboard-logo-text span {
+      color: var(--blue-light);
+    }
+
+    .dashboard-heading {
+      font-family: 'DM Serif Display', serif;
+      font-size: 42px;
+      color: var(--white);
+      text-align: center;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .dashboard-subheading {
+      font-size: 16px;
+      color: rgba(255, 255, 255, 0.7);
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .dashboard-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      width: 100%;
+      margin-bottom: 40px;
+    }
+
+    .dashboard-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      text-decoration: none;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .dashboard-card-icon {
+      font-size: 56px;
+      margin-bottom: 24px;
+      color: var(--blue);
+    }
+
+    .dashboard-card-title {
+      font-family: 'DM Serif Display', serif;
+      font-size: 24px;
+      color: var(--navy);
+      margin-bottom: 12px;
+    }
+
+    .dashboard-card-description {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .dashboard-card-button {
+      padding: 14px 32px;
+      border: none;
+      border-radius: 10px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .dashboard-card:nth-child(1) .dashboard-card-button {
+      background: var(--blue);
+      color: var(--white);
+    }
+
+    .dashboard-card:nth-child(1) .dashboard-card-button:hover {
+      background: var(--navy);
+      transform: translateY(-2px);
+    }
+
+    .dashboard-card:nth-child(2) .dashboard-card-button {
+      background: var(--gold);
+      color: var(--navy);
+    }
+
+    .dashboard-card:nth-child(2) .dashboard-card-button:hover {
+      background: #e59512;
+      transform: translateY(-2px);
+    }
+
+    .dashboard-footer {
+      text-align: center;
+    }
+
+    .dashboard-logout {
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      font-size: 13px;
+      transition: color 0.2s;
+      cursor: pointer;
+    }
+
+    .dashboard-logout:hover {
+      color: var(--white);
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-cards {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .dashboard-heading {
+        font-size: 32px;
+      }
+
+      .dashboard-card {
+        padding: 32px 24px;
+      }
+
+      .dashboard-card-icon {
+        font-size: 48px;
+      }
+
+      .dashboard-card-title {
+        font-size: 20px;
+      }
+
+      .dashboard-card-button {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 24px 16px;
+      }
+
+      .dashboard-logo {
+        margin-bottom: 40px;
+      }
+
+      .dashboard-heading {
+        font-size: 28px;
+      }
+
+      .dashboard-subheading {
+        font-size: 14px;
+        margin-bottom: 40px;
+      }
+
+      .dashboard-cards {
+        gap: 20px;
+      }
+
+      .dashboard-card {
+        padding: 24px 20px;
+      }
+
+      .dashboard-card-icon {
+        font-size: 40px;
+      }
+
+      .dashboard-card-title {
+        font-size: 18px;
+      }
+
+      .dashboard-card-description {
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="dashboard-select-container">
+  <!-- Logo -->
+  <div class="dashboard-logo">
+    <img src="images/logo.png" alt="Localie">
+    <div class="dashboard-logo-text">Local<span>ie</span></div>
+  </div>
+
+  <!-- Heading -->
+  <h1 class="dashboard-heading" id="welcomeHeading">Welcome back</h1>
+  <p class="dashboard-subheading">What would you like to do today?</p>
+
+  <!-- Cards -->
+  <div class="dashboard-cards">
+    <!-- Customer Card -->
+    <div class="dashboard-card" onclick="goToDashboard('customer')">
+      <i class="ti ti-user dashboard-card-icon"></i>
+      <h2 class="dashboard-card-title">Find local services</h2>
+      <p class="dashboard-card-description">Browse verified tradies near you and book with confidence</p>
+      <button class="dashboard-card-button">Go to customer dashboard</button>
+    </div>
+
+    <!-- Provider Card -->
+    <div class="dashboard-card" onclick="goToDashboard('provider')">
+      <i class="ti ti-building dashboard-card-icon"></i>
+      <h2 class="dashboard-card-title">Manage my business</h2>
+      <p class="dashboard-card-description">View enquiries, posts and stats from your Localie business</p>
+      <button class="dashboard-card-button">Go to provider dashboard</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="dashboard-footer">
+    <a href="#" class="dashboard-logout" onclick="handleLogout(event)">Log out</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module">
+  import { getDeviceType, signOut, getUser, getUserProfile } from './js/auth.js';
+
+  let userName = 'there';
+
+  // Load user name on page load
+  (async () => {
+    const profile = await getUserProfile();
+    if (profile && profile.full_name) {
+      userName = profile.full_name.split(' ')[0];
+      document.getElementById('welcomeHeading').textContent = `Welcome back, ${userName}`;
+    }
+  })();
+
+  window.goToDashboard = function(type) {
+    const isDesktop = getDeviceType() === 'desktop';
+    let url = '';
+
+    if (type === 'customer') {
+      url = isDesktop ? '/dashboard-customer-web.html' : '/dashboard-customer.html';
+    } else if (type === 'provider') {
+      url = isDesktop ? '/dashboard-provider-web.html' : '/dashboard-provider.html';
+    }
+
+    if (url) {
+      window.location.href = url;
+    }
+  };
+
+  window.handleLogout = function(e) {
+    e.preventDefault();
+    signOut();
+  };
+</script>
+
+</body>
+</html>

@@ -77,15 +77,68 @@ export function getDashboardUrl(userType) {
   }
 }
 
-// Redirect to correct dashboard based on user type and device
+// Get user profile from profiles table
+export async function getUserProfile() {
+  const user = await getUser();
+  if (!user) return null;
+  const { data, error } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  if (error) {
+    console.error('Error fetching profile:', error);
+    return null;
+  }
+  return data;
+}
+
+// Create or update user profile
+export async function upsertProfile(fullName, location, isCustomer = true, isProvider = false) {
+  const user = await getUser();
+  if (!user) return null;
+  const { data, error } = await sb.from('profiles').upsert({
+    id: user.id,
+    full_name: fullName,
+    location: location || null,
+    is_customer: isCustomer,
+    is_provider: isProvider,
+    is_admin: false
+  }).select().single();
+  if (error) {
+    console.error('Error upserting profile:', error);
+    return null;
+  }
+  return data;
+}
+
+// Redirect to correct dashboard based on profile roles
 export async function redirectToDashboard() {
   const user = await getUser();
   if (!user) return;
-  // Check localStorage first (user's selection on login), fallback to user_metadata
-  let userType = localStorage.getItem('selectedUserType');
-  if (!userType) {
-    userType = user.user_metadata?.user_type;
+  const profile = await getUserProfile();
+
+  if (!profile) {
+    window.location.href = '/login.html';
+    return;
   }
-  localStorage.removeItem('selectedUserType');
-  window.location.href = getDashboardUrl(userType);
+
+  // Admin goes straight to admin dashboard
+  if (profile.is_admin) {
+    window.location.href = '/dashboard-admin.html';
+    return;
+  }
+
+  // Both roles: show role selector
+  if (profile.is_provider && profile.is_customer) {
+    window.location.href = '/dashboard-select.html';
+    return;
+  }
+
+  // Provider only
+  if (profile.is_provider) {
+    const isDesktop = getDeviceType() === 'desktop';
+    window.location.href = isDesktop ? '/dashboard-provider-web.html' : '/dashboard-provider.html';
+    return;
+  }
+
+  // Customer only (default)
+  const isDesktop = getDeviceType() === 'desktop';
+  window.location.href = isDesktop ? '/dashboard-customer-web.html' : '/dashboard-customer.html';
 }

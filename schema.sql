@@ -1,4 +1,20 @@
--- Users table
+-- Profiles table (linked to Supabase auth.users)
+CREATE TABLE IF NOT EXISTS profiles (
+  id uuid references auth.users on delete cascade primary key,
+  full_name text,
+  location text,
+  is_customer boolean default true,
+  is_provider boolean default false,
+  is_admin boolean default false,
+  created_at timestamp with time zone default now()
+);
+
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Users can read own profile" ON profiles FOR SELECT USING (auth.uid() = id);
+CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
+CREATE POLICY "Users can insert own profile" ON profiles FOR INSERT WITH CHECK (auth.uid() = id);
+
+-- Users table (legacy - kept for reference)
 CREATE TABLE users (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email VARCHAR(255) UNIQUE NOT NULL,

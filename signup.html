@@ -622,7 +622,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
-  import { signUp, getSession, redirectToDashboard } from './js/auth.js';
+  import { signUp, getSession, redirectToDashboard, upsertProfile } from './js/auth.js';
 
   // Check if already logged in
   (async () => {
@@ -776,11 +776,13 @@
     try {
       await signUp(email, password, {
         full_name: fullName,
-        user_type: 'customer',
         location: location || ''
       });
       showToast('Account created! Redirecting...', 'success');
-      await new Promise(r => setTimeout(r, 1200));
+      await new Promise(r => setTimeout(r, 600));
+      // Create profile for new customer
+      await upsertProfile(fullName, location, true, false);
+      await new Promise(r => setTimeout(r, 600));
       await redirectToDashboard();
     } catch (error) {
       showToast(error.message || 'Sign up failed', 'error');

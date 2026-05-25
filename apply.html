@@ -380,7 +380,7 @@
 <!-- ── Scripts ──────────────────────────────────────────────────────────────── -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
-  import { signUp, redirectToDashboard, getSession, getDeviceType, getDashboardUrl } from './js/auth.js';
+  import { signUp, redirectToDashboard, getSession, getDeviceType, getDashboardUrl, getUser, upsertProfile } from './js/auth.js';
   import { showToast, setLoading } from './js/app.js';
 
   // ── Redirect if already logged in ─────────────────────────────────────────
@@ -458,28 +458,29 @@
 
     setLoading(submitBtn, true);
     try {
-      // Create provider account
-      const metadata = {
-        full_name: fullName,
-        user_type: 'provider',
-        business_name: businessName,
-        abn,
-        insurance_url: insuranceUrl,
-        service_area: serviceArea,
-        business_description: description,
-        status: 'approved'
-      };
+      // Check if user already has an account
+      let user = await getUser();
 
-      // TODO: Handle file upload to Supabase storage if insuranceFile exists
-      if (insuranceFile) {
-        // File will need to be uploaded separately
-        console.log('File upload:', insuranceFile.name);
+      if (!user) {
+        // Create new account for provider (everyone is a customer by default)
+        const metadata = {
+          full_name: fullName
+        };
+        await signUp(email, Math.random().toString(36).slice(-12), metadata);
+        // Wait a moment for the user to be created
+        await new Promise(r => setTimeout(r, 500));
+        user = await getUser();
       }
 
-      await signUp(email, Math.random().toString(36).slice(-12), metadata);
+      // Update/create profile with provider role
+      if (user) {
+        await upsertProfile(fullName, '', true, true);
+      }
+
       showToast('Application approved — welcome to Localie!', 'success');
       await new Promise(r => setTimeout(r, 1500));
-      const dashboardUrl = getDashboardUrl('provider');
+      const isDesktop = getDeviceType() === 'desktop';
+      const dashboardUrl = isDesktop ? '/dashboard-provider-web.html' : '/dashboard-provider.html';
       window.location.href = dashboardUrl;
     } catch (err) {
       const msg = err.message || 'Application failed. Please try again.';

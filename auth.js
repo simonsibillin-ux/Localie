@@ -118,21 +118,19 @@ export async function redirectToDashboard() {
 
   let profile = await getUserProfile();
 
-  // If no profile exists, create a default customer profile automatically
-  // This handles users who signed up before the profiles table existed
+  // If no profile exists, create one automatically
   if (!profile) {
     const userType = localStorage.getItem('selectedUserType') || 'customer';
     const isProvider = userType === 'provider';
     profile = await upsertProfile(
       user.user_metadata?.full_name || user.email.split('@')[0],
       user.user_metadata?.location || null,
-      true,        // is_customer — everyone is a customer by default
-      isProvider   // is_provider — only if they came from provider flow
+      true,
+      isProvider
     );
-    localStorage.removeItem('selectedUserType');
   }
 
-  // If still no profile something is seriously wrong — bail to login
+  // If still no profile something is seriously wrong
   if (!profile) {
     window.location.href = '/login.html';
     return;
@@ -140,11 +138,30 @@ export async function redirectToDashboard() {
 
   // Admin goes straight to admin dashboard
   if (profile.is_admin) {
+    localStorage.removeItem('selectedUserType');
     window.location.href = '/dashboard-admin.html';
     return;
   }
 
-  // Both roles: show role selector
+  const isDesktop = getDeviceType() === 'desktop';
+
+  // If user explicitly selected a role on the login screen, honour it
+  const selectedType = localStorage.getItem('selectedUserType');
+  localStorage.removeItem('selectedUserType');
+
+  if (selectedType === 'provider' && profile.is_provider) {
+    window.location.href = isDesktop ? '/dashboard-provider-web.html' : '/dashboard-provider.html';
+    return;
+  }
+
+  if (selectedType === 'customer' || !selectedType) {
+    if (profile.is_customer) {
+      window.location.href = isDesktop ? '/dashboard-customer-web.html' : '/dashboard-customer.html';
+      return;
+    }
+  }
+
+  // Fallback — both roles with no selection: show role selector
   if (profile.is_provider && profile.is_customer) {
     window.location.href = '/dashboard-select.html';
     return;
@@ -152,12 +169,10 @@ export async function redirectToDashboard() {
 
   // Provider only
   if (profile.is_provider) {
-    const isDesktop = getDeviceType() === 'desktop';
     window.location.href = isDesktop ? '/dashboard-provider-web.html' : '/dashboard-provider.html';
     return;
   }
 
   // Customer only (default)
-  const isDesktop = getDeviceType() === 'desktop';
   window.location.href = isDesktop ? '/dashboard-customer-web.html' : '/dashboard-customer.html';
 }

@@ -508,21 +508,8 @@
   <!-- Right Panel -->
   <div class="login-right">
     <div style="width:100%;max-width:360px">
-      <!-- User Type Selector -->
-      <div class="user-type-selector" id="userTypeSelector">
-        <div class="user-type-card" onclick="selectUserType('customer')">
-          <i class="ti ti-user user-type-icon"></i>
-          <div class="user-type-title">I'm a customer</div>
-          <div class="user-type-subtitle">Find trusted local services</div>
-        </div>
-        <div class="user-type-card" onclick="selectUserType('provider')">
-          <i class="ti ti-building user-type-icon"></i>
-          <div class="user-type-title">I'm a service provider</div>
-          <div class="user-type-subtitle">Manage your Localie business</div>
-        </div>
-      </div>
 
-      <div class="login-form-container hidden" id="loginFormContainer">
+      <div class="login-form-container" id="loginFormContainer">
         <h2 class="login-form-title">Sign in</h2>
         <p class="login-form-subtitle">Welcome back to Localie</p>
 
@@ -583,16 +570,6 @@
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  // Must be global and outside module for onclick to work on iOS Safari
-  function selectUserType(type) {
-    localStorage.setItem('selectedUserType', type);
-    document.querySelectorAll('.user-type-card').forEach(card => card.classList.remove('selected'));
-    event.currentTarget.classList.add('selected');
-    document.getElementById('userTypeSelector').style.display = 'none';
-    document.getElementById('loginFormContainer').classList.remove('hidden');
-  }
-</script>
 <script type="module">
   import { signIn, redirectToDashboard } from './js/auth.js';
 

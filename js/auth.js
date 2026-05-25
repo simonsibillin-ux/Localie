@@ -79,10 +79,10 @@ export function getDashboardUrl(userType) {
 export async function redirectToDashboard() {
   const user = await getUser();
   if (!user) return;
-  // Try to get user_type from metadata, fallback to localStorage for existing users
-  let userType = user.user_metadata?.user_type;
+  // Check localStorage first (user's selection on login), fallback to user_metadata
+  let userType = localStorage.getItem('selectedUserType');
   if (!userType) {
-    userType = localStorage.getItem('selectedUserType');
+    userType = user.user_metadata?.user_type;
   }
   localStorage.removeItem('selectedUserType');
   window.location.href = getDashboardUrl(userType);

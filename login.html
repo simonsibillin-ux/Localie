@@ -587,6 +587,7 @@
 
   window.selectUserType = function(type) {
     selectedUserType = type;
+    localStorage.setItem('selectedUserType', type);
     const cards = document.querySelectorAll('.user-type-card');
     cards.forEach(card => card.classList.remove('selected'));
     event.currentTarget.classList.add('selected');

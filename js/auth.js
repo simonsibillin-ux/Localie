@@ -28,6 +28,7 @@ export async function signUp(email, password, meta = {}) {
 export async function signOut() {
   const { error } = await sb.auth.signOut();
   if (error) throw error;
+  sessionStorage.removeItem('redirectGuard');
   window.location.href = '/login.html';
 }
 
@@ -60,7 +61,8 @@ export async function requireAuth(redirectUrl = '/login.html') {
 
 // Detect device type based on screen width
 export function getDeviceType() {
-  return window.innerWidth >= 768 ? 'desktop' : 'mobile';
+  const width = document.documentElement.clientWidth || window.innerWidth;
+  return width >= 768 ? 'desktop' : 'mobile';
 }
 
 // Get correct dashboard URL based on user type and device

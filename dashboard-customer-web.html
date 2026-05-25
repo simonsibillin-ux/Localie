@@ -476,8 +476,11 @@ function getInitials(name) {
 async function initApp() {
   // Responsive routing - redirect mobile users to mobile dashboard
   if (getDeviceType() === 'mobile') {
-    window.location.href = '/dashboard-customer.html';
-    return;
+    if (!sessionStorage.getItem('redirectGuard')) {
+      sessionStorage.setItem('redirectGuard', 'true');
+      window.location.href = '/dashboard-customer.html';
+      return;
+    }
   }
 
   // Set logo link

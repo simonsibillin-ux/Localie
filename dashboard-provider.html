@@ -328,8 +328,11 @@ async function initProviderApp() {
   try {
     // Responsive routing - redirect desktop users to web dashboard
     if (getDeviceType() === 'desktop') {
-      window.location.href = '/dashboard-provider-web.html';
-      return;
+      if (!sessionStorage.getItem('redirectGuard')) {
+        sessionStorage.setItem('redirectGuard', 'true');
+        window.location.href = '/dashboard-provider-web.html';
+        return;
+      }
     }
 
     // Set logo link

@@ -397,8 +397,11 @@ window.switchTab = function(t) {
 async function initProvider() {
   // Responsive routing - redirect mobile users to mobile dashboard
   if (getDeviceType() === 'mobile') {
-    window.location.href = '/dashboard-provider.html';
-    return;
+    if (!sessionStorage.getItem('redirectGuard')) {
+      sessionStorage.setItem('redirectGuard', 'true');
+      window.location.href = '/dashboard-provider.html';
+      return;
+    }
   }
 
   // Set logo link

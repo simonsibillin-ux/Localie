@@ -515,7 +515,8 @@ async function initProvider() {
       } else {
         publishBtn.textContent = 'Publish post';
         publishBtn.disabled = false;
-        alert('Failed to publish. Please try again.');
+        console.error('Post insert error:', error);
+        alert('Failed to publish: ' + (error.message || error.code || 'Unknown error') + '\n\nCheck browser console for details.');
       }
     });
   }

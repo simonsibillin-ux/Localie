@@ -417,6 +417,16 @@ html, body { height: 100%; overflow: hidden; font-family: 'DM Sans', sans-serif;
 import sb from './supabase.js';
 import { getUser, getDeviceType, signOut } from './auth.js';
 
+// Clear mock/placeholder data immediately before real data loads
+document.addEventListener('DOMContentLoaded', () => {
+  const feedGrid = document.querySelector('.feed-grid');
+  if (feedGrid) feedGrid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:13px">Loading posts...</div>';
+  const searchContainer = document.querySelector('#tab-search');
+  if (searchContainer) {
+    searchContainer.querySelectorAll('.provider-card').forEach(c => c.remove());
+  }
+});
+
 window.handleLogout = async function() {
   try { await signOut(); } catch(e) { window.location.href = '/login.html'; }
 };

@@ -378,7 +378,7 @@ html, body { height: 100%; overflow: hidden; font-family: 'DM Sans', sans-serif;
             <div class="form-row"><label class="form-label">Location</label><input class="form-input" type="text" value="Melbourne, VIC" placeholder="e.g. Melbourne, VIC" /></div>
             <div style="display:flex;align-items:center;gap:0;margin-top:8px">
               <button class="btn-save">Save changes</button>
-              <button class="logout-btn" onclick="window.location.href='login.html'">Log out</button>
+              <button class="logout-btn" onclick="handleLogout()">Log out</button>
             </div>
           </div>
         </div>
@@ -415,7 +415,11 @@ html, body { height: 100%; overflow: hidden; font-family: 'DM Sans', sans-serif;
 
 <script type="module">
 import sb from './js/supabase.js';
-import { getUser, getDeviceType } from './js/auth.js';
+import { getUser, getDeviceType, signOut } from './js/auth.js';
+
+window.handleLogout = async function() {
+  try { await signOut(); } catch(e) { window.location.href = '/login.html'; }
+};
 
 const tabs = ['home','feed','search','messages','settings','refer','feedback'];
 window.switchTab = function(t) {

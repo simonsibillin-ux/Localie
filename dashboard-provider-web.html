@@ -341,7 +341,7 @@ textarea::placeholder { color: #aab4cc; }
             </div>
             <div style="display:flex;align-items:center">
               <button class="btn-save">Save changes</button>
-              <button class="btn-danger" onclick="window.location.href='login.html'">Log out</button>
+              <button class="btn-danger" onclick="handleLogout()">Log out</button>
             </div>
           </div>
         </div>
@@ -381,7 +381,11 @@ textarea::placeholder { color: #aab4cc; }
 
 <script type="module">
 import sb from './js/supabase.js';
-import { getUser, getDeviceType } from './js/auth.js';
+import { getUser, getDeviceType, signOut } from './js/auth.js';
+
+window.handleLogout = async function() {
+  try { await signOut(); } catch(e) { window.location.href = '/login.html'; }
+};
 
 const tabs = ['dashboard','post','messages','settings','refer','feedback'];
 const titles = { dashboard:'Dashboard', post:'Create a post', messages:'Messages', settings:'Settings & billing', refer:'Refer a business', feedback:'Leave feedback' };

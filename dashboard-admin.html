@@ -117,8 +117,9 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--n
   <div class="sidebar-footer">
     <div class="admin-user">
       <div class="admin-avatar">SS</div>
-      <div><div class="admin-name">Simon</div><div class="admin-role">Platform owner</div></div>
+      <div><div class="admin-name">Simon & Ethan</div><div class="admin-role">Platform owners</div></div>
     </div>
+    <button onclick="handleLogout()" style="margin-top:12px;width:100%;padding:9px;background:#fdecea;color:#c0392b;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;">Log out</button>
   </div>
 </div>
 
@@ -263,6 +264,10 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--n
 <script type="module">
 import sb from './js/supabase.js';
 import { getUser, getDeviceType, signOut } from './js/auth.js';
+
+window.handleLogout = async function() {
+  try { await signOut(); } catch(e) { window.location.href = '/login.html'; }
+};
 
 const pages = {
   applications: ['Applications','Review and approve incoming provider applications'],

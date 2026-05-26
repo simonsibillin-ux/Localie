@@ -270,7 +270,7 @@ textarea::placeholder { color: #aab4cc; }
         <div class="setting-row"><div class="setting-icon"><i class="ti ti-user-plus"></i></div><div><div class="setting-name">Refer a business</div><div class="setting-sub">Earn $0.10 per approved referral</div></div><i class="ti ti-chevron-right" style="font-size:15px;color:#aab4cc"></i></div>
       </div>
     </div>
-    <button class="logout-btn" onclick="window.location.href='login.html'">Log out</button>
+    <button class="logout-btn" onclick="handleLogout()">Log out</button>
   </div>
 
 </div>
@@ -441,6 +441,10 @@ async function initProviderApp() {
 document.querySelector('.logout-btn')?.addEventListener('click', async () => {
   await signOut();
 });
+
+window.handleLogout = async function() {
+  try { await signOut(); } catch(e) { window.location.href = '/login.html'; }
+};
 
 // Initialize on load
 initProviderApp();

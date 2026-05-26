@@ -415,7 +415,7 @@ body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--n
         <div class="setting-row"><div class="setting-icon"><i class="ti ti-bell"></i></div><div><div class="setting-name">Notifications</div><div class="setting-sub">Manage preferences</div></div><i class="ti ti-chevron-right"></i></div>
       </div>
     </div>
-    <button class="logout-btn" onclick="window.location.href='login.html'">Log out</button>
+    <button class="logout-btn" onclick="handleLogout()">Log out</button>
   </div>
 
 </div>
@@ -664,6 +664,10 @@ function getStars(rating) {
 document.querySelector('.logout-btn')?.addEventListener('click', async () => {
   await signOut();
 });
+
+window.handleLogout = async function() {
+  try { await signOut(); } catch(e) { window.location.href = '/login.html'; }
+};
 
 // Initialize on load
 initApp();

@@ -490,11 +490,12 @@ function getInitials(name) {
 async function initApp() {
   // Responsive routing - redirect mobile users to mobile dashboard
   if (getDeviceType() === 'mobile') {
-    if (!sessionStorage.getItem('redirectGuard')) {
-      sessionStorage.setItem('redirectGuard', 'true');
+    if (!sessionStorage.getItem('customerWebGuard')) {
+      sessionStorage.setItem('customerWebGuard', 'true');
       window.location.href = '/dashboard-customer.html';
       return;
     }
+    sessionStorage.removeItem('customerWebGuard');
   }
 
   // Set logo link

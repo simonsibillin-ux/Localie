@@ -400,11 +400,12 @@ window.switchTab = function(t) {
 
 async function initProvider() {
   if (getDeviceType() === 'mobile') {
-    if (!sessionStorage.getItem('redirectGuard')) {
-      sessionStorage.setItem('redirectGuard', 'true');
+    if (!sessionStorage.getItem('providerWebGuard')) {
+      sessionStorage.setItem('providerWebGuard', 'true');
       window.location.href = '/dashboard-provider.html';
       return;
     }
+    sessionStorage.removeItem('providerWebGuard');
   }
 
   const logoLink = document.getElementById('sidebarLogo');

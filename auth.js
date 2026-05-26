@@ -138,30 +138,13 @@ export async function redirectToDashboard() {
 
   // Admin goes straight to admin dashboard
   if (profile.is_admin) {
-    localStorage.removeItem('selectedUserType');
     window.location.href = '/dashboard-admin.html';
     return;
   }
 
   const isDesktop = getDeviceType() === 'desktop';
 
-  // If user explicitly selected a role on the login screen, honour it
-  const selectedType = localStorage.getItem('selectedUserType');
-  localStorage.removeItem('selectedUserType');
-
-  if (selectedType === 'provider' && profile.is_provider) {
-    window.location.href = isDesktop ? '/dashboard-provider-web.html' : '/dashboard-provider.html';
-    return;
-  }
-
-  if (selectedType === 'customer' || !selectedType) {
-    if (profile.is_customer) {
-      window.location.href = isDesktop ? '/dashboard-customer-web.html' : '/dashboard-customer.html';
-      return;
-    }
-  }
-
-  // Fallback — both roles with no selection: show role selector
+  // Both roles — show role switcher
   if (profile.is_provider && profile.is_customer) {
     window.location.href = '/dashboard-select.html';
     return;

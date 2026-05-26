@@ -380,8 +380,8 @@
 <!-- ── Scripts ──────────────────────────────────────────────────────────────── -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script type="module">
-  import { signUp, redirectToDashboard, getSession, getDeviceType, getDashboardUrl, getUser, upsertProfile } from './js/auth.js';
-  import { showToast, setLoading } from './js/app.js';
+  import { signUp, redirectToDashboard, getSession, getDeviceType, getDashboardUrl, getUser, upsertProfile } from './auth.js';
+  import { showToast, setLoading } from './app.js';
 
   // ── apply.html is always accessible — do not redirect away ───────────────
   // A provider may already be logged in as a customer and wants to also apply

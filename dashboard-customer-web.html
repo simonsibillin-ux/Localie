@@ -430,7 +430,17 @@ window.switchTab = function(t) {
 };
 
 document.querySelectorAll('.filter-pill').forEach(p => {
-  p.addEventListener('click', function() { document.querySelectorAll('.filter-pill').forEach(x => x.classList.remove('active')); this.classList.add('active'); });
+  p.addEventListener('click', async function() {
+    document.querySelectorAll('.filter-pill').forEach(x => x.classList.remove('active'));
+    this.classList.add('active');
+    const location = this.textContent.trim();
+    let query = sb.from('posts').select('*').order('created_at', { ascending: false }).limit(12);
+    if (location !== 'All areas') {
+      query = query.ilike('location', `%${location}%`);
+    }
+    const { data: filtered } = await query;
+    populateFeed(filtered || []);
+  });
 });
 
 window.selectThread = function(el, name, cat, initials, bg, color) {
@@ -532,11 +542,37 @@ async function initApp() {
     pageSubtitle.textContent = 'Find trusted local services near ' + userLocation;
   }
 
-  // Fetch providers for featured section
-  const { data: providers } = await sb.from('providers').select('*').eq('verified', true).limit(6);
+  // Fetch approved providers for featured section
+  const { data: providers } = await sb.from('providers')
+    .select('*')
+    .eq('status', 'approved')
+    .eq('available', true)
+    .limit(6);
+
   if (providers && providers.length > 0) {
     populateFeatured(providers.slice(0, 3));
-    populateFeed(providers.slice(0, 6));
+    populateSearch(providers);
+  }
+
+  // Fetch real posts for feed — most recent first
+  const { data: feedPosts } = await sb.from('posts')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(12);
+
+  if (feedPosts && feedPosts.length > 0) {
+    populateFeed(feedPosts);
+  }
+
+  // Fetch last-minute slots (type = 'slot')
+  const { data: slots } = await sb.from('posts')
+    .select('*')
+    .eq('type', 'slot')
+    .order('created_at', { ascending: false })
+    .limit(3);
+
+  if (slots && slots.length > 0) {
+    populateSlots(slots);
   }
 }
 
@@ -578,26 +614,82 @@ function populateFeatured(providers) {
   });
 }
 
-function populateFeed(providers) {
+function populateFeed(posts) {
   const container = document.querySelector('.feed-grid');
   if (!container) return;
-
   container.innerHTML = '';
-
-  providers.forEach((p, idx) => {
-    const icon = getCategoryIcon(p.category);
+  posts.forEach((p, idx) => {
+    const icon = 'ti-building';
+    const timeAgo = getTimeAgo(p.created_at);
     const card = document.createElement('div');
     card.className = 'feed-card';
     card.innerHTML = `
-      <div class="feed-img" style="background:${getGradient(idx)}"><i class="ti ${icon}"></i>${p.plan === 'Pro' ? '<div class="badge-pro">Pro</div>' : ''}</div>
+      <div class="feed-img" style="background:${getGradient(idx)}"><i class="ti ${icon}"></i></div>
       <div class="feed-body">
-        <div class="feed-biz">${p.business_name}</div>
-        <div class="feed-desc">${p.description || 'Verified local service'}</div>
+        <div class="feed-biz">${p.business_name || 'Local Business'}</div>
+        <div class="feed-desc">${p.content}</div>
+        <div style="font-size:10px;color:var(--muted);margin-bottom:8px">${timeAgo} · ${p.location || 'Local area'}</div>
         <div class="feed-row"><div class="verified"><i class="ti ti-shield-check" style="font-size:10px"></i> Localie Verified</div><button class="btn-contact" style="font-size:11px;padding:5px 14px">Enquire</button></div>
       </div>
     `;
     container.appendChild(card);
   });
+  if (posts.length === 0) {
+    container.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:13px">No posts yet — check back soon as providers join your area.</div>';
+  }
+}
+
+function populateSearch(providers) {
+  const container = document.querySelector('#tab-search .page-sub');
+  if (container) container.textContent = `${providers.length} verified providers near you`;
+  const searchContainer = document.querySelector('#tab-search');
+  if (!searchContainer) return;
+  const existingCards = searchContainer.querySelectorAll('.provider-card');
+  existingCards.forEach(c => c.remove());
+  providers.forEach((p, idx) => {
+    const icon = getCategoryIcon(p.category);
+    const card = document.createElement('div');
+    card.className = 'provider-card';
+    card.innerHTML = `
+      <div class="card-inner">
+        <div class="card-img" style="background:${getGradient(idx)};width:100px"><i class="ti ${icon}"></i></div>
+        <div class="card-body">
+          <div class="card-biz">${p.business_name}</div>
+          <div class="card-desc">${p.description || 'Verified local service provider · ' + (p.service_area || '')}</div>
+          <div class="card-row"><div><div class="stars">★★★★★</div><div class="verified"><i class="ti ti-shield-check" style="font-size:11px"></i> Localie Verified</div></div><button class="btn-contact">Contact</button></div>
+        </div>
+      </div>
+    `;
+    searchContainer.appendChild(card);
+  });
+}
+
+function populateSlots(slots) {
+  const container = document.querySelector('.two-col > div:last-child');
+  if (!container) return;
+  const existingSlots = container.querySelectorAll('.slot-card');
+  existingSlots.forEach(s => s.remove());
+  const label = container.querySelector('.sec-label');
+  slots.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'slot-card';
+    card.innerHTML = `
+      <div class="slot-biz">${s.business_name || 'Local Business'}</div>
+      <div class="slot-time"><i class="ti ti-clock" style="font-size:12px;color:var(--gold)"></i> ${s.content.replace('🕐 Last-minute slot: ', '')}</div>
+      <button class="btn-claim">Claim this slot</button>
+    `;
+    if (label) label.after(card);
+    else container.appendChild(card);
+  });
+}
+
+function getTimeAgo(dateStr) {
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 60) return mins + 'm ago';
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return hrs + 'h ago';
+  return Math.floor(hrs / 24) + 'd ago';
 }
 
 initApp();

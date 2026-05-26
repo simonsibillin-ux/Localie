@@ -399,7 +399,6 @@ window.switchTab = function(t) {
 };
 
 async function initProvider() {
-  // Responsive routing - redirect mobile users to mobile dashboard
   if (getDeviceType() === 'mobile') {
     if (!sessionStorage.getItem('redirectGuard')) {
       sessionStorage.setItem('redirectGuard', 'true');
@@ -408,97 +407,190 @@ async function initProvider() {
     }
   }
 
-  // Set logo link
   const logoLink = document.getElementById('sidebarLogo');
-  if (logoLink) logoLink.href = '/dashboard-provider-web.html';
+  if (logoLink) { logoLink.href = '#'; logoLink.onclick = (e) => { e.preventDefault(); window.switchTab('dashboard'); }; }
 
   const user = await getUser();
-  if (!user) {
-    window.location.href = '/login.html';
-    return;
-  }
+  if (!user) { window.location.href = '/login.html'; return; }
+
   const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
-  if (!profile || !profile.is_provider) {
-    window.location.href = '/login.html';
-    return;
-  }
+  if (!profile || !profile.is_provider) { window.location.href = '/login.html'; return; }
 
-  // Fetch provider data
-  const { data: provider } = await sb.from('providers').select('*').eq('user_id', user.id).single();
+  // Fetch provider record — id matches auth user id
+  const { data: provider } = await sb.from('providers').select('*').eq('id', user.id).single();
 
-  if (!provider) {
-    window.location.href = '/login.html';
-    return;
-  }
+  // If no provider record yet, create a placeholder so they can still use the dashboard
+  let providerData = provider || {
+    id: user.id,
+    business_name: profile.full_name || 'My Business',
+    category: 'Service Provider',
+    service_area: profile.location || 'Melbourne, VIC',
+    plan: 'standard',
+    available: true
+  };
 
-  // Update sidebar business info
+  // Update sidebar
   const bizName = document.querySelector('.biz-name');
-  if (bizName) bizName.textContent = provider.business_name;
+  if (bizName) bizName.textContent = providerData.business_name;
   const bizSub = document.querySelector('.biz-sub');
-  if (bizSub) bizSub.textContent = provider.category + ' · ' + provider.location;
+  if (bizSub) bizSub.textContent = (providerData.category || '') + ' · ' + (providerData.service_area || '');
 
-  // Update settings profile
+  // Update settings profile block
   const profileName = document.querySelector('.profile-name');
-  if (profileName) profileName.textContent = provider.business_name;
+  if (profileName) profileName.textContent = providerData.business_name;
   const profileSub = document.querySelector('.profile-sub');
-  if (profileSub) profileSub.textContent = provider.category + ' · ' + provider.location;
+  if (profileSub) profileSub.textContent = (providerData.category || '') + ' · ' + (providerData.service_area || '');
 
-  // Update business form fields
-  const bizNameInput = document.querySelector('.settings-content .form-input[type="text"]:nth-child(1)');
-  if (bizNameInput) bizNameInput.value = provider.business_name;
+  // Update plan tag in sidebar
+  const planTag = document.querySelector('.plan-tag-label');
+  if (planTag) planTag.textContent = (providerData.plan || 'standard').charAt(0).toUpperCase() + (providerData.plan || 'standard').slice(1);
 
-  // Update stats
+  // Fetch real post count this month
+  const startOfMonth = new Date(); startOfMonth.setDate(1); startOfMonth.setHours(0,0,0,0);
+  const { data: posts, count: postCount } = await sb.from('posts')
+    .select('*', { count: 'exact' })
+    .eq('provider_id', user.id)
+    .gte('created_at', startOfMonth.toISOString());
+
   const statCards = document.querySelectorAll('.stat-card');
-  if (statCards[0]) statCards[0].querySelector('.stat-num').textContent = provider.profile_views || 0;
-  if (statCards[1]) statCards[1].querySelector('.stat-num').textContent = provider.enquiries || 0;
+  if (statCards[2]) statCards[2].querySelector('.stat-num').textContent = postCount || 0;
 
-  // Update plan info
-  const planName = document.querySelector('.plan-name');
-  if (planName) planName.textContent = (provider.plan || 'Standard') + ' plan';
+  // Update plan info in sidebar plan block
+  const planNameEl = document.querySelector('.plan-name');
+  if (planNameEl) planNameEl.textContent = (providerData.plan === 'pro' ? 'Pro' : 'Standard') + ' plan';
 
-  // Handle post submission
+  // ── POST CREATION ─────────────────────────────────────────────────────────
   const publishBtn = document.querySelector('.composer-actions .post-btn');
+  const postTextarea = document.querySelector('.composer textarea');
+  const postLimitEl = document.querySelector('.post-limit');
+
+  // Check weekly post limit (1 for standard, 5 for pro)
+  const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0,0,0,0);
+  const { count: weeklyCount } = await sb.from('posts')
+    .select('*', { count: 'exact', head: true })
+    .eq('provider_id', user.id)
+    .gte('created_at', weekStart.toISOString());
+
+  const limit = providerData.plan === 'pro' ? 5 : 1;
+  const used = weeklyCount || 0;
+
+  if (postLimitEl) {
+    postLimitEl.textContent = `${used} of ${limit} posts used this week`;
+    if (used >= limit) {
+      postLimitEl.classList.remove('ok');
+    } else {
+      postLimitEl.classList.add('ok');
+    }
+  }
+
   if (publishBtn) {
-    publishBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const textarea = document.querySelector('.composer textarea');
-      if (!textarea.value.trim()) return;
+    publishBtn.addEventListener('click', async () => {
+      const content = postTextarea?.value?.trim();
+      if (!content) { alert('Please write something before posting.'); return; }
+
+      if (used >= limit) {
+        alert(`You've used all ${limit} post${limit > 1 ? 's' : ''} for this week. Upgrade to Pro for more.`);
+        return;
+      }
 
       publishBtn.disabled = true;
       publishBtn.textContent = 'Publishing...';
 
-      const { error } = await sb.from('provider_posts').insert([{
-        provider_id: provider.id,
-        content: textarea.value,
+      const { error } = await sb.from('posts').insert([{
+        provider_id: user.id,
+        business_name: providerData.business_name,
+        content: content,
+        location: providerData.service_area || '',
+        type: 'general',
         created_at: new Date().toISOString()
       }]);
 
       if (!error) {
-        textarea.value = '';
-        publishBtn.disabled = false;
+        postTextarea.value = '';
         publishBtn.textContent = 'Publish post';
+        publishBtn.disabled = false;
+        if (postLimitEl) postLimitEl.textContent = `${used + 1} of ${limit} posts used this week`;
+        alert('Post published! Customers in your area can now see it in their feed.');
+      } else {
+        publishBtn.textContent = 'Publish post';
+        publishBtn.disabled = false;
+        alert('Failed to publish. Please try again.');
       }
     });
   }
 
-  // Handle availability toggle
+  // ── LAST MINUTE SLOT ──────────────────────────────────────────────────────
+  const slotBtn = document.querySelector('.slot-btn');
+  if (slotBtn) {
+    slotBtn.addEventListener('click', async () => {
+      const inputs = document.querySelectorAll('.slot-input');
+      const slotDesc = inputs[0]?.value?.trim();
+      const slotLocation = inputs[1]?.value?.trim();
+
+      if (!slotDesc) { alert('Please describe the slot.'); return; }
+
+      slotBtn.disabled = true;
+      slotBtn.textContent = 'Posting...';
+
+      const { error } = await sb.from('posts').insert([{
+        provider_id: user.id,
+        business_name: providerData.business_name,
+        content: '🕐 Last-minute slot: ' + slotDesc,
+        location: slotLocation || providerData.service_area || '',
+        type: 'slot',
+        created_at: new Date().toISOString()
+      }]);
+
+      if (!error) {
+        if (inputs[0]) inputs[0].value = '';
+        if (inputs[1]) inputs[1].value = '';
+        slotBtn.textContent = 'Slot posted!';
+        setTimeout(() => { slotBtn.disabled = false; slotBtn.textContent = 'Post last-minute slot'; }, 2000);
+      } else {
+        slotBtn.disabled = false;
+        slotBtn.textContent = 'Post last-minute slot';
+        alert('Failed to post slot. Please try again.');
+      }
+    });
+  }
+
+  // ── AVAILABILITY TOGGLE ───────────────────────────────────────────────────
   const toggleBtn = document.querySelector('.toggle');
   if (toggleBtn) {
-    if (provider.taking_new_clients) {
-      toggleBtn.classList.remove('off');
-    } else {
-      toggleBtn.classList.add('off');
-    }
+    if (!providerData.available) toggleBtn.classList.add('off');
+    toggleBtn.onclick = async () => {
+      const newVal = toggleBtn.classList.contains('off');
+      toggleBtn.classList.toggle('off');
+      const subEl = document.getElementById('avail-sub');
+      if (subEl) subEl.textContent = newVal ? 'Currently active' : 'Currently inactive';
+      await sb.from('providers').update({ available: newVal }).eq('id', user.id);
+    };
+  }
 
-    toggleBtn.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const newStatus = !toggleBtn.classList.contains('off');
+  // ── SETTINGS SAVE ─────────────────────────────────────────────────────────
+  const saveBtn = document.querySelector('.btn-save');
+  if (saveBtn) {
+    saveBtn.addEventListener('click', async () => {
+      const inputs = document.querySelectorAll('.settings-content .form-input');
+      const newBizName = inputs[0]?.value?.trim();
+      const newDesc = inputs[1]?.value?.trim();
+      const newArea = inputs[2]?.value?.trim();
 
-      const { error } = await sb.from('providers').update({ taking_new_clients: newStatus }).eq('id', provider.id);
+      if (!newBizName) { alert('Business name cannot be empty.'); return; }
 
-      if (error) {
-        toggleBtn.classList.toggle('off');
-      }
+      saveBtn.textContent = 'Saving...';
+      saveBtn.disabled = true;
+
+      await sb.from('providers').upsert({
+        id: user.id,
+        business_name: newBizName,
+        description: newDesc,
+        service_area: newArea
+      });
+
+      saveBtn.textContent = 'Save changes';
+      saveBtn.disabled = false;
+      alert('Changes saved. They will go live after admin review.');
     });
   }
 }

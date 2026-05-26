@@ -464,32 +464,41 @@ async function initProvider() {
   const publishBtn = document.querySelector('.composer-actions .post-btn');
   const postTextarea = document.querySelector('.composer textarea');
   const postLimitEl = document.querySelector('.post-limit');
-
-  // Check weekly post limit (1 for standard, 5 for pro)
-  const weekStart = new Date(); weekStart.setDate(weekStart.getDate() - weekStart.getDay()); weekStart.setHours(0,0,0,0);
-  const { count: weeklyCount } = await sb.from('posts')
-    .select('*', { count: 'exact', head: true })
-    .eq('provider_id', user.id)
-    .gte('created_at', weekStart.toISOString());
-
   const limit = providerData.plan === 'pro' ? 5 : 1;
-  const used = weeklyCount || 0;
 
-  if (postLimitEl) {
-    postLimitEl.textContent = `${used} of ${limit} posts used this week`;
-    if (used >= limit) {
-      postLimitEl.classList.remove('ok');
-    } else {
-      postLimitEl.classList.add('ok');
-    }
+  // Always fetch live count from Supabase — never use cached value
+  async function getLiveWeeklyCount() {
+    const weekStart = new Date();
+    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+    weekStart.setHours(0,0,0,0);
+    const { count } = await sb.from('posts')
+      .select('*', { count: 'exact', head: true })
+      .eq('provider_id', user.id)
+      .gte('created_at', weekStart.toISOString());
+    return count || 0;
   }
+
+  // Update the limit display
+  async function updateLimitDisplay() {
+    const liveCount = await getLiveWeeklyCount();
+    if (postLimitEl) {
+      postLimitEl.textContent = `${liveCount} of ${limit} posts used this week`;
+      postLimitEl.classList.toggle('ok', liveCount < limit);
+    }
+    return liveCount;
+  }
+
+  // Initial display
+  await updateLimitDisplay();
 
   if (publishBtn) {
     publishBtn.addEventListener('click', async () => {
       const content = postTextarea?.value?.trim();
       if (!content) { alert('Please write something before posting.'); return; }
 
-      if (used >= limit) {
+      // Always check live count before posting
+      const liveUsed = await getLiveWeeklyCount();
+      if (liveUsed >= limit) {
         alert(`You've used all ${limit} post${limit > 1 ? 's' : ''} for this week. Upgrade to Pro for more.`);
         return;
       }
@@ -510,7 +519,8 @@ async function initProvider() {
         postTextarea.value = '';
         publishBtn.textContent = 'Publish post';
         publishBtn.disabled = false;
-        if (postLimitEl) postLimitEl.textContent = `${used + 1} of ${limit} posts used this week`;
+        // Refetch live count and update display immediately
+        await updateLimitDisplay();
         alert('Post published! Customers in your area can now see it in their feed.');
       } else {
         publishBtn.textContent = 'Publish post';

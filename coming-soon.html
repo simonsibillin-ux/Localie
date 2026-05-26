@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0a1628">
+<title>Localie — Trusted Local Services, Coming Soon</title>
+<meta name="description" content="Every provider on Localie is personally vetted — ABN checked, insured, and approved. Join the waitlist and be first to know when we launch near you.">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --navy: #0d2d6a; --blue: #1a6bdf; --blue-light: #4a9eff;
+  --dark: #0a1628; --gold: #f5a623; --muted: #7a8aaa;
+  --border: #e0ecff; --white: #ffffff; --bg: #f4f7fb;
+  --green: #2e6b3e; --green-light: #e8f5e9;
+}
+
+html, body {
+  height: 100%;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--dark);
+  color: var(--white);
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ── BACKGROUND ── */
+.bg-glow {
+  position: fixed;
+  top: -300px; left: 50%;
+  transform: translateX(-50%);
+  width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(26,107,223,0.12) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bg-glow-2 {
+  position: fixed;
+  bottom: -200px; right: -200px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(74,158,255,0.06) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── LAYOUT ── */
+.page {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── LOGO ── */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  text-decoration: none;
+}
+
+.logo img {
+  height: 48px;
+  width: 48px;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.logo-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  color: var(--white);
+}
+
+.logo-text em {
+  color: var(--blue-light);
+  font-style: normal;
+}
+
+/* ── EYEBROW ── */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(74,158,255,0.1);
+  border: 1px solid rgba(74,158,255,0.2);
+  border-radius: 50px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--blue-light);
+  letter-spacing: 0.3px;
+  margin-bottom: 18px;
+}
+
+/* ── HEADLINE ── */
+.headline {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 6vw, 58px);
+  line-height: 1.08;
+  text-align: center;
+  max-width: 780px;
+  margin-bottom: 14px;
+}
+
+.headline em {
+  color: var(--blue-light);
+  font-style: normal;
+}
+
+/* ── SUBTEXT ── */
+.subtext {
+  font-size: clamp(14px, 2vw, 17px);
+  color: rgba(255,255,255,0.5);
+  text-align: center;
+  max-width: 520px;
+  line-height: 1.65;
+  margin-bottom: 28px;
+}
+
+/* ── FORM ── */
+.form-wrap {
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 28px;
+}
+
+.form-row {
+  display: flex;
+  gap: 10px;
+}
+
+.form-input {
+  flex: 1;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 50px;
+  padding: 14px 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--white);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-input::placeholder { color: rgba(255,255,255,0.3); }
+.form-input:focus { border-color: var(--blue-light); }
+
+.form-btn {
+  background: var(--blue);
+  color: var(--white);
+  border: none;
+  border-radius: 50px;
+  padding: 14px 24px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.form-btn:hover { background: var(--blue-light); transform: translateY(-1px); }
+.form-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.form-note {
+  font-size: 12px;
+  color: rgba(255,255,255,0.25);
+  text-align: center;
+  margin-top: 12px;
+}
+
+/* ── SUCCESS STATE ── */
+.success-state {
+  display: none;
+  text-align: center;
+  animation: fadeIn 0.4s ease;
+}
+
+.success-icon {
+  width: 56px; height: 56px;
+  background: var(--green-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+
+.success-icon i { font-size: 26px; color: var(--green); }
+.success-title { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--white); margin-bottom: 8px; }
+.success-sub { font-size: 14px; color: rgba(255,255,255,0.45); }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── TRUST BADGES ── */
+.trust-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.trust-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 50px;
+  padding: 8px 16px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 500;
+}
+
+.trust-badge i { font-size: 14px; color: var(--blue-light); }
+
+/* ── COUNTER ── */
+.counter-wrap {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.counter-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 42px;
+  color: var(--white);
+  line-height: 1;
+}
+
+.counter-lbl {
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+  margin-top: 6px;
+}
+
+.counter-bar {
+  width: 240px;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 10px;
+  margin: 16px auto 0;
+  overflow: hidden;
+}
+
+.counter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue), var(--blue-light));
+  border-radius: 10px;
+  width: 0%;
+  transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 24px 20px 32px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.2);
+}
+
+footer a { color: rgba(255,255,255,0.3); text-decoration: none; }
+footer a:hover { color: rgba(255,255,255,0.5); }
+
+/* ── MOBILE ── */
+@media (max-width: 520px) {
+  .form-row { flex-direction: column; }
+  .form-btn { justify-content: center; }
+  .trust-row { gap: 6px; }
+  .logo { margin-bottom: 20px; }
+  .eyebrow { margin-bottom: 14px; font-size: 11px; }
+  .trust-badge { font-size: 11px; padding: 6px 12px; }
+  .subtext { margin-bottom: 20px; }
+  .form-wrap { margin-bottom: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<div class="bg-glow-2"></div>
+
+<div class="page">
+
+  <!-- LOGO -->
+  <div class="logo">
+    <img src="images/logo.png" alt="Localie">
+    <div class="logo-text">Local<em>ie</em></div>
+  </div>
+
+  <!-- EYEBROW -->
+  <div class="eyebrow">
+    <i class="ti ti-shield-check" style="font-size:13px"></i>
+    Every provider individually verified by us
+  </div>
+
+  <!-- HEADLINE -->
+  <h1 class="headline">
+    Trusted local services,<br><em>coming to your area.</em>
+  </h1>
+
+  <!-- SUBTEXT -->
+  <p class="subtext">
+    Not everyone gets in. Every business on Localie is individually verified — ABN checked, insured, and personally approved. Free for customers, always.
+  </p>
+
+  <!-- FORM -->
+  <div class="form-wrap">
+    <div id="formState">
+      <div class="form-row" style="margin-bottom:10px">
+        <input
+          type="text"
+          class="form-input"
+          id="nameInput"
+          placeholder="Your first name"
+          autocomplete="given-name"
+        />
+      </div>
+      <div class="form-row">
+        <input
+          type="email"
+          class="form-input"
+          id="emailInput"
+          placeholder="Your email address"
+          autocomplete="email"
+        />
+        <button class="form-btn" id="submitBtn" onclick="handleSubmit()">
+          <i class="ti ti-arrow-right" style="font-size:16px"></i>
+          Join waitlist
+        </button>
+      </div>
+      <div class="form-note">No spam. We'll only email you when Localie launches near you.</div>
+    </div>
+
+    <div class="success-state" id="successState">
+      <div class="success-icon"><i class="ti ti-check"></i></div>
+      <div class="success-title" id="successTitle">You're on the list!</div>
+      <div class="success-sub">We'll be in touch when Localie launches near you.<br>Tell a friend — the more locals, the better.</div>
+    </div>
+  </div>
+
+  <!-- TRUST BADGES -->
+  <div class="trust-row">
+    <div class="trust-badge"><i class="ti ti-id-badge"></i> ABN verified</div>
+    <div class="trust-badge"><i class="ti ti-shield-check"></i> Insurance checked</div>
+    <div class="trust-badge"><i class="ti ti-users"></i> Personally approved</div>
+    <div class="trust-badge"><i class="ti ti-lock"></i> Free for customers</div>
+  </div>
+
+  <!-- FOOTER SPACER -->
+  <div style="height:20px"></div>
+
+  <!-- FOOTER -->
+  <div style="font-size:12px;color:rgba(255,255,255,0.2);text-align:center;padding-top:16px">
+    © 2026 Localie · <a href="mailto:admin@localieapp.com" style="color:rgba(255,255,255,0.3);text-decoration:none">admin@localieapp.com</a>
+  </div>
+
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const sb = createClient(
+  'https://mykjrlabehpipyyhniwe.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15a2pybGFiZWhwaXB5eWhuaXdlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1MDYyNjEsImV4cCI6MjA5NTA4MjI2MX0.hPHQAn_salUbIy6ISeW5Li9kDyQw_Qq7Hg2B2jOtbk8'
+);
+
+// ── FORM SUBMIT ────────────────────────────────────────────────────────────
+window.handleSubmit = async function() {
+  const name = document.getElementById('nameInput').value.trim();
+  const email = document.getElementById('emailInput').value.trim();
+  const btn = document.getElementById('submitBtn');
+
+  if (!name) {
+    document.getElementById('nameInput').style.borderColor = '#c0392b';
+    document.getElementById('nameInput').focus();
+    return;
+  }
+
+  if (!email || !email.includes('@')) {
+    document.getElementById('emailInput').style.borderColor = '#c0392b';
+    document.getElementById('emailInput').focus();
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader-2" style="font-size:16px;animation:spin 0.8s linear infinite"></i> Joining...';
+
+  const firstName = name.split(' ')[0].charAt(0).toUpperCase() + name.split(' ')[0].slice(1).toLowerCase();
+
+  const { error } = await sb.from('waitlist').insert([{
+    full_name: name,
+    email: email,
+    created_at: new Date().toISOString()
+  }]);
+
+  if (!error) {
+    document.getElementById('formState').style.display = 'none';
+    document.getElementById('successState').style.display = 'block';
+    document.getElementById('successTitle').textContent = `You're on the list, ${firstName}!`;
+  } else if (error.code === '23505') {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-arrow-right" style="font-size:16px"></i> Join waitlist';
+    document.getElementById('emailInput').style.borderColor = 'var(--gold)';
+    document.getElementById('emailInput').placeholder = "You're already on the list!";
+    document.getElementById('emailInput').value = '';
+  } else {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-arrow-right" style="font-size:16px"></i> Join waitlist';
+  }
+};
+
+// Enter key submits from either field
+document.getElementById('nameInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') document.getElementById('emailInput').focus();
+});
+document.getElementById('emailInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') window.handleSubmit();
+});
+
+// Spin animation for loader
+const style = document.createElement('style');
+style.textContent = '@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }';
+document.head.appendChild(style);
+</script>
+
+</body>
+</html>
